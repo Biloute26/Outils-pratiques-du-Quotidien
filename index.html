@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outils Pratiques — Convertisseurs, Météo, Horoscope & Calculateurs Gratuits</title>
+<meta name="description" content="Outils gratuits en ligne : convertisseur de devises, météo, horoscope, calculateur d'âge, IMC, crédit et plus.">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2586059139929294" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F5F3EE;--surface:#FFFFFF;--surface2:#EDEDEA;--border:#D8D5CE;
+  --text:#1A1916;--muted:#6B6860;--accent:#2A6B4F;--accent-light:#E3F0EA;
+  --radius:12px;--radius-lg:20px;--sans:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;position:sticky;top:0;z-index:100}
+.header-inner{max-width:960px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text);text-decoration:none}
+.logo span{color:var(--accent)}
+main{max-width:960px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.ad-slot{background:var(--surface2);border:1px dashed var(--border);border-radius:var(--radius);height:80px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:2rem}
+.hero{margin-bottom:2rem}
+.hero-tag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--accent);background:var(--accent-light);padding:4px 10px;border-radius:4px;margin-bottom:12px}
+.hero h1{font-size:clamp(22px,4vw,34px);font-weight:600;letter-spacing:-0.8px;margin-bottom:8px}
+.hero p{font-size:14px;color:var(--muted)}
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:2.5rem}
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.2rem;cursor:pointer;transition:border-color .15s,transform .15s;text-align:left}
+.tool-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.tool-card.active{border-color:var(--accent);background:var(--accent-light)}
+.tool-card-icon{font-size:22px;margin-bottom:10px}
+.tool-card-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.tool-card-desc{font-size:11px;color:var(--muted);line-height:1.4}
+#tool-area{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;min-height:400px}
+.tool-header{display:flex;align-items:center;gap:12px;margin-bottom:1.8rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border)}
+.tool-header-icon{width:42px;height:42px;border-radius:12px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:20px}
+.tool-header h2{font-size:16px;font-weight:600}
+.tool-header p{font-size:12px;color:var(--muted)}
+.live-badge{margin-left:auto;font-size:11px;font-family:var(--mono);padding:4px 10px;border-radius:4px;background:#E3F5EC;color:#1A7A40}
+label.fl{display:block;font-size:11px;font-family:var(--mono);color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px}
+input,select{width:100%;height:44px;border:1px solid var(--border);border-radius:var(--radius);padding:0 12px;font-family:var(--sans);font-size:14px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;appearance:none}
+input:focus,select:focus{border-color:var(--accent)}
+.result-box{height:44px;border:1px solid var(--border);border-radius:var(--radius);padding:0 12px;display:flex;align-items:center;background:var(--bg);font-size:16px;font-weight:600;font-family:var(--mono)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem}
+.btn{height:44px;border:1px solid var(--accent);border-radius:var(--radius);background:var(--accent);color:#fff;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s;width:100%}
+.btn:hover{opacity:.85}
+.btn-outline{background:transparent;color:var(--accent)}
+.swap-btn{width:44px;height:44px;border:1px solid var(--border);border-radius:50%;background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--muted);transition:border-color .15s,transform .2s;margin:0 auto}
+.swap-btn:hover{border-color:var(--accent);transform:rotate(180deg)}
+.rate-line{font-size:12px;color:var(--muted);font-family:var(--mono);margin:8px 0 1.2rem;min-height:18px}
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:8px}
+.quick-card{border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;cursor:pointer;transition:border-color .12s;min-width:0;overflow:hidden}
+.quick-card:hover{border-color:var(--accent);background:var(--accent-light)}
+.quick-from{font-size:10px;color:var(--muted);font-family:var(--mono)}
+.quick-to{font-size:13px;font-weight:600;font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.result-big{text-align:center;padding:1.5rem;background:var(--bg);border-radius:var(--radius-lg);margin:1rem 0}
+.result-big .num{font-size:42px;font-weight:600;font-family:var(--mono);color:var(--accent)}
+.result-big .label{font-size:13px;color:var(--muted);margin-top:4px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:1rem}
+.info-card{background:var(--bg);border-radius:var(--radius);padding:12px;text-align:center}
+.info-card .val{font-size:18px;font-weight:600;font-family:var(--mono);color:var(--text)}
+.info-card .lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.weather-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:1rem}
+.weather-day{background:var(--bg);border-radius:var(--radius);padding:12px 8px;text-align:center}
+.weather-day .day{font-size:11px;color:var(--muted);font-family:var(--mono);text-transform:uppercase}
+.weather-day .icon{font-size:26px;margin:6px 0}
+.weather-day .temp{font-size:15px;font-weight:600}
+.weather-day .desc{font-size:10px;color:var(--muted);margin-top:2px}
+.sign-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-bottom:1.5rem}
+.sign-btn{border:1px solid var(--border);border-radius:var(--radius);padding:10px 6px;cursor:pointer;text-align:center;background:var(--surface);transition:border-color .12s,background .12s}
+.sign-btn:hover,.sign-btn.active{border-color:var(--accent);background:var(--accent-light)}
+.sign-btn .sign-icon{font-size:22px}
+.sign-btn .sign-name{font-size:10px;color:var(--muted);margin-top:3px}
+.horo-card{background:var(--bg);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1rem}
+.horo-card h3{font-size:18px;font-weight:600;margin-bottom:4px}
+.horo-card .dates{font-size:12px;color:var(--muted);margin-bottom:1rem;font-family:var(--mono)}
+.horo-card p{font-size:14px;line-height:1.7;color:var(--text)}
+.stars{color:#F5A623;font-size:18px;margin-bottom:8px}
+.imc-bar{height:18px;border-radius:9px;background:linear-gradient(to right,#4FC3F7,#81C784,#FFD54F,#FF7043,#EF5350);margin:1rem 0;position:relative}
+.imc-marker{position:absolute;top:-4px;width:26px;height:26px;border-radius:50%;background:var(--text);border:3px solid white;transform:translateX(-50%);transition:left .4s}
+.imc-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-family:var(--mono)}
+.pwd-output{font-family:var(--mono);font-size:18px;font-weight:500;background:var(--bg);border-radius:var(--radius);padding:14px 16px;margin:1rem 0;letter-spacing:2px;word-break:break-all;min-height:54px}
+.strength-bar{height:6px;border-radius:3px;margin:8px 0;transition:width .3s,background .3s}
+footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;font-size:11px;color:var(--muted);font-family:var(--mono)}
+@media(max-width:600px){main{padding:1rem 1rem 3rem}.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo" onclick="showTool('devises');return false">outils<span>.</span>pratiques</a>
+  </div>
+</header>
+<main>
+  <div class="ad-slot">[ Publicité AdSense ]</div>
+  <div class="hero">
+    <div class="hero-tag">100% gratuit · sans inscription</div>
+    <h1>Vos outils du quotidien</h1>
+    <p>Convertisseurs, météo, horoscope, calculateurs — rapides et gratuits.</p>
+  </div>
+  <p class="section-label">Tous les outils</p>
+  <div class="tool-grid">
+    <div class="tool-card active" onclick="showTool('devises')">
+      <div class="tool-card-icon">💱</div>
+      <div class="tool-card-name">Convertisseur de devises</div>
+      <div class="tool-card-desc">Taux en temps réel, +20 devises</div>
+    </div>
+    <div class="tool-card" onclick="showTool('meteo')">
+      <div class="tool-card-icon">🌤️</div>
+      <div class="tool-card-name">Météo</div>
+      <div class="tool-card-desc">Prévisions 7 jours par ville</div>
+    </div>
+    <div class="tool-card" onclick="showTool('horoscope')">
+      <div class="tool-card-icon">✨</div>
+      <div class="tool-card-name">Horoscope</div>
+      <div class="tool-card-desc">Horoscope du jour par signe</div>
+    </div>
+    <div class="tool-card" onclick="showTool('age')">
+      <div class="tool-card-icon">📅</div>
+      <div class="tool-card-name">Calculateur d'âge</div>
+      <div class="tool-card-desc">Âge exact, jours vécus</div>
+    </div>
+    <div class="tool-card" onclick="showTool('unites')">
+      <div class="tool-card-icon">📐</div>
+      <div class="tool-card-name">Convertisseur d'unités</div>
+      <div class="tool-card-desc">km/miles, kg/lbs, °C/°F...</div>
+    </div>
+    <div class="tool-card" onclick="showTool('credit')">
+      <div class="tool-card-icon">🏦</div>
+      <div class="tool-card-name">Calculateur de crédit</div>
+      <div class="tool-card-desc">Mensualités et coût total</div>
+    </div>
+    <div class="tool-card" onclick="showTool('imc')">
+      <div class="tool-card-icon">⚖️</div>
+      <div class="tool-card-name">Calculateur IMC</div>
+      <div class="tool-card-desc">Indice de masse corporelle</div>
+    </div>
+    <div class="tool-card" onclick="showTool('password')">
+      <div class="tool-card-icon">🔐</div>
+      <div class="tool-card-name">Générateur de mot de passe</div>
+      <div class="tool-card-desc">Mots de passe sécurisés</div>
+    </div>
+  </div>
+  <div id="tool-area"></div>
+</main>
+<footer>© 2025 outils.pratiques · Gratuit · Sans inscription</footer>
+
+<script>
+// ═══════════════════════════════════════════
+// DONNÉES & UTILITAIRES
+// ═══════════════════════════════════════════
+const CURRENCIES=[
+  {code:'EUR',name:'Euro 🇪🇺'},{code:'USD',name:'Dollar américain 🇺🇸'},
+  {code:'GBP',name:'Livre sterling 🇬🇧'},{code:'JPY',name:'Yen japonais 🇯🇵'},
+  {code:'CHF',name:'Franc suisse 🇨🇭'},{code:'CAD',name:'Dollar canadien 🇨🇦'},
+  {code:'AUD',name:'Dollar australien 🇦🇺'},{code:'CNY',name:'Yuan chinois 🇨🇳'},
+  {code:'MAD',name:'Dirham marocain 🇲🇦'},{code:'TND',name:'Dinar tunisien 🇹🇳'},
+  {code:'DZD',name:'Dinar algérien 🇩🇿'},{code:'BRL',name:'Réal brésilien 🇧🇷'},
+  {code:'MXN',name:'Peso mexicain 🇲🇽'},{code:'INR',name:'Roupie indienne 🇮🇳'},
+  {code:'KRW',name:'Won coréen 🇰🇷'},{code:'SGD',name:'Dollar Singapour 🇸🇬'},
+  {code:'HKD',name:'Dollar Hong Kong 🇭🇰'},{code:'NOK',name:'Couronne norvégienne 🇳🇴'},
+  {code:'SEK',name:'Couronne suédoise 🇸🇪'},{code:'DKK',name:'Couronne danoise 🇩🇰'},
+];
+const FALLBACK_RATES={EUR:1,USD:1.08,GBP:0.86,JPY:163.5,CHF:0.97,CAD:1.47,AUD:1.65,CNY:7.82,MAD:10.75,TND:3.35,DZD:145.2,BRL:5.45,MXN:18.6,INR:89.7,KRW:1430,SGD:1.44,HKD:8.43,NOK:11.4,SEK:11.2,DKK:7.46};
+let rateCache={};
+
+const SIGNS=[
+  {name:'Bélier',icon:'♈',dates:'21 mars – 19 avril'},
+  {name:'Taureau',icon:'♉',dates:'20 avril – 20 mai'},
+  {name:'Gémeaux',icon:'♊',dates:'21 mai – 20 juin'},
+  {name:'Cancer',icon:'♋',dates:'21 juin – 22 juillet'},
+  {name:'Lion',icon:'♌',dates:'23 juillet – 22 août'},
+  {name:'Vierge',icon:'♍',dates:'23 août – 22 sept.'},
+  {name:'Balance',icon:'♎',dates:'23 sept. – 22 oct.'},
+  {name:'Scorpion',icon:'♏',dates:'23 oct. – 21 nov.'},
+  {name:'Sagittaire',icon:'♐',dates:'22 nov. – 21 déc.'},
+  {name:'Capricorne',icon:'♑',dates:'22 déc. – 19 janv.'},
+  {name:'Verseau',icon:'♒',dates:'20 janv. – 18 fév.'},
+  {name:'Poissons',icon:'♓',dates:'19 fév. – 20 mars'},
+];
+
+const HOROSCOPES={
+  'Bélier':['Une énergie débordante vous anime aujourd\'hui. C\'est le moment idéal pour lancer un nouveau projet ou prendre une décision importante. Votre audace sera récompensée. En amour, une surprise agréable vous attend.','La journée s\'annonce dynamique. Vos initiatives portent leurs fruits et votre entourage remarque votre détermination. Restez attentif à votre santé : une bonne nuit de sommeil fera des merveilles.','Mars vous insuffle une énergie renouvelée. Les obstacles du passé s\'effacent. Sur le plan professionnel, une opportunité inattendue se présente. Saisissez-la sans hésiter.'],
+  'Taureau':['La stabilité est votre maître mot aujourd\'hui. Prenez le temps de savourer les petits plaisirs de la vie. Une conversation avec un proche vous apportera réconfort et clarté.','Vénus favorise vos relations affectives. C\'est une belle journée pour exprimer vos sentiments. Sur le plan financier, évitez les dépenses impulsives et faites confiance à votre instinct.','Votre persévérance légendaire paie enfin. Un projet mûrement réfléchi avance dans la bonne direction. Votre sens pratique est un atout précieux ce jour.'],
+  'Gémeaux':['Votre curiosité naturelle vous ouvre des portes insoupçonnées. Les échanges sont favorisés, notamment sur le plan intellectuel. Une rencontre pourrait changer votre perspective sur une situation.','Mercure stimule votre esprit vif. C\'est le bon moment pour communiquer, négocier ou convaincre. En soirée, offrez-vous une activité créative pour recharger vos batteries.','Votre adaptabilité est un don précieux aujourd\'hui. Vous jonglerez facilement entre vos différentes obligations. Une bonne nouvelle arrive par message.'],
+  'Cancer':['La Lune, votre astre gouverneur, vous invite à l\'introspection. Écoutez votre intuition : elle ne vous trompe jamais. Les liens familiaux sont mis en valeur ce jour.','Votre sensibilité est votre plus belle force aujourd\'hui. Une personne chère à votre cœur a besoin de vous. Votre générosité sera précieuse et profondément appréciée.','Une ambiance douce et harmonieuse règne dans votre foyer. Profitez de ce calme pour vous ressourcer. Sur le plan sentimental, la tendresse est au rendez-vous.'],
+  'Lion':['Le Soleil brille pour vous ! Votre charisme naturel attire les regards et l\'admiration. C\'est le moment de briller, que ce soit en amour ou dans votre carrière. Assumez votre grandeur.','Votre générosité illumine votre entourage. Une reconnaissance tardive mais méritée arrive enfin. En amour, votre passion est communicative et irrésistible.','Leadership et créativité sont vos alliés du jour. Vous inspirez ceux qui vous entourent. Une décision importante mérite réflexion avant d\'être prise.'],
+  'Vierge':['Votre sens du détail vous permet de résoudre un problème qui traîne depuis trop longtemps. La méthode et la rigueur sont vos meilleures armes. Une bonne organisation vous libère du stress.','Mercure affûte votre esprit analytique. C\'est le moment idéal pour planifier, organiser et mettre de l\'ordre dans vos affaires. Votre santé bénéficiera d\'une attention particulière.','Votre discernement est remarquable aujourd\'hui. Vous voyez clairement ce que les autres ignorent. Un conseil que vous donnerez sera très apprécié.'],
+  'Balance':['L\'harmonie règne en maître dans vos relations. Vénus favorise les rencontres et les réconciliations. Sur le plan esthétique, votre goût raffiné fait l\'unanimité.','La justice et l\'équilibre guident vos pas ce jour. Une décision difficile demande de la sagesse : faites confiance à votre sens inné de l\'équité pour trancher.','Vos relations s\'épanouissent dans la douceur et la compréhension mutuelle. Un partenariat, professionnel ou amoureux, prend un beau tournant.'],
+  'Scorpion':['Votre intuition est à son apogée. Les secrets se révèlent à vous comme par magie. Sur le plan émotionnel, une transformation profonde est en cours. Embrassez le changement.','Pluton intensifie vos émotions. Canal isez cette énergie dans un projet passionnel. Votre magnétisme attire les bonnes personnes au bon moment.','Votre perspicacité légendaire déjoue les pièges ce jour. Vous percez à jour les intentions cachées. En amour, la profondeur de vos sentiments touche votre partenaire.'],
+  'Sagittaire':['L\'aventure vous appelle ! Jupiter vous ouvre des horizons nouveaux. Un voyage, même imaginaire, nourrit votre soif de découverte. Votre optimisme est contagieux et précieux.','Votre philosophie de vie attire l\'admiration. Une opportunité liée à l\'étranger ou à la formation se présente. Votre bonne humeur naturelle est un atout inestimable.','La liberté et l\'expansion sont vos maîtres mots. Un projet ambitieux prend forme. Votre enthousiasme entraîne les autres dans votre sillage.'],
+  'Capricorne':['Saturne récompense votre discipline et votre patience. Un objectif à long terme franchit une étape importante. Votre sérieux inspire confiance à ceux qui vous entourent.','Votre ambition est bien orientée aujourd\'hui. Les efforts passés portent leurs fruits. Sur le plan familial, votre rôle de pilier est reconnu et apprécié.','La maturité et la sagesse vous guident. Une responsabilité supplémentaire vous est confiée, signe de la confiance qu\'on vous accorde. Vous êtes à la hauteur.'],
+  'Verseau':['L\'originalité est votre signature aujourd\'hui. Uranus vous inspire des idées révolutionnaires. Votre vision du futur est précieuse : partagez-la sans retenue.','Votre humanisme et votre empathie font de vous un allié précieux. Une cause qui vous tient à cœur avance dans la bonne direction. En amour, la liberté et la complicité s\'unissent.','Votre esprit inventif trouve des solutions là où d\'autres voient des impasses. Un projet collectif bénéficie de votre apport unique et créatif.'],
+  'Poissons':['Neptune vous berce d\'une douce inspiration. Votre sensibilité artistique est exacerbée. Accordez-vous un moment de rêverie : les idées qui en émergent seront précieuses.','Votre empathie naturelle vous connecte profondément aux autres. Une aide que vous apportez change véritablement une situation. Votre intuition est un guide fidèle.','La spiritualité et l\'imaginaire vous ressourcent. Faites confiance au flux de la vie. Sur le plan amoureux, une connexion âme à âme vous attend.'],
+};
+
+const WEATHER_ICONS={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'❄️',73:'❄️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};
+const WEATHER_DESC={0:'Ensoleillé',1:'Peu nuageux',2:'Nuageux',3:'Couvert',45:'Brouillard',51:'Bruine',61:'Pluie légère',63:'Pluie',65:'Forte pluie',71:'Neige légère',73:'Neige',80:'Averses',81:'Fortes averses',82:'Violentes averses',95:'Orage',96:'Orage grêle'};
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function showTool(name){
+  document.querySelectorAll('.tool-card').forEach(c=>c.classList.remove('active'));
+  const map={devises:0,meteo:1,horoscope:2,age:3,unites:4,credit:5,imc:6,password:7,surface:8,retraite:9,tarot:10,foot:11};
+  if(map[name]!==undefined) document.querySelectorAll('.tool-card')[map[name]].classList.add('active');
+  const area=document.getElementById('tool-area');
+  const renders={devises:renderDevises,meteo:renderMeteo,horoscope:renderHoroscope,age:renderAge,unites:renderUnites,credit:renderCredit,imc:renderImc,password:renderPassword,surface:renderSurface,retraite:renderRetraite,tarot:renderTarot,foot:renderFoot};
+  if(renders[name]) renders[name](area);
+}
+
+// ═══════════════════════════════════════════
+// 1. DEVISES
+// ═══════════════════════════════════════════
+function renderDevises(el){
+  el.innerHTML=`
+    <div class="tool-header">
+      <div class="tool-header-icon">💱</div>
+      <div><h2>Convertisseur de devises</h2><p>Taux de change en temps réel</p></div>
+      <span class="live-badge">● En direct</span>
+    </div>
+    <div class="grid2" style="align-items:end">
+      <div><label class="fl">Montant</label><input type="number" id="d-amt" value="100" min="0" step="any"></div>
+      <div><label class="fl">Résultat</label><div class="result-box" id="d-res">—</div></div>
+    </div>
+    <div style="text-align:center;margin-bottom:10px"><button class="swap-btn" id="d-swap">⇄</button></div>
+    <div class="grid2">
+      <div><label class="fl">De</label><select id="d-from"></select></div>
+      <div><label class="fl">Vers</label><select id="d-to"></select></div>
+    </div>
+    <div class="rate-line" id="d-rate"></div>
+    <div class="ad-slot">[ Publicité AdSense ]</div>
+    <p class="section-label">Conversions rapides</p>
+    <div class="quick-grid" id="d-quick"></div>`;
+  const from=el.querySelector('#d-from'),to=el.querySelector('#d-to');
+  CURRENCIES.forEach(c=>{from.add(new Option(c.code+' — '+c.name,c.code));to.add(new Option(c.code+' — '+c.name,c.code))});
+  from.value='EUR';to.value='USD';
+  async function conv(){
+    const f=from.value,t=to.value,amt=parseFloat(el.querySelector('#d-amt').value);
+    if(isNaN(amt)||amt<0){el.querySelector('#d-res').textContent='—';return}
+    let rate;
+    try{
+      if(!rateCache[f]){const r=await fetch('https://api.frankfurter.app/latest?from='+f);const d=await r.json();d.rates[f]=1;rateCache[f]=d.rates}
+      rate=rateCache[f][t];
+    }catch(e){
+      rate=(FALLBACK_RATES[t]||1)/(FALLBACK_RATES[f]||1);
+    }
+    const res=amt*rate;
+    el.querySelector('#d-res').textContent=res.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+t;
+    el.querySelector('#d-rate').textContent='1 '+f+' = '+rate.toFixed(4)+' '+t;
+    const qg=el.querySelector('#d-quick');qg.innerHTML='';
+    [1,5,10,50,100,500,1000,5000].forEach(a=>{
+      const v=(a*rate).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});
+      const d=document.createElement('div');d.className='quick-card';
+      d.innerHTML='<div class="quick-from">'+a.toLocaleString('fr-FR')+' '+f+'</div><div class="quick-to">'+v+' '+t+'</div>';
+      d.onclick=()=>{el.querySelector('#d-amt').value=a;conv()};qg.appendChild(d);
+    });
+  }
+  el.querySelector('#d-swap').onclick=()=>{const t=from.value;from.value=to.value;to.value=t;rateCache={};conv()};
+  from.onchange=to.onchange=()=>{rateCache={};conv()};
+  el.querySelector('#d-amt').oninput=conv;conv();
+}
+
+// ═══════════════════════════════════════════
+// 2. MÉTÉO
+// ═══════════════════════════════════════════
+function renderMeteo(el){
+  el.innerHTML=`
+    <div class="tool-header">
+      <div class="tool-header-icon">🌤️</div>
+      <div><h2>Météo</h2><p>Prévisions 7 jours</p></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:1rem">
+      <input id="m-city" placeholder="Entrez une ville..." style="flex:1">
+      <button class="btn" style="width:120px" onclick="searchWeather()">Rechercher</button>
+    </div>
+    <button class="btn btn-outline" style="width:100%;margin-bottom:1rem" onclick="geoWeather()">📍 Ma position</button>
+    <div id="m-result"></div>`;
+}
+async function searchWeather(){
+  const city=document.getElementById('m-city').value.trim();
+  if(!city)return;
+  const res=document.getElementById('m-result');
+  res.innerHTML='<p style="color:var(--muted);font-size:13px">Recherche en cours...</p>';
+  try{
+    const geo=await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=fr');
+    const gd=await geo.json();
+    if(!gd.results||!gd.results.length){res.innerHTML='<p style="color:red;font-size:13px">Ville introuvable.</p>';return}
+    showWeather(gd.results[0].latitude,gd.results[0].longitude,gd.results[0].name,res);
+  }catch(e){res.innerHTML='<p style="color:red;font-size:13px">Erreur réseau.</p>'}
+}
+function geoWeather(){
+  const res=document.getElementById('m-result');
+  if(!navigator.geolocation){res.innerHTML='<p style="color:red;font-size:13px">Géolocalisation non disponible.</p>';return}
+  res.innerHTML='<p style="color:var(--muted);font-size:13px">Localisation...</p>';
+  navigator.geolocation.getCurrentPosition(async p=>{
+    try{
+      const rg=await fetch('https://geocoding-api.open-meteo.com/v1/reverse?latitude='+p.coords.latitude+'&longitude='+p.coords.longitude+'&language=fr');
+      const rd=await rg.json();
+      const name=(rd.results&&rd.results[0])?rd.results[0].name:'Ma position';
+      showWeather(p.coords.latitude,p.coords.longitude,name,res);
+    }catch(e){showWeather(p.coords.latitude,p.coords.longitude,'Ma position',res)}
+  },()=>{res.innerHTML='<p style="color:red;font-size:13px">Permission refusée.</p>'});
+}
+async function showWeather(lat,lon,name,el){
+  el.innerHTML='<p style="color:var(--muted);font-size:13px">Chargement météo...</p>';
+  try{
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&daily=weathercode,temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto&forecast_days=7');
+    const d=await r.json();
+    const cur=d.current_weather;
+    const days=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+    let html=`<div class="result-big">
+      <div style="font-size:48px">${WEATHER_ICONS[cur.weathercode]||'🌡️'}</div>
+      <div class="num">${Math.round(cur.temperature)}°C</div>
+      <div class="label">${name} · ${WEATHER_DESC[cur.weathercode]||''}  · Vent ${Math.round(cur.windspeed)} km/h</div>
+    </div><div class="weather-grid">`;
+    d.daily.time.forEach((t,i)=>{
+      const date=new Date(t);const dayName=i===0?'Auj.':days[date.getDay()];
+      html+=`<div class="weather-day"><div class="day">${dayName}</div><div class="icon">${WEATHER_ICONS[d.daily.weathercode[i]]||'🌡️'}</div><div class="temp">${Math.round(d.daily.temperature_2m_max[i])}° / ${Math.round(d.daily.temperature_2m_min[i])}°</div><div class="desc">${WEATHER_DESC[d.daily.weathercode[i]]||''}</div></div>`;
+    });
+    html+='</div>';
+    el.innerHTML=html;
+  }catch(e){el.innerHTML='<p style="color:red;font-size:13px">Impossible de récupérer la météo.</p>'}
+}
+
+// ═══════════════════════════════════════════
+// 3. HOROSCOPE
+// ═══════════════════════════════════════════
+function renderHoroscope(el){
+  let signsHTML='<div class="sign-grid">';
+  SIGNS.forEach(s=>{signsHTML+=`<div class="sign-btn" onclick="showHoro('${s.name}',this)"><div class="sign-icon">${s.icon}</div><div class="sign-name">${s.name}</div></div>`});
+  signsHTML+='</div><div id="horo-result"></div>';
+  el.innerHTML=`<div class="tool-header"><div class="tool-header-icon">✨</div><div><h2>Horoscope du jour</h2><p>Choisissez votre signe</p></div></div>${signsHTML}`;
+}
+function showHoro(name,btn){
+  document.querySelectorAll('.sign-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const sign=SIGNS.find(s=>s.name===name);
+  const texts=HOROSCOPES[name];
+  const today=new Date();
+  const idx=(today.getDate()+today.getMonth())%texts.length;
+  const text=texts[idx];
+  const stars='⭐'.repeat(3+Math.floor((today.getDate()%3)));
+  document.getElementById('horo-result').innerHTML=`
+    <div class="horo-card">
+      <h3>${sign.icon} ${sign.name}</h3>
+      <div class="dates">${sign.dates}</div>
+      <div class="stars">${stars}</div>
+      <p>${text}</p>
+      <div class="ad-slot" style="margin-top:1.5rem">[ Publicité AdSense ]</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════
+// 4. ÂGE
+// ═══════════════════════════════════════════
+function renderAge(el){
+  const today=new Date();
+  const defDate=new Date(today.getFullYear()-30,today.getMonth(),today.getDate());
+  const defStr=defDate.toISOString().split('T')[0];
+  el.innerHTML=`
+    <div class="tool-header"><div class="tool-header-icon">📅</div><div><h2>Calculateur d'âge</h2><p>Âge exact et infos détaillées</p></div></div>
+    <div style="max-width:320px">
+      <label class="fl">Date de naissance</label>
+      <input type="date" id="a-date" value="${defStr}" max="${today.toISOString().split('T')[0]}">
+    </div>
+    <div id="a-result" style="margin-top:1.5rem"></div>`;
+  function calcAge(){
+    const dob=new Date(document.getElementById('a-date').value);
+    if(isNaN(dob))return;
+    const now=new Date();
+    let y=now.getFullYear()-dob.getFullYear(),m=now.getMonth()-dob.getMonth(),d=now.getDate()-dob.getDate();
+    if(d<0){m--;d+=new Date(now.getFullYear(),now.getMonth(),0).getDate()}
+    if(m<0){y--;m+=12}
+    const totalDays=Math.floor((now-dob)/86400000);
+    const next=new Date(now.getFullYear(),dob.getMonth(),dob.getDate());
+    if(next<=now)next.setFullYear(next.getFullYear()+1);
+    const daysLeft=Math.floor((next-now)/86400000);
+    document.getElementById('a-result').innerHTML=`
+      <div class="result-big"><div class="num">${y} ans</div><div class="label">${m} mois et ${d} jours</div></div>
+      <div class="info-grid">
+        <div class="info-card"><div class="val">${totalDays.toLocaleString('fr-FR')}</div><div class="lbl">Jours vécus</div></div>
+        <div class="info-card"><div class="val">${(totalDays*24).toLocaleString('fr-FR')}</div><div class="lbl">Heures vécues</div></div>
+        <div class="info-card"><div class="val">${Math.floor(totalDays/7).toLocaleString('fr-FR')}</div><div class="lbl">Semaines vécues</div></div>
+        <div class="info-card"><div class="val">${daysLeft}</div><div class="lbl">Jours avant anniv.</div></div>
+      </div>`;
+  }
+  document.getElementById('a-date').oninput=calcAge;calcAge();
+}
+
+// ═══════════════════════════════════════════
+// 5. UNITÉS
+// ═══════════════════════════════════════════
+const UNIT_CATS={
+  'Longueur':{units:['Kilomètre','Mètre','Centimètre','Millimètre','Mile','Yard','Pied','Pouce'],toBase:[1000,1,0.01,0.001,1609.344,0.9144,0.3048,0.0254]},
+  'Masse':{units:['Tonne','Kilogramme','Gramme','Milligramme','Livre','Once'],toBase:[1000,1,0.001,0.000001,0.453592,0.028350]},
+  'Température':{units:['Celsius','Fahrenheit','Kelvin'],special:true},
+  'Volume':{units:['Litre','Millilitre','Mètre cube','Gallon US','Pinte US'],toBase:[1,0.001,1000,3.78541,0.473176]},
+  'Vitesse':{units:['km/h','m/s','mph','Nœud'],toBase:[1,3.6,1.60934,1.852]},
+};
+function renderUnites(el){
+  let catOpts=Object.keys(UNIT_CATS).map(c=>`<option>${c}</option>`).join('');
+  el.innerHTML=`
+    <div class="tool-header"><div class="tool-header-icon">📐</div><div><h2>Convertisseur d'unités</h2><p>Longueur, masse, température, volume, vitesse</p></div></div>
+    <div style="margin-bottom:1rem"><label class="fl">Catégorie</label><select id="u-cat" onchange="updateUnitSelects()">${catOpts}</select></div>
+    <div class="grid2" style="align-items:end;margin-bottom:10px">
+      <div><label class="fl">Valeur</label><input type="number" id="u-val" value="1" oninput="convertUnit()"></div>
+      <div><label class="fl">Résultat</label><div class="result-box" id="u-res">—</div></div>
+    </div>
+    <div class="grid2">
+      <div><label class="fl">De</label><select id="u-from" onchange="convertUnit()"></select></div>
+      <div><label class="fl">Vers</label><select id="u-to" onchange="convertUnit()"></select></div>
+    </div>`;
+  updateUnitSelects();
+}
+function updateUnitSelects(){
+  const cat=document.getElementById('u-cat').value;
+  const units=UNIT_CATS[cat].units;
+  const from=document.getElementById('u-from'),to=document.getElementById('u-to');
+  from.innerHTML=to.innerHTML='';
+  units.forEach((u,i)=>{from.add(new Option(u,i));to.add(new Option(u,i))});
+  to.value=1;convertUnit();
+}
+function convertUnit(){
+  const cat=document.getElementById('u-cat').value;
+  const val=parseFloat(document.getElementById('u-val').value);
+  const fi=parseInt(document.getElementById('u-from').value);
+  const ti=parseInt(document.getElementById('u-to').value);
+  if(isNaN(val)){document.getElementById('u-res').textContent='—';return}
+  let res;
+  if(UNIT_CATS[cat].special){
+    if(fi===0&&ti===1)res=val*9/5+32;
+    else if(fi===0&&ti===2)res=val+273.15;
+    else if(fi===1&&ti===0)res=(val-32)*5/9;
+    else if(fi===1&&ti===2)res=(val-32)*5/9+273.15;
+    else if(fi===2&&ti===0)res=val-273.15;
+    else if(fi===2&&ti===1)res=(val-273.15)*9/5+32;
+    else res=val;
+  }else{
+    const tb=UNIT_CATS[cat].toBase;
+    res=val*tb[fi]/tb[ti];
+  }
+  const disp=Math.abs(res)>=0.001?res.toLocaleString('fr-FR',{maximumFractionDigits:6}):res.toExponential(3);
+  document.getElementById('u-res').textContent=disp+' '+UNIT_CATS[cat].units[ti];
+}
+
+// ═══════════════════════════════════════════
+// 6. CRÉDIT
+// ═══════════════════════════════════════════
+function renderCredit(el){
+  el.innerHTML=`
+    <div class="tool-header"><div class="tool-header-icon">🏦</div><div><h2>Calculateur de crédit</h2><p>Mensualités et coût total</p></div></div>
+    <div class="grid3">
+      <div><label class="fl">Montant (€)</label><input type="number" id="c-amt" value="10000" oninput="calcCredit()"></div>
+      <div><label class="fl">Taux annuel (%)</label><input type="number" id="c-rate" value="4.5" step="0.1" oninput="calcCredit()"></div>
+      <div><label class="fl">Durée (mois)</label><input type="number" id="c-dur" value="36" oninput="calcCredit()"></div>
+    </div>
+    <div id="c-result"></div>`;
+  calcCredit();
+}
+function calcCredit(){
+  const P=parseFloat(document.getElementById('c-amt').value);
+  const r=parseFloat(document.getElementById('c-rate').value)/100/12;
+  const n=parseInt(document.getElementById('c-dur').value);
+  if(isNaN(P)||isNaN(r)||isNaN(n)||n<=0){return}
+  let M;
+  if(r===0){M=P/n}else{M=P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)}
+  const total=M*n,interest=total-P;
+  document.getElementById('c-result').innerHTML=`
+    <div class="info-grid" style="margin-top:1rem">
+      <div class="info-card"><div class="val">${M.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})} €</div><div class="lbl">Mensualité</div></div>
+      <div class="info-card"><div class="val">${total.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})} €</div><div class="lbl">Coût total</div></div>
+      <div class="info-card"><div class="val">${interest.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})} €</div><div class="lbl">Total intérêts</div></div>
+      <div class="info-card"><div class="val">${((interest/P)*100).toFixed(1)} %</div><div class="lbl">Coût du crédit</div></div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════
+// 7. IMC
+// ═══════════════════════════════════════════
+function renderImc(el){
+  el.innerHTML=`
+    <div class="tool-header"><div class="tool-header-icon">⚖️</div><div><h2>Calculateur IMC</h2><p>Indice de Masse Corporelle</p></div></div>
+    <div class="grid2">
+      <div><label class="fl">Taille (cm)</label><input type="number" id="i-h" value="170" oninput="calcImc()"></div>
+      <div><label class="fl">Poids (kg)</label><input type="number" id="i-w" value="70" oninput="calcImc()"></div>
+    </div>
+    <div id="i-result"></div>`;
+  calcImc();
+}
+function calcImc(){
+  const h=parseFloat(document.getElementById('i-h').value)/100;
+  const w=parseFloat(document.getElementById('i-w').value);
+  if(isNaN(h)||isNaN(w)||h<=0)return;
+  const imc=w/(h*h);
+  let cat,color;
+  if(imc<18.5){cat='Insuffisance pondérale';color='#4FC3F7'}
+  else if(imc<25){cat='Poids normal ✓';color='#81C784'}
+  else if(imc<30){cat='Surpoids';color='#FFD54F'}
+  else if(imc<35){cat='Obésité modérée';color='#FF7043'}
+  else{cat='Obésité sévère';color='#EF5350'}
+  const pct=Math.min(Math.max((imc-10)/35*100,2),98);
+  const ideal_min=(18.5*h*h).toFixed(1),ideal_max=(24.9*h*h).toFixed(1);
+  document.getElementById('i-result').innerHTML=`
+    <div class="result-big"><div class="num" style="color:${color}">${imc.toFixed(1)}</div><div class="label" style="color:${color}">${cat}</div></div>
+    <div class="imc-bar"><div class="imc-marker" style="left:${pct}%"></div></div>
+    <div class="imc-labels"><span>Maigreur</span><span>Normal</span><span>Surpoids</span><span>Obèse</span></div>
+    <div class="info-grid" style="margin-top:1rem">
+      <div class="info-card"><div class="val">${ideal_min} – ${ideal_max} kg</div><div class="lbl">Poids idéal pour votre taille</div></div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════
+// 8. MOT DE PASSE
+// ═══════════════════════════════════════════
+function renderPassword(el){
+  el.innerHTML=`
+    <div class="tool-header"><div class="tool-header-icon">🔐</div><div><h2>Générateur de mot de passe</h2><p>Sécurisé et personnalisable</p></div></div>
+    <div style="margin-bottom:1rem">
+      <label class="fl">Longueur : <span id="p-len-val">16</span> caractères</label>
+      <input type="range" id="p-len" min="6" max="64" value="16" oninput="document.getElementById('p-len-val').textContent=this.value;genPwd()" style="width:100%;margin-top:6px">
+    </div>
+    <div class="grid2" style="margin-bottom:1rem">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="p-upper" checked onchange="genPwd()"> Majuscules (A-Z)</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="p-lower" checked onchange="genPwd()"> Minuscules (a-z)</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="p-num" checked onchange="genPwd()"> Chiffres (0-9)</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="p-sym" onchange="genPwd()"> Symboles (!@#...)</label>
+    </div>
+    <div class="pwd-output" id="p-out"></div>
+    <div id="p-strength-label" style="font-size:12px;color:var(--muted);margin-bottom:6px"></div>
+    <div class="strength-bar" id="p-bar"></div>
+    <div class="grid2" style="margin-top:1rem">
+      <button class="btn" onclick="genPwd()">🔄 Générer</button>
+      <button class="btn btn-outline" onclick="copyPwd()">📋 Copier</button>
+    </div>`;
+  genPwd();
+}
+function genPwd(){
+  let chars='';
+  if(document.getElementById('p-upper').checked)chars+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if(document.getElementById('p-lower').checked)chars+='abcdefghijklmnopqrstuvwxyz';
+  if(document.getElementById('p-num').checked)chars+='0123456789';
+  if(document.getElementById('p-sym').checked)chars+='!@#$%^&*()_+-=[]{}|;:,.<>?';
+  if(!chars)chars='abcdefghijklmnopqrstuvwxyz';
+  const len=parseInt(document.getElementById('p-len').value);
+  let pwd='';
+  for(let i=0;i<len;i++)pwd+=chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById('p-out').textContent=pwd;
+  let score=0;
+  if(len>=12)score++;if(len>=16)score++;
+  if(document.getElementById('p-upper').checked)score++;
+  if(document.getElementById('p-lower').checked)score++;
+  if(document.getElementById('p-num').checked)score++;
+  if(document.getElementById('p-sym').checked)score++;
+  const labels=['Très faible','Faible','Moyen','Bon','Fort','Très fort'];
+  const colors=['#EF5350','#FF7043','#FFD54F','#AED581','#66BB6A','#2A6B4F'];
+  const idx=Math.min(score,5);
+  document.getElementById('p-strength-label').textContent='Force : '+labels[idx];
+  const bar=document.getElementById('p-bar');
+  bar.style.width=((idx+1)/6*100)+'%';bar.style.background=colors[idx];
+}
+function copyPwd(){
+  const pwd=document.getElementById('p-out').textContent;
+  navigator.clipboard.writeText(pwd).then(()=>{
+    const btn=document.querySelector('#tool-area .btn-outline');
+    btn.textContent='✅ Copié !';setTimeout(()=>btn.textContent='📋 Copier',2000);
+  });
+}
+
+
+// ═══════════════════════════════════════════
+// 9. SURFACE
+// ═══════════════════════════════════════════
+function renderSurface(el){
+  el.innerHTML=`
+    <div class="tool-header"><div class="tool-header-icon">📐</div><div><h2>Calculateur de surface</h2><p>Pièce, carrelage, peinture...</p></div></div>
+    <div style="margin-bottom:1rem"><label class="fl">Forme</label>
+    <select id="s-shape" onchange="updateSurface()">
+      <option value="rect">Rectangle / Carré</option>
+      <option value="circle">Cercle</option>
+      <option value="triangle">Triangle</option>
+      <option value="trap">Trapèze</option>
+    </select></div>
+    <div id="s-inputs"></div>
+    <div id="s-result"></div>`;
+  updateSurface();
+}
+function updateSurface(){
+  const shape=document.getElementById('s-shape').value;
+  const inp=document.getElementById('s-inputs');
+  const forms={
+    rect:`<div class="grid2"><div><label class="fl">Longueur (m)</label><input type="number" id="s1" value="5" step="0.01" oninput="calcSurface()"></div><div><label class="fl">Largeur (m)</label><input type="number" id="s2" value="4" step="0.01" oninput="calcSurface()"></div></div>`,
+    circle:`<div style="max-width:240px"><label class="fl">Rayon (m)</label><input type="number" id="s1" value="3" step="0.01" oninput="calcSurface()"></div>`,
+    triangle:`<div class="grid2"><div><label class="fl">Base (m)</label><input type="number" id="s1" value="6" step="0.01" oninput="calcSurface()"></div><div><label class="fl">Hauteur (m)</label><input type="number" id="s2" value="4" step="0.01" oninput="calcSurface()"></div></div>`,
+    trap:`<div class="grid3"><div><label class="fl">Base a (m)</label><input type="number" id="s1" value="6" step="0.01" oninput="calcSurface()"></div><div><label class="fl">Base b (m)</label><input type="number" id="s2" value="4" step="0.01" oninput="calcSurface()"></div><div><label class="fl">Hauteur (m)</label><input type="number" id="s3" value="3" step="0.01" oninput="calcSurface()"></div></div>`
+  };
+  inp.innerHTML=forms[shape];calcSurface();
+}
+function calcSurface(){
+  const shape=document.getElementById('s-shape').value;
+  const v=id=>parseFloat(document.getElementById(id)?.value)||0;
+  let area=0;
+  if(shape==='rect')area=v('s1')*v('s2');
+  else if(shape==='circle')area=Math.PI*v('s1')*v('s1');
+  else if(shape==='triangle')area=0.5*v('s1')*v('s2');
+  else if(shape==='trap')area=0.5*(v('s1')+v('s2'))*v('s3');
+  const tiles33=Math.ceil(area/0.1089)*1.1;
+  const tiles60=Math.ceil(area/0.36)*1.1;
+  const paint=Math.ceil(area/10);
+  document.getElementById('s-result').innerHTML=`
+    <div class="result-big"><div class="num">${area.toFixed(2)} m²</div><div class="label">Surface totale</div></div>
+    <div class="info-grid">
+      <div class="info-card"><div class="val">${Math.ceil(tiles33)}</div><div class="lbl">Carreaux 33×33 cm (+10%)</div></div>
+      <div class="info-card"><div class="val">${Math.ceil(tiles60)}</div><div class="lbl">Carreaux 60×60 cm (+10%)</div></div>
+      <div class="info-card"><div class="val">${paint} L</div><div class="lbl">Peinture estimée</div></div>
+      <div class="info-card"><div class="val">${(area*10.764).toFixed(1)} ft²</div><div class="lbl">En pieds carrés</div></div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════
+// 10. SIMULATEUR RETRAITE
+// ═══════════════════════════════════════════
+function renderRetraite(el){
+  el.innerHTML=`
+    <div class="tool-header"><div class="tool-header-icon">👴</div><div><h2>Simulateur de retraite</h2><p>Estimation de votre départ</p></div></div>
+    <div class="grid2">
+      <div><label class="fl">Année de naissance</label><input type="number" id="r-born" value="1970" min="1940" max="2010" oninput="calcRetraite()"></div>
+      <div><label class="fl">Année début de travail</label><input type="number" id="r-start" value="1990" min="1960" max="2030" oninput="calcRetraite()"></div>
+    </div>
+    <div class="grid2">
+      <div><label class="fl">Salaire mensuel net (€)</label><input type="number" id="r-sal" value="2500" oninput="calcRetraite()"></div>
+      <div><label class="fl">Régime</label><select id="r-reg" onchange="calcRetraite()"><option value="prive">Salarié privé</option><option value="fonct">Fonctionnaire</option><option value="indep">Indépendant</option></select></div>
+    </div>
+    <div id="r-result"></div>`;
+  calcRetraite();
+}
+function calcRetraite(){
+  const born=parseInt(document.getElementById('r-born').value);
+  const start=parseInt(document.getElementById('r-start').value);
+  const sal=parseFloat(document.getElementById('r-sal').value)||0;
+  const reg=document.getElementById('r-reg').value;
+  const now=new Date().getFullYear();
+  const age=now-born;
+  const trimNow=(now-start)*4;
+  const trimNeeded=reg==='fonct'?167:172;
+  const ageMin=reg==='fonct'?62:64;
+  const yearsByAge=born+ageMin-now;
+  const trimsNeeded=trimNeeded-trimNow;
+  const yearsByTrim=Math.ceil(trimsNeeded/4);
+  const yearsLeft=Math.max(yearsByAge,yearsByTrim,0);
+  const departYear=now+yearsLeft;
+  const departAge=departYear-born;
+  const tauxBase=reg==='fonct'?0.75:0.5;
+  const taux=Math.min(tauxBase+(Math.max(trimNow-trimNeeded,0)*0.00125),tauxBase);
+  const pension=sal*taux;
+  document.getElementById('r-result').innerHTML=`
+    <div class="result-big"><div class="num">${departAge} ans</div><div class="label">Départ estimé en ${departYear} · dans ${yearsLeft} ans</div></div>
+    <div class="info-grid">
+      <div class="info-card"><div class="val">${trimNow}</div><div class="lbl">Trimestres validés</div></div>
+      <div class="info-card"><div class="val">${trimNeeded}</div><div class="lbl">Trimestres requis</div></div>
+      <div class="info-card"><div class="val">${Math.max(trimsNeeded,0)}</div><div class="lbl">Trimestres restants</div></div>
+      <div class="info-card"><div class="val">${pension.toFixed(0)} €/mois</div><div class="lbl">Pension estimée</div></div>
+    </div>
+    <p style="font-size:11px;color:var(--muted);margin-top:1rem">⚠️ Estimation indicative basée sur les règles générales 2024. Consultez votre caisse de retraite pour un calcul précis.</p>`;
+}
+
+// ═══════════════════════════════════════════
+// 11. TAROT
+// ═══════════════════════════════════════════
+const TAROT_CARDS=[
+  {name:'Le Mat',icon:'🃏',up:'Liberté, nouveau départ, insouciance, potentiel illimité',down:'Imprudence, manque de direction, irresponsabilité'},
+  {name:'Le Bateleur',icon:'🎩',up:'Volonté, habileté, action, maîtrise de soi',down:'Manipulation, tromperie, manque de confiance'},
+  {name:'La Papesse',icon:'📖',up:'Intuition, sagesse intérieure, mystère, connaissance',down:'Secrets cachés, manque d\'intuition, superficialité'},
+  {name:'L\'Impératrice',icon:'👑',up:'Féminité, abondance, nature, créativité, fertilité',down:'Dépendance, étouffement, négligence de soi'},
+  {name:'L\'Empereur',icon:'⚜️',up:'Autorité, structure, stabilité, leadership',down:'Rigidité, domination, manque de flexibilité'},
+  {name:'Le Pape',icon:'✝️',up:'Tradition, sagesse spirituelle, conseils, conformisme',down:'Dogmatisme, rigidité morale, mauvais conseil'},
+  {name:'L\'Amoureux',icon:'💕',up:'Amour, harmonie, choix, alignement des valeurs',down:'Déséquilibre, mauvais choix, infidélité'},
+  {name:'Le Chariot',icon:'🏆',up:'Victoire, contrôle, détermination, succès',down:'Manque de contrôle, agression, obstacles'},
+  {name:'La Justice',icon:'⚖️',up:'Justice, équité, vérité, cause et effet',down:'Injustice, malhonnêteté, manque d\'équilibre'},
+  {name:'L\'Ermite',icon:'🕯️',up:'Introspection, solitude, guidance intérieure, sagesse',down:'Isolement, repli sur soi, refus d\'aide'},
+  {name:'La Roue',icon:'🎡',up:'Bonne fortune, karma, tournant de vie, destin',down:'Malchance, résistance au changement, cycles négatifs'},
+  {name:'La Force',icon:'🦁',up:'Courage, persuasion, influence, compassion',down:'Doute, faiblesse intérieure, manque de confiance'},
+  {name:'Le Pendu',icon:'🙃',up:'Suspension, sacrifice, nouvelles perspectives, lâcher-prise',down:'Délais, résistance, sacrifice inutile'},
+  {name:'La Mort',icon:'🌙',up:'Fin et transformation, transition, changement profond',down:'Résistance au changement, stagnation, peur'},
+  {name:'La Tempérance',icon:'🌊',up:'Équilibre, modération, patience, harmonie',down:'Excès, déséquilibre, manque de vision à long terme'},
+  {name:'Le Diable',icon:'🔗',up:'Ombre, attachement, sexualité, matérialisme',down:'Libération, rupture des chaînes, indépendance'},
+  {name:'La Maison Dieu',icon:'⚡',up:'Révélation soudaine, chaos, réveil, vérité révélée',down:'Peur du changement, évitement de la catastrophe'},
+  {name:'L\'Étoile',icon:'⭐',up:'Espoir, foi, renouveau, sérénité, inspiration',down:'Désespoir, manque de foi, découragement'},
+  {name:'La Lune',icon:'🌕',up:'Illusion, peur, subconscient, rêves, intuition',down:'Confusion, peur, tromperie, malentendus'},
+  {name:'Le Soleil',icon:'☀️',up:'Joie, succès, positivité, vitalité, clarté',down:'Optimisme excessif, narcissisme, dépendance'},
+  {name:'Le Jugement',icon:'🔔',up:'Réflexion, reckoning, éveil, pardon, absolution',down:'Doute de soi, refus d\'apprendre, jugement sévère'},
+  {name:'Le Monde',icon:'🌍',up:'Achèvement, intégration, accomplissement, voyage',down:'Manque de clôture, stagnation, court-circuit'},
+];
+function renderTarot(el){
+  el.innerHTML=`
+    <div class="tool-header"><div class="tool-header-icon">🔮</div><div><h2>Tirage de Tarot</h2><p>Tirage en croix — 5 cartes</p></div></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1.5rem">Concentrez-vous sur votre question, puis lancez le tirage.</p>
+    <button class="btn" onclick="doTarot()">🔮 Tirer les cartes</button>
+    <div id="tarot-result" style="margin-top:1.5rem"></div>`;
+}
+function doTarot(){
+  const positions=['Situation actuelle','Obstacle','Passé','Futur','Résultat final'];
+  const shuffled=[...TAROT_CARDS].sort(()=>Math.random()-0.5).slice(0,5);
+  let html='<div style="display:grid;gap:12px;margin-top:1rem">';
+  shuffled.forEach((card,i)=>{
+    const reversed=Math.random()>0.7;
+    const meaning=reversed?card.down:card.up;
+    const revLabel=reversed?'<span style="font-size:10px;background:#FFF3E0;color:#E65100;padding:2px 6px;border-radius:4px;margin-left:8px">Renversée</span>':'';
+    html+=`<div style="background:var(--bg);border-radius:var(--radius);padding:14px 16px;display:flex;gap:14px;align-items:flex-start">
+      <div style="font-size:32px;min-width:40px;text-align:center">${card.icon}</div>
+      <div>
+        <div style="font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">${positions[i]}</div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:4px">${card.name}${revLabel}</div>
+        <div style="font-size:13px;color:var(--muted)">${meaning}</div>
+      </div>
+    </div>`;
+  });
+  html+='</div><div class="ad-slot" style="margin-top:1.5rem">[ Publicité AdSense ]</div>';
+  document.getElementById('tarot-result').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════
+// 12. FOOT
+// ═══════════════════════════════════════════
+const LEAGUES={
+  'ligue1':{name:'🇫🇷 Ligue 1',id:61},
+  'ligue2':{name:'🇫🇷 Ligue 2',id:62},
+  'pl':{name:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League',id:39},
+  'liga':{name:'🇪🇸 La Liga',id:140},
+  'bundesliga':{name:'🇩🇪 Bundesliga',id:78},
+  'seriea':{name:'🇮🇹 Serie A',id:135},
+  'ucl':{name:'🏆 Champions League',id:2},
+};
+function renderFoot(el){
+  let leagueButtons=Object.entries(LEAGUES).map(([k,v])=>`<button class="sign-btn" onclick="loadLeague('${k}',this)" style="min-width:120px"><div style="font-size:13px;font-weight:500">${v.name}</div></button>`).join('');
+  el.innerHTML=`
+    <div class="tool-header"><div class="tool-header-icon">⚽</div><div><h2>Foot Europe</h2><p>Classements & résultats en direct</p></div></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem">${leagueButtons}</div>
+    <div id="foot-tabs" style="display:flex;gap:8px;margin-bottom:1rem">
+      <button id="tab-class" class="btn" style="width:auto;padding:0 20px" onclick="switchTab('classement')">Classement</button>
+      <button id="tab-match" class="btn btn-outline" style="width:auto;padding:0 20px" onclick="switchTab('matchs')">Matchs récents</button>
+    </div>
+    <div id="foot-result"><p style="color:var(--muted);font-size:13px">Sélectionnez un championnat pour voir le classement.</p></div>`;
+}
+let currentLeague=null,currentTab='classement';
+function switchTab(tab){
+  currentTab=tab;
+  document.getElementById('tab-class').className=tab==='classement'?'btn':'btn btn-outline';
+  document.getElementById('tab-match').className=tab==='matchs'?'btn':'btn btn-outline';
+  document.getElementById('tab-class').style.cssText='width:auto;padding:0 20px';
+  document.getElementById('tab-match').style.cssText='width:auto;padding:0 20px';
+  if(currentLeague)loadLeagueData(currentLeague);
+}
+function loadLeague(key,btn){
+  document.querySelectorAll('#tool-area .sign-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentLeague=key;
+  loadLeagueData(key);
+}
+async function loadLeagueData(key){
+  const league=LEAGUES[key];
+  const el=document.getElementById('foot-result');
+  el.innerHTML='<p style="color:var(--muted);font-size:13px">Chargement...</p>';
+  const year=new Date().getFullYear();
+  const season=new Date().getMonth()<7?year-1:year;
+  try{
+    if(currentTab==='classement'){
+      const r=await fetch(`https://api-football-v1.p.rapidapi.com/v3/standings?league=${league.id}&season=${season}`,{headers:{'x-rapidapi-host':'api-football-v1.p.rapidapi.com','x-rapidapi-key':'demo'}});
+      const d=await r.json();
+      if(d.response&&d.response[0]){
+        const standings=d.response[0].league.standings[0];
+        let html=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="border-bottom:2px solid var(--border)">
+            <th style="text-align:left;padding:8px 4px;color:var(--muted);font-weight:500">#</th>
+            <th style="text-align:left;padding:8px 4px;color:var(--muted);font-weight:500">Équipe</th>
+            <th style="padding:8px 4px;color:var(--muted);font-weight:500">J</th>
+            <th style="padding:8px 4px;color:var(--muted);font-weight:500">G</th>
+            <th style="padding:8px 4px;color:var(--muted);font-weight:500">N</th>
+            <th style="padding:8px 4px;color:var(--muted);font-weight:500">P</th>
+            <th style="padding:8px 4px;color:var(--muted);font-weight:500">Diff</th>
+            <th style="padding:8px 4px;color:var(--accent);font-weight:600">Pts</th>
+          </tr></thead><tbody>`;
+        standings.forEach((t,i)=>{
+          const bg=i<3?'background:var(--accent-light)':i===standings.length-1||i===standings.length-2||i===standings.length-3?'background:#FFF0F0':'';
+          html+=`<tr style="border-bottom:0.5px solid var(--border);${bg}">
+            <td style="padding:8px 4px;font-family:var(--mono);color:var(--muted)">${t.rank}</td>
+            <td style="padding:8px 4px;font-weight:500">${t.team.name}</td>
+            <td style="padding:8px 4px;text-align:center">${t.all.played}</td>
+            <td style="padding:8px 4px;text-align:center">${t.all.win}</td>
+            <td style="padding:8px 4px;text-align:center">${t.all.draw}</td>
+            <td style="padding:8px 4px;text-align:center">${t.all.lose}</td>
+            <td style="padding:8px 4px;text-align:center">${t.goalsDiff>0?'+'+t.goalsDiff:t.goalsDiff}</td>
+            <td style="padding:8px 4px;text-align:center;font-weight:700;color:var(--accent)">${t.points}</td>
+          </tr>`;
+        });
+        html+='</tbody></table></div>';
+        el.innerHTML=html;
+      } else { showFallbackStandings(key,el); }
+    } else {
+      const r=await fetch(`https://api-football-v1.p.rapidapi.com/v3/fixtures?league=${league.id}&season=${season}&last=10`,{headers:{'x-rapidapi-host':'api-football-v1.p.rapidapi.com','x-rapidapi-key':'demo'}});
+      const d=await r.json();
+      if(d.response&&d.response.length){
+        let html='<div style="display:grid;gap:8px">';
+        d.response.reverse().forEach(f=>{
+          const finished=f.fixture.status.short==='FT';
+          const score=finished?`${f.goals.home} – ${f.goals.away}`:'vs';
+          const date=new Date(f.fixture.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});
+          html+=`<div style="background:var(--bg);border-radius:var(--radius);padding:12px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px">
+            <div style="font-size:13px;font-weight:500;text-align:right">${f.teams.home.name}</div>
+            <div style="font-family:var(--mono);font-size:16px;font-weight:700;text-align:center;min-width:60px;color:${finished?'var(--accent)':'var(--muted)'}">${score}<div style="font-size:10px;color:var(--muted);font-weight:400">${date}</div></div>
+            <div style="font-size:13px;font-weight:500">${f.teams.away.name}</div>
+          </div>`;
+        });
+        html+='</div>';
+        el.innerHTML=html;
+      } else { el.innerHTML='<p style="color:var(--muted);font-size:13px">Aucun match récent trouvé.</p>'; }
+    }
+  } catch(e){ showFallbackStandings(key,el); }
+}
+function showFallbackStandings(key,el){
+  el.innerHTML=`<div style="text-align:center;padding:2rem">
+    <div style="font-size:40px;margin-bottom:12px">⚽</div>
+    <p style="font-size:14px;font-weight:500;margin-bottom:8px">${LEAGUES[key].name}</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1.5rem">Les données en temps réel nécessitent une clé API football.<br>Voici où obtenir les données officielles gratuitement :</p>
+    <a href="https://www.api-football.com" target="_blank" style="display:inline-block;padding:10px 20px;background:var(--accent);color:white;border-radius:var(--radius);text-decoration:none;font-size:13px">Obtenir l'API Football gratuite →</a>
+  </div>`;
+}
+
+// Init
+showTool('devises');
+</script>
+</body>
+</html>
