@@ -789,7 +789,7 @@ async function loadLeagueData(key){
   const season=new Date().getMonth()<7?year-1:year;
   try{
     if(currentTab==='classement'){
-      const r=await fetch(`https://api-football-v1.p.rapidapi.com/v3/standings?league=${league.id}&season=${season}`,{headers:{'x-rapidapi-host':'api-football-v1.p.rapidapi.com','x-rapidapi-key':'8429bf17be29e1d773c5b764119b62e4'}});
+      const r=await fetch(`https://v3.football.api-sports.io/standings?league=${league.id}&season=${season}`,{headers:{'x-apisports-key':'8429bf17be29e1d773c5b764119b62e4'}});
       const d=await r.json();
       if(d.response&&d.response[0]){
         const standings=d.response[0].league.standings[0];
@@ -821,7 +821,7 @@ async function loadLeagueData(key){
         el.innerHTML=html;
       } else { showFallbackStandings(key,el); }
     } else {
-      const r=await fetch(`https://api-football-v1.p.rapidapi.com/v3/fixtures?league=${league.id}&season=${season}&last=10`,{headers:{'x-rapidapi-host':'api-football-v1.p.rapidapi.com','x-rapidapi-key':'8429bf17be29e1d773c5b764119b62e4'}});
+      const r=await fetch(`https://v3.football.api-sports.io/fixtures?league=${league.id}&season=${season}&last=10`,{headers:{'x-apisports-key':'8429bf17be29e1d773c5b764119b62e4'}});
       const d=await r.json();
       if(d.response&&d.response.length){
         let html='<div style="display:grid;gap:8px">';
