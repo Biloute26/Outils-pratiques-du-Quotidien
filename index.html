@@ -43,7 +43,7 @@ main{max-width:960px;margin:0 auto;padding:2rem 1.5rem 4rem}
 label.fl{display:block;font-size:11px;font-family:var(--mono);color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px}
 input,select{width:100%;height:44px;border:1px solid var(--border);border-radius:var(--radius);padding:0 12px;font-family:var(--sans);font-size:14px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;appearance:none}
 input:focus,select:focus{border-color:var(--accent)}
-.result-box{height:44px;border:1px solid var(--border);border-radius:var(--radius);padding:0 12px;display:flex;align-items:center;background:var(--bg);font-size:16px;font-weight:600;font-family:var(--mono)}
+.result-box{height:44px;border:1px solid var(--border);border-radius:var(--radius);padding:0 12px;display:flex;align-items:center;background:var(--bg);font-size:16px;font-weight:600;font-family:var(--sans)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem}
 .btn{height:44px;border:1px solid var(--accent);border-radius:var(--radius);background:var(--accent);color:#fff;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s;width:100%}
@@ -51,18 +51,18 @@ input:focus,select:focus{border-color:var(--accent)}
 .btn-outline{background:transparent;color:var(--accent)}
 .swap-btn{width:44px;height:44px;border:1px solid var(--border);border-radius:50%;background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--muted);transition:border-color .15s,transform .2s;margin:0 auto}
 .swap-btn:hover{border-color:var(--accent);transform:rotate(180deg)}
-.rate-line{font-size:12px;color:var(--muted);font-family:var(--mono);margin:8px 0 1.2rem;min-height:18px}
+.rate-line{font-size:12px;color:var(--muted);font-family:var(--sans);margin:8px 0 1.2rem;min-height:18px}
 .quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:8px}
 .quick-card{border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;cursor:pointer;transition:border-color .12s;min-width:0;overflow:hidden}
 .quick-card:hover{border-color:var(--accent);background:var(--accent-light)}
-.quick-from{font-size:10px;color:var(--muted);font-family:var(--mono)}
-.quick-to{font-size:13px;font-weight:600;font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quick-from{font-size:11px;color:var(--muted);font-family:var(--sans)}
+.quick-to{font-size:13px;font-weight:600;font-family:var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .result-big{text-align:center;padding:1.5rem;background:var(--bg);border-radius:var(--radius-lg);margin:1rem 0}
-.result-big .num{font-size:42px;font-weight:600;font-family:var(--mono);color:var(--accent)}
+.result-big .num{font-size:42px;font-weight:600;font-family:var(--sans);color:var(--accent)}
 .result-big .label{font-size:13px;color:var(--muted);margin-top:4px}
 .info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:1rem}
 .info-card{background:var(--bg);border-radius:var(--radius);padding:12px;text-align:center}
-.info-card .val{font-size:18px;font-weight:600;font-family:var(--mono);color:var(--text)}
+.info-card .val{font-size:18px;font-weight:600;font-family:var(--sans);color:var(--text)}
 .info-card .lbl{font-size:11px;color:var(--muted);margin-top:2px}
 .weather-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:1rem}
 .weather-day{background:var(--bg);border-radius:var(--radius);padding:12px 8px;text-align:center}
@@ -83,7 +83,7 @@ input:focus,select:focus{border-color:var(--accent)}
 .imc-bar{height:18px;border-radius:9px;background:linear-gradient(to right,#4FC3F7,#81C784,#FFD54F,#FF7043,#EF5350);margin:1rem 0;position:relative}
 .imc-marker{position:absolute;top:-4px;width:26px;height:26px;border-radius:50%;background:var(--text);border:3px solid white;transform:translateX(-50%);transition:left .4s}
 .imc-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-family:var(--mono)}
-.pwd-output{font-family:var(--mono);font-size:18px;font-weight:500;background:var(--bg);border-radius:var(--radius);padding:14px 16px;margin:1rem 0;letter-spacing:2px;word-break:break-all;min-height:54px}
+.pwd-output{font-family:var(--sans);font-size:18px;font-weight:500;background:var(--bg);border-radius:var(--radius);padding:14px 16px;margin:1rem 0;letter-spacing:2px;word-break:break-all;min-height:54px}
 .strength-bar{height:6px;border-radius:3px;margin:8px 0;transition:width .3s,background .3s}
 footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;font-size:11px;color:var(--muted);font-family:var(--mono)}
 @media(max-width:600px){main{padding:1rem 1rem 3rem}.grid2,.grid3{grid-template-columns:1fr}}
@@ -143,6 +143,26 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;
       <div class="tool-card-icon">🔐</div>
       <div class="tool-card-name">Générateur de mot de passe</div>
       <div class="tool-card-desc">Mots de passe sécurisés</div>
+    </div>
+    <div class="tool-card" onclick="showTool('surface')">
+      <div class="tool-card-icon">📐</div>
+      <div class="tool-card-name">Calculateur de surface</div>
+      <div class="tool-card-desc">Pièce, carrelage, peinture</div>
+    </div>
+    <div class="tool-card" onclick="showTool('retraite')">
+      <div class="tool-card-icon">👴</div>
+      <div class="tool-card-name">Simulateur de retraite</div>
+      <div class="tool-card-desc">Départ et pension estimés</div>
+    </div>
+    <div class="tool-card" onclick="showTool('tarot')">
+      <div class="tool-card-icon">🔮</div>
+      <div class="tool-card-name">Tirage de Tarot</div>
+      <div class="tool-card-desc">Tirage en croix — 5 cartes</div>
+    </div>
+    <div class="tool-card" onclick="showTool('foot')">
+      <div class="tool-card-icon">⚽</div>
+      <div class="tool-card-name">Foot Europe</div>
+      <div class="tool-card-desc">Classements et résultats live</div>
     </div>
   </div>
   <div id="tool-area"></div>
