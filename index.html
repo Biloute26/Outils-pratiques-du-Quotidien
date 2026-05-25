@@ -784,10 +784,9 @@ async function loadLeagueData(key){
   const league=LEAGUES[key];
   const el=document.getElementById('foot-result');
   el.innerHTML='<p style="color:var(--muted);font-size:13px">Chargement...</p>';
-  const TOKEN='8350da04c6e54f5ba00036001195a28b';
   try{
     if(currentTab==='classement'){
-      const r=await fetch('https://api.football-data.org/v4/competitions/'+league.id+'/standings',{headers:{'X-Auth-Token':TOKEN}});
+      const r=await fetch('https://football-proxy.widehem-olivier.workers.dev/competitions/'+league.id+'/standings');
       const d=await r.json();
       if(d.standings&&d.standings[0]){
         const standings=d.standings[0].table;
@@ -800,7 +799,7 @@ async function loadLeagueData(key){
         el.innerHTML=html;
       } else { showFallbackStandings(key,el); }
     } else {
-      const r=await fetch('https://api.football-data.org/v4/competitions/'+league.id+'/matches?status=FINISHED',{headers:{'X-Auth-Token':TOKEN}});
+      const r=await fetch('https://football-proxy.widehem-olivier.workers.dev/competitions/'+league.id+'/matches?status=FINISHED');
       const d=await r.json();
       if(d.matches&&d.matches.length){
         let html='<div style="display:grid;gap:8px">';
