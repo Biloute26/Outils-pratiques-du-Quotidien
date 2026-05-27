@@ -1974,32 +1974,274 @@ function convertUnit(){
 // ═══════════════════════════════════════════
 // 6. CRÉDIT
 // ═══════════════════════════════════════════
+// Taux réels marché mai 2026
+const CREDIT_TYPES = {
+  immo: {
+    label: '🏠 Immobilier', icon: '🏠',
+    rates: [
+      {dur:10, taux:2.99, label:'10 ans'},
+      {dur:15, taux:3.20, label:'15 ans'},
+      {dur:20, taux:3.38, label:'20 ans'},
+      {dur:25, taux:3.50, label:'25 ans'},
+    ],
+    assurance: 0.30, fraisDossier: 1200,
+    tip: 'Taux moyens marché mai 2026 — source Meilleurtaux/CAFPI. Hors assurance emprunteur (~0,30%/an).'
+  },
+  auto: {
+    label: '🚗 Auto / Moto', icon: '🚗',
+    rates: [
+      {dur:1, taux:3.50, label:'12 mois'},
+      {dur:2, taux:3.80, label:'24 mois'},
+      {dur:3, taux:4.20, label:'36 mois'},
+      {dur:4, taux:4.90, label:'48 mois'},
+      {dur:5, taux:5.20, label:'60 mois'},
+    ],
+    assurance: 0, fraisDossier: 0,
+    tip: 'Crédit affecté auto. TAEG moyen marché 3,96% toutes durées — source CheckmonCredit mai 2026.'
+  },
+  conso: {
+    label: '💳 Crédit personnel', icon: '💳',
+    rates: [
+      {dur:1, taux:4.50, label:'12 mois'},
+      {dur:2, taux:5.20, label:'24 mois'},
+      {dur:3, taux:5.80, label:'36 mois'},
+      {dur:4, taux:6.50, label:'48 mois'},
+      {dur:5, taux:7.20, label:'60 mois'},
+      {dur:7, taux:8.00, label:'84 mois'},
+    ],
+    assurance: 0, fraisDossier: 0,
+    tip: 'Prêt personnel non affecté. Taux indicatifs mai 2026.'
+  },
+  travaux: {
+    label: '🔨 Travaux', icon: '🔨',
+    rates: [
+      {dur:2, taux:4.00, label:'24 mois'},
+      {dur:3, taux:4.50, label:'36 mois'},
+      {dur:5, taux:5.00, label:'60 mois'},
+      {dur:7, taux:5.50, label:'84 mois'},
+      {dur:10, taux:6.00, label:'120 mois'},
+    ],
+    assurance: 0, fraisDossier: 150,
+    tip: 'Crédit travaux affecté. Taux indicatifs mai 2026.'
+  },
+  etudes: {
+    label: '🎓 Études', icon: '🎓',
+    rates: [
+      {dur:5, taux:1.50, label:'5 ans'},
+      {dur:8, taux:2.00, label:'8 ans'},
+      {dur:10, taux:2.50, label:'10 ans'},
+    ],
+    assurance: 0, fraisDossier: 0,
+    tip: 'Prêt étudiant garanti par l\'Etat. Différé de remboursement possible.'
+  },
+};
+
+let currentCreditType = 'immo';
+
 function renderCredit(el){
+  const typeBtns = Object.entries(CREDIT_TYPES).map(([k,v])=>
+    `<button onclick="setCreditType('${k}')" id="ct-btn-${k}" style="padding:8px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer;background:var(--bg);white-space:nowrap">${v.label}</button>`
+  ).join('');
+
   el.innerHTML=`
-    <div class="tool-header"><div class="tool-header-icon">🏦</div><div><h2>Calculateur de crédit</h2><p>Mensualités et coût total</p></div></div>
-    <div class="grid3">
-      <div><label class="fl">Montant (€)</label><input type="number" id="c-amt" value="10000" oninput="calcCredit()"></div>
-      <div><label class="fl">Taux annuel (%)</label><input type="number" id="c-rate" value="4.5" step="0.1" oninput="calcCredit()"></div>
-      <div><label class="fl">Durée (mois)</label><input type="number" id="c-dur" value="36" oninput="calcCredit()"></div>
+    <div class="tool-header"><div class="tool-header-icon">🏦</div><div><h2>Calculateur de crédit</h2><p>Taux réels du marché — mai 2026</p></div></div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem">${typeBtns}</div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem">
+      <div id="ct-taux-label" style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:1rem"></div>
+      <div id="ct-taux-btns" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.2rem"></div>
+
+      <div class="grid2" style="gap:12px;margin-bottom:12px">
+        <div>
+          <label class="fl">Prix total / Montant du projet (€)</label>
+          <input type="number" id="c-prix" value="200000" step="1000" oninput="calcCreditFull()">
+        </div>
+        <div>
+          <label class="fl">Apport personnel (€)</label>
+          <input type="number" id="c-apport" value="20000" step="1000" oninput="calcCreditFull()">
+        </div>
+        <div>
+          <label class="fl">Taux annuel (%)</label>
+          <input type="number" id="c-rate" value="3.38" step="0.01" oninput="calcCreditFull()">
+        </div>
+        <div>
+          <label class="fl">Durée</label>
+          <select id="c-dur" onchange="calcCreditFull()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:var(--sans);background:var(--bg)">
+            <option value="120">10 ans</option>
+            <option value="180">15 ans</option>
+            <option value="240" selected>20 ans</option>
+            <option value="300">25 ans</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <label class="fl" style="display:flex;align-items:center;gap:10px">
+          <input type="checkbox" id="c-assur-on" onchange="toggleAssur()" style="width:16px;height:16px;cursor:pointer">
+          <span>Assurance emprunteur</span>
+        </label>
+        <div id="c-assurance-wrap" style="display:none;margin-top:10px;padding:12px 14px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border)">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+            <button onclick="setAssurTaux(0.15)" style="padding:5px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;cursor:pointer;background:var(--bg)">0,15% <span style="color:var(--muted);font-size:10px">délégation</span></button>
+            <button onclick="setAssurTaux(0.25)" style="padding:5px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;cursor:pointer;background:var(--bg)">0,25% <span style="color:var(--muted);font-size:10px">négocié</span></button>
+            <button onclick="setAssurTaux(0.30)" style="padding:5px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;cursor:pointer;background:var(--bg)">0,30% <span style="color:var(--muted);font-size:10px">moyen</span></button>
+            <button onclick="setAssurTaux(0.40)" style="padding:5px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;cursor:pointer;background:var(--bg)">0,40% <span style="color:var(--muted);font-size:10px">banque</span></button>
+            <button onclick="setAssurTaux(0.60)" style="padding:5px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;cursor:pointer;background:var(--bg)">0,60% <span style="color:var(--muted);font-size:10px">senior</span></button>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <label style="font-size:13px;color:var(--muted)">Taux personnalisé :</label>
+            <input type="number" id="c-assur" value="0.30" step="0.01" oninput="calcCreditFull()" style="width:100px;padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--bg)">
+            <span style="font-size:13px;color:var(--muted)">% / an</span>
+            <span style="font-size:11px;color:var(--muted)">(loi Lemoine : changement possible à tout moment)</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="c-result"></div>
+      <div id="ct-tip" style="font-size:11px;color:var(--muted);margin-top:10px"></div>
     </div>
-    <div id="c-result"></div>`;
-  calcCredit();
-}
-function calcCredit(){
-  const P=parseFloat(document.getElementById('c-amt').value);
-  const r=parseFloat(document.getElementById('c-rate').value)/100/12;
-  const n=parseInt(document.getElementById('c-dur').value);
-  if(isNaN(P)||isNaN(r)||isNaN(n)||n<=0){return}
-  let M;
-  if(r===0){M=P/n}else{M=P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)}
-  const total=M*n,interest=total-P;
-  document.getElementById('c-result').innerHTML=`
-    <div class="info-grid" style="margin-top:1rem">
-      <div class="info-card"><div class="val">${M.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})} €</div><div class="lbl">Mensualité</div></div>
-      <div class="info-card"><div class="val">${total.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})} €</div><div class="lbl">Coût total</div></div>
-      <div class="info-card"><div class="val">${interest.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})} €</div><div class="lbl">Total intérêts</div></div>
-      <div class="info-card"><div class="val">${((interest/P)*100).toFixed(1)} %</div><div class="lbl">Coût du crédit</div></div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem">
+      <p style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:1rem">📊 Tableau d'amortissement (12 premières échéances)</p>
+      <div id="c-amort" style="overflow-x:auto"></div>
     </div>`;
+
+  setCreditType('immo');
+}
+
+function setCreditType(type){
+  currentCreditType = type;
+  const ct = CREDIT_TYPES[type];
+  Object.keys(CREDIT_TYPES).forEach(k=>{
+    const b=document.getElementById('ct-btn-'+k);
+    if(b){b.style.background=k===type?'var(--accent)':'var(--bg)';b.style.color=k===type?'#fff':'var(--text)';b.style.borderColor=k===type?'var(--accent)':'var(--border)';}
+  });
+  // Update duration select
+  const sel=document.getElementById('c-dur');
+  if(sel){
+    sel.innerHTML=ct.rates.map(r=>`<option value="${r.dur*12}">${r.label}</option>`).join('');
+  }
+  // Default rate & assurance
+  const defRate=ct.rates[Math.floor(ct.rates.length/2)];
+  const rateInput=document.getElementById('c-rate');
+  if(rateInput) rateInput.value=defRate.taux;
+  const assurInput=document.getElementById('c-assur');
+  if(assurInput) assurInput.value=ct.assurance;
+  // Reset assurance checkbox
+  const assurCheck=document.getElementById('c-assur-on');
+  const assurWrap=document.getElementById('c-assurance-wrap');
+  if(assurCheck){ assurCheck.checked=ct.assurance>0; }
+  if(assurWrap){ assurWrap.style.display=ct.assurance>0?'block':'none'; }
+  // Default amounts
+  const prixInput=document.getElementById('c-prix');
+  const apportInput=document.getElementById('c-apport');
+  if(type==='immo'){if(prixInput)prixInput.value=200000;if(apportInput)apportInput.value=20000;}
+  else if(type==='auto'){if(prixInput)prixInput.value=20000;if(apportInput)apportInput.value=3000;}
+  else if(type==='travaux'){if(prixInput)prixInput.value=30000;if(apportInput)apportInput.value=5000;}
+  else if(type==='etudes'){if(prixInput)prixInput.value=15000;if(apportInput)apportInput.value=0;}
+  else{if(prixInput)prixInput.value=10000;if(apportInput)apportInput.value=0;}
+  // Tip
+  const tipEl=document.getElementById('ct-tip');
+  if(tipEl) tipEl.textContent=ct.tip;
+  // Rate buttons
+  const ratebtns=document.getElementById('ct-taux-btns');
+  const label=document.getElementById('ct-taux-label');
+  if(label) label.textContent='Taux du marché — choisissez ou saisissez manuellement :';
+  if(ratebtns){
+    ratebtns.innerHTML=ct.rates.map(r=>
+      `<button onclick="setRate(${r.taux},${r.dur*12})" style="padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:11px;font-weight:600;cursor:pointer;background:var(--bg);text-align:center">
+        <div>${r.label}</div><div style="color:var(--accent);font-size:13px;font-weight:700">${r.taux}%</div>
+      </button>`
+    ).join('');
+  }
+  calcCreditFull();
+}
+
+function setRate(taux, durmois){
+  const r=document.getElementById('c-rate');
+  const d=document.getElementById('c-dur');
+  if(r) r.value=taux;
+  if(d) d.value=durmois;
+  calcCreditFull();
+}
+
+function calcCreditFull(){
+  const prix=parseFloat(document.getElementById('c-prix').value)||0;
+  const apport=parseFloat(document.getElementById('c-apport').value)||0;
+  const P=Math.max(prix-apport,0);
+  const annualRate=parseFloat(document.getElementById('c-rate').value)||0;
+  const assurOn=document.getElementById('c-assur-on')?.checked||false;
+  const assurRate=assurOn?(parseFloat(document.getElementById('c-assur')?.value||0)||0):0;
+  const n=parseInt(document.getElementById('c-dur').value)||240;
+  const ct=CREDIT_TYPES[currentCreditType];
+  if(P<=0||n<=0) return;
+  const r=annualRate/100/12;
+  let M;
+  if(r===0){M=P/n}else{M=P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);}
+  const assurMens=P*assurRate/100/12;
+  const mensTotal=M+assurMens;
+  const total=mensTotal*n;
+  const totalInterets=(M*n)-P;
+  const totalAssur=assurMens*n;
+  const taeg=annualRate+assurRate+(ct.fraisDossier>0?(ct.fraisDossier/P/n*12*100):0);
+  const apportPct=prix>0?Math.round(apport/prix*100):0;
+  document.getElementById('c-result').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:8px">
+      <div style="background:var(--accent-light);border-radius:var(--radius);padding:14px;text-align:center;border:1px solid var(--accent)">
+        <div style="font-size:11px;color:var(--accent);font-weight:500;margin-bottom:4px">Mensualité totale</div>
+        <div style="font-size:24px;font-weight:700;color:var(--accent)">${mensTotal.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})} €</div>
+        ${assurMens>0?`<div style="font-size:10px;color:var(--muted)">dont ${assurMens.toFixed(2)}€ assurance</div>`:''}
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius);padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Montant emprunté</div>
+        <div style="font-size:18px;font-weight:700">${P.toLocaleString('fr-FR')} €</div>
+        ${apport>0?`<div style="font-size:10px;color:var(--muted)">Apport ${apportPct}%</div>`:''}
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius);padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Coût total</div>
+        <div style="font-size:18px;font-weight:700">${total.toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0})} €</div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius);padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Total intérêts</div>
+        <div style="font-size:18px;font-weight:700;color:#D97706">${totalInterets.toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0})} €</div>
+      </div>
+      ${totalAssur>0?`<div style="background:var(--bg);border-radius:var(--radius);padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Total assurance</div>
+        <div style="font-size:18px;font-weight:700;color:#7C3AED">${totalAssur.toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0})} €</div>
+      </div>`:''}
+      <div style="background:var(--bg);border-radius:var(--radius);padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">TAEG estimé</div>
+        <div style="font-size:18px;font-weight:700">${taeg.toFixed(2)} %</div>
+      </div>
+    </div>`;
+
+  // Amortization table (first 12 months)
+  let capital=P, rows='';
+  for(let i=1;i<=Math.min(12,n);i++){
+    const interets=capital*r;
+    const capitalRembourse=M-interets;
+    capital=Math.max(capital-capitalRembourse,0);
+    rows+=`<tr style="border-bottom:0.5px solid var(--border);${i%2?'background:var(--bg)':''}">
+      <td style="padding:5px 8px;text-align:center;color:var(--muted)">${i}</td>
+      <td style="padding:5px 8px;text-align:right">${mensTotal.toFixed(2)} €</td>
+      <td style="padding:5px 8px;text-align:right;color:#D97706">${interets.toFixed(2)} €</td>
+      <td style="padding:5px 8px;text-align:right;color:var(--accent)">${capitalRembourse.toFixed(2)} €</td>
+      <td style="padding:5px 8px;text-align:right">${capital.toFixed(2)} €</td>
+    </tr>`;
+  }
+  document.getElementById('c-amort').innerHTML=`
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead><tr style="border-bottom:2px solid var(--border)">
+        <th style="padding:6px 8px;color:var(--muted);text-align:center">Mois</th>
+        <th style="padding:6px 8px;color:var(--muted);text-align:right">Mensualité</th>
+        <th style="padding:6px 8px;color:#D97706;text-align:right">Intérêts</th>
+        <th style="padding:6px 8px;color:var(--accent);text-align:right">Capital</th>
+        <th style="padding:6px 8px;color:var(--muted);text-align:right">Capital restant</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${n>12?`<p style="font-size:11px;color:var(--muted);margin-top:6px;text-align:center">... ${n-12} échéances supplémentaires non affichées</p>`:''}`;
 }
 
 // ═══════════════════════════════════════════
@@ -6528,6 +6770,18 @@ function wcRenderCalendrierStatic(){
 
   html += `<div style="font-size:11px;color:var(--muted);text-align:right;margin-top:8px">📅 Calendrier indicatif · Dates et horaires susceptibles de modification · Heure de Paris</div>`;
   el.innerHTML = html;
+}
+
+
+function toggleAssur(){
+  const on=document.getElementById('c-assur-on').checked;
+  const wrap=document.getElementById('c-assurance-wrap');
+  if(wrap) wrap.style.display=on?'block':'none';
+  calcCreditFull();
+}
+function setAssurTaux(val){
+  const inp=document.getElementById('c-assur');
+  if(inp){ inp.value=val; calcCreditFull(); }
 }
 
 </script>
