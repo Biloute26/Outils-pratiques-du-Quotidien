@@ -1539,26 +1539,141 @@ async function searchWeather(){
   const city=document.getElementById('m-city').value.trim();
   if(!city)return;
   const res=document.getElementById('m-result');
-  res.innerHTML='<div style="text-align:center;padding:2rem"><div style="font-size:28px;margin-bottom:10px">🤖</div><p style="font-size:13px;color:var(--muted)">Recherche météo via IA...</p></div>';
-  await showWeatherAI(city, res);
+  res.innerHTML='<div style="text-align:center;padding:2rem"><p style="font-size:13px;color:var(--muted)">⏳ Recherche en cours...</p></div>';
+  try{
+    const geo=await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=fr&format=json');
+    const gd=await geo.json();
+    if(!gd.results||!gd.results.length){res.innerHTML='<p style="color:red;font-size:13px">Ville introuvable.</p>';return;}
+    showWeatherData(gd.results[0].latitude,gd.results[0].longitude,gd.results[0].name,res);
+  }catch(e){res.innerHTML='<p style="color:red;font-size:13px">Erreur réseau.</p>';}
 }
 
 function geoWeather(){
   const res=document.getElementById('m-result');
-  if(!navigator.geolocation){
-    // Fallback: ask for city name
-    res.innerHTML='<p style="color:var(--muted);font-size:13px">Géolocalisation non disponible. Entrez une ville manuellement.</p>';
-    return;
-  }
-  res.innerHTML='<p style="color:var(--muted);font-size:13px">Localisation...</p>';
+  if(!navigator.geolocation){res.innerHTML='<p style="color:var(--muted);font-size:13px">Géolocalisation non disponible. Entrez une ville manuellement.</p>';return;}
+  res.innerHTML='<p style="color:var(--muted);font-size:13px">📍 Localisation...</p>';
   navigator.geolocation.getCurrentPosition(async p=>{
     try{
       const rg=await fetch('https://nominatim.openstreetmap.org/reverse?lat='+p.coords.latitude+'&lon='+p.coords.longitude+'&format=json&accept-language=fr');
       const rd=await rg.json();
       const name=rd.address?(rd.address.city||rd.address.town||rd.address.village||rd.address.county||'Ma position'):'Ma position';
-      await showWeatherAI(name, res);
-    }catch(e){ await showWeatherAI('ma position actuelle', res); }
-  },()=>{res.innerHTML='<p style="color:red;font-size:13px">Permission refusée.</p>'});
+      showWeatherData(p.coords.latitude,p.coords.longitude,name,res);
+    }catch(e){showWeatherData(p.coords.latitude,p.coords.longitude,'Ma position',res);}
+  },()=>{res.innerHTML='<p style="color:red;font-size:13px">Permission refusée.</p>';});
+}
+
+async function showWeatherAI(city,el){
+  // Legacy - redirect to new function
+  const res=el;
+  try{
+    const geo=await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=fr&format=json');
+    const gd=await geo.json();
+    if(!gd.results||!gd.results.length){res.innerHTML='<p style="color:red;font-size:13px">Ville introuvable.</p>';return;}
+    showWeatherData(gd.results[0].latitude,gd.results[0].longitude,gd.results[0].name,res);
+  }catch(e){res.innerHTML='<p style="color:red;font-size:13px">Impossible de récupérer la météo.</p>';}
+}
+
+async function showWeatherData(lat,lon,name,el){
+  el.innerHTML='<div style="text-align:center;padding:2rem"><p style="font-size:13px;color:var(--muted)">⏳ Chargement météo...</p></div>';
+  try{
+    const url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon
+      +'&current=temperature_2m,apparent_temperature,weathercode,windspeed_10m,relativehumidity_2m'
+      +'&hourly=temperature_2m,weathercode,precipitation_probability,windspeed_10m'
+      +'&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max,windspeed_10m_max'
+      +'&timezone=auto&forecast_days=7&language=fr';
+    const r=await fetch(url);
+    const d=await r.json();
+    const c=d.current;
+    const daily=d.daily;
+    const wcode=c.weathercode;
+    const soundInfo=getSoundType(wcode);
+    meteoSoundType=soundInfo.type;
+    if(meteoAudioCtx){meteoAudioCtx.close();meteoAudioCtx=null;}
+    setTimeout(()=>{createMeteoSound(soundInfo.type);},300);
+    const dayNames=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+    let html=`<div style="background:linear-gradient(135deg,var(--accent),#1a4a35);border-radius:var(--radius-lg);padding:1.5rem;color:#fff;margin-bottom:1rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem">
+        <div>
+          <div style="font-size:13px;opacity:0.8;margin-bottom:4px">📍 ${name}</div>
+          <div style="font-size:48px;font-weight:700;line-height:1">${Math.round(c.temperature_2m)}°</div>
+          <div style="font-size:14px;margin-top:6px;opacity:0.9">${getWeatherDesc(wcode)}</div>
+          <div style="font-size:12px;margin-top:8px;opacity:0.75;display:flex;gap:12px;flex-wrap:wrap">
+            <span>🌡️ Ressenti ${Math.round(c.apparent_temperature)}°</span>
+            <span>💧 ${c.relativehumidity_2m}%</span>
+            <span>💨 ${Math.round(c.windspeed_10m)} km/h</span>
+          </div>
+        </div>
+        <div style="text-align:center">${getWeatherAnim(wcode,true)}</div>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.2);display:flex;gap:8px;align-items:center">
+        <button id="m-snd-btn" onclick="toggleMeteoSound()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:12px">${soundInfo.label}</button>
+        <input type="range" id="m-vol" min="0" max="1" step="0.1" value="0.3" oninput="setMeteoVol(this.value)" style="flex:1;accent-color:white">
+      </div>
+    </div>`;
+    if(daily&&daily.time){
+      html+=`<div class="weather-grid" style="margin-bottom:1rem">`;
+      daily.time.forEach((t,i)=>{
+        const date=new Date(t);
+        const dn=dayNames[date.getDay()];
+        html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 4px;text-align:center">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${dn}</div>
+          ${getWeatherAnim(daily.weathercode[i])}
+          <div style="font-size:13px;font-weight:600;margin-top:4px">${Math.round(daily.temperature_2m_max[i])}°</div>
+          <div style="font-size:11px;color:var(--muted)">${Math.round(daily.temperature_2m_min[i])}°</div>
+          ${daily.precipitation_probability_max[i]?`<div style="font-size:10px;color:#42A5F5;margin-top:2px">💧${daily.precipitation_probability_max[i]}%</div>`:''}
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+    // Hourly forecast — next 24h
+    if(d.hourly&&d.hourly.time){
+      const now=new Date();
+      const hourlyItems=[];
+      d.hourly.time.forEach((t,i)=>{
+        const dt=new Date(t);
+        if(dt>=now && hourlyItems.length<24) hourlyItems.push({
+          time:dt.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),
+          temp:Math.round(d.hourly.temperature_2m[i]),
+          code:d.hourly.weathercode[i],
+          rain:d.hourly.precipitation_probability[i],
+          wind:Math.round(d.hourly.windspeed_10m[i]),
+        });
+      });
+      if(hourlyItems.length){
+        html+=`<div style="margin-bottom:1rem">
+          <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:8px">🕐 Heure par heure — prochaines 24h</div>
+          <div style="overflow-x:auto;padding-bottom:6px">
+            <div style="display:flex;gap:8px;min-width:max-content">
+              ${hourlyItems.map(h=>`
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 8px;text-align:center;min-width:64px">
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${h.time}</div>
+                  ${getWeatherAnim(h.code)}
+                  <div style="font-size:14px;font-weight:700;margin-top:4px">${h.temp}°</div>
+                  ${h.rain?`<div style="font-size:10px;color:#42A5F5">💧${h.rain}%</div>`:''}
+                  <div style="font-size:10px;color:var(--muted)">💨${h.wind}</div>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>`;
+      }
+    }
+    html+=`<div style="font-size:11px;color:var(--muted);text-align:right">Source : Open-Meteo · Données temps réel</div>`;
+    el.innerHTML=html;
+  }catch(err){
+    el.innerHTML='<p style="color:red;font-size:13px">Impossible de récupérer la météo.</p>';
+  }
+}
+
+function getWeatherDesc(code){
+  if(code===0) return 'Ciel dégagé';
+  if(code<=2) return 'Partiellement nuageux';
+  if(code===3) return 'Couvert';
+  if(code<=48) return 'Brouillard';
+  if(code<=55) return 'Bruine';
+  if(code<=65) return 'Pluie';
+  if(code<=77) return 'Neige';
+  if(code<=82) return 'Averses';
+  return 'Orage';
 }
 
 async function showWeatherAI(city, el){
