@@ -1,13 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Page principale -->
   <url>
     <loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/</loc>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-05-28</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  <url>
-    <loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/index.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
+
+  <!-- Finance -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#credit</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#tva</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#devises</loc><lastmod>2026-05-28</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#epargne</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#pourboire</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#notefrais</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#facture</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Santé -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#imc</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#calories</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#retraite</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#age</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#sommeil</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Monde & Voyage -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#meteo</loc><lastmod>2026-05-28</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#timezone</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#indicatifs</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#traducteur</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#jours</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#distance</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Sport -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#foot</loc><lastmod>2026-05-28</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#worldcup</loc><lastmod>2026-05-28</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+
+  <!-- Tech -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#password</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#qrcode</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#compresseur</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#convertimg</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#base64</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#scanner</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#regex</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#json</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Documents IA -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#correcteur</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#resumeur</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#generateur</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+
+  <!-- Maison -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#surface</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#peinture</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#carburant</loc><lastmod>2026-05-28</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#metiers</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#fraisport</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Business -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#marge</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Coût de la vie -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#vie</loc><lastmod>2026-05-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+
+  <!-- Radio -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#radio</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Calculs -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#calculatrice</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#unites</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#minuteur</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#calendrier</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Fun -->
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#horoscope</loc><lastmod>2026-05-28</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#cristal</loc><lastmod>2026-05-28</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#tarot</loc><lastmod>2026-05-28</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#quiz</loc><lastmod>2026-05-28</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biloute26.github.io/Outils-pratiques-du-Quotidien/#compat</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
 </urlset>

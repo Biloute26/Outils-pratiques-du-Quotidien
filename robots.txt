@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://biloute26.github.io/Outils-pratiques-du-Quotidien/sitemap.xml
+
+# Priorité aux crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
