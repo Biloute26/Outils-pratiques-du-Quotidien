@@ -1875,7 +1875,7 @@ async function showWeatherAI(city, el){
   el.innerHTML='<div style="text-align:center;padding:2rem"><div style="font-size:28px;margin-bottom:10px">🤖</div><p style="font-size:13px;color:var(--muted)">Chargement météo via IA...</p></div>';
   try{
     const today = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const resp=await fetch('https://anthropic-proxy.widehem-olivier.workers.dev',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -2097,7 +2097,7 @@ function getSoundType(code){
 
 const WEATHER_DESC_FR={0:'Ciel dégagé',1:'Peu nuageux',2:'Partiellement nuageux',3:'Couvert',45:'Brouillard',48:'Brouillard givrant',51:'Bruine légère',53:'Bruine modérée',55:'Bruine dense',61:'Pluie légère',63:'Pluie modérée',65:'Forte pluie',71:'Neige légère',73:'Neige modérée',75:'Forte neige',80:'Averses légères',81:'Averses modérées',82:'Averses violentes',95:'Orage',96:'Orage avec grêle',99:'Orage violent'};
 
-async function showWeather(lat,lon,name,el){ await showWeatherAI(name,el); }
+async function showWeather(lat,lon,name,el){ await showWeatherData(lat,lon,name,el); }
 
 function showHourly(dayIndex,dateStr,hourly){
   hourly = hourly || window.meteoHourlyData;
@@ -4779,23 +4779,23 @@ const BRACKETS = {
       {
         name: 'Quarts de finale',
         matches: [
-          {home:'Real Madrid',away:'Arsenal',scoreH:3,scoreA:2,winner:'Real Madrid',done:true},
-          {home:'Inter Milan',away:'Bayern Munich',scoreH:1,scoreA:0,winner:'Inter Milan',done:true},
-          {home:'Barcelona',away:'Dortmund',scoreH:4,scoreA:3,winner:'Barcelona',done:true},
-          {home:'PSG',away:'Aston Villa',scoreH:3,scoreA:1,winner:'PSG',done:true},
+          {home:'Arsenal',away:'Real Madrid',scoreH:5,scoreA:1,winner:'Arsenal',done:true},
+          {home:'PSG',away:'Aston Villa',scoreH:5,scoreA:4,winner:'PSG',done:true},
+          {home:'Barcelona',away:'Dortmund',scoreH:5,scoreA:3,winner:'Barcelona',done:true},
+          {home:'Inter Milan',away:'Bayern Munich',scoreH:4,scoreA:3,winner:'Inter Milan',done:true},
         ]
       },
       {
         name: 'Demi-finales',
         matches: [
-          {home:'Real Madrid',away:'Inter Milan',scoreH:2,scoreA:1,winner:'Real Madrid',done:true},
-          {home:'Barcelona',away:'PSG',scoreH:null,scoreA:null,winner:null,done:false},
+          {home:'Arsenal',away:'PSG',scoreH:1,scoreA:3,winner:'PSG',done:true},
+          {home:'Barcelona',away:'Inter Milan',scoreH:6,scoreA:7,winner:'Inter Milan',done:true},
         ]
       },
       {
         name: 'Finale',
         matches: [
-          {home:'Real Madrid',away:'?',scoreH:null,scoreA:null,winner:null,done:false,venue:'Allianz Arena, Munich'},
+          {home:'PSG',away:'Inter Milan',scoreH:5,scoreA:0,winner:'PSG',done:true,venue:'Allianz Arena, Munich'},
         ]
       }
     ]
@@ -8118,27 +8118,34 @@ async function lancerCorrecteur(){
   const out=document.getElementById('corr-out');
   const status=document.getElementById('corr-status');
   out.value='';
-  status.textContent='⏳ IA en cours...';
+  status.textContent='⏳ Correction en cours...';
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:2000,
-        system:'Tu es un assistant d\'écriture expert en français. ' + CORR_PROMPTS[corrTab],
-        messages:[{role:'user',content:inp}]
-      })
-    });
+    const params=new URLSearchParams({text:inp,language:'fr',enabledOnly:'false'});
+    const resp=await fetch('https://api.languagetool.org/v2/check',{method:'POST',body:params});
     const data=await resp.json();
-    const text=data.content?.[0]?.text||'';
-    out.value=text;
-    status.textContent=`✅ ${inp.length} → ${text.length} caractères`;
+    if(!data.matches||data.matches.length===0){
+      out.value=inp;
+      status.textContent='✅ Aucune erreur détectée — texte parfait !';
+      return;
+    }
+    let corrected=inp;
+    // Apply corrections in reverse order to preserve positions
+    const sorted=[...data.matches].sort((a,b)=>b.offset-a.offset);
+    for(const m of sorted){
+      if(m.replacements&&m.replacements.length>0){
+        corrected=corrected.slice(0,m.offset)+m.replacements[0].value+corrected.slice(m.offset+m.length);
+      }
+    }
+    out.value=corrected;
+    const errs=data.matches.length;
+    const examples=data.matches.slice(0,3).map(m=>`• "${inp.slice(m.offset,m.offset+m.length)}" → ${m.replacements[0]?.value||'?'} (${m.message})`).join('\n');
+    status.textContent=`✅ ${errs} correction${errs>1?'s':''} appliquée${errs>1?'s':''}\n${examples}`;
   }catch(e){
-    status.textContent='❌ Erreur : '+e.message;
+    // Fallback: show original text with error message
+    out.value=inp;
+    status.textContent='⚠️ Service de correction temporairement indisponible. Texte affiché sans modification.';
   }
 }
-
 // ═══════════════════════════════════════════
 // RÉSUMEUR DE TEXTE IA
 // ═══════════════════════════════════════════
@@ -8184,30 +8191,47 @@ function setResTab(i){
   }
 }
 
-async function lancerResumeur(){
+function lancerResumeur(){
   const inp=document.getElementById('res-in').value.trim();
   if(!inp) return;
   const out=document.getElementById('res-out');
-  out.innerHTML='<p style="color:var(--muted)">⏳ IA en cours...</p>';
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:RES_PROMPTS[resTab],
-        messages:[{role:'user',content:inp}]
-      })
-    });
-    const data=await resp.json();
-    const text=data.content?.[0]?.text||'';
-    out.innerHTML=text.replace(/\n/g,'<br>').replace(/•/g,'<span style="color:var(--accent)">•</span>');
-  }catch(e){
-    out.innerHTML='<p style="color:red">Erreur : '+e.message+'</p>';
-  }
-}
+  out.innerHTML='<p style="color:var(--muted)">⏳ Traitement...</p>';
 
+  // Extractive summarization algorithm
+  const sentences = inp.match(/[^.!?\n]+[.!?\n]+/g)||[inp];
+  const words = inp.toLowerCase().split(/\s+/);
+  const freq={};
+  words.forEach(w=>{const c=w.replace(/[^a-zàâéèêëîïôùûüç]/gi,'');if(c.length>3)freq[c]=(freq[c]||0)+1;});
+  const stopWords=new Set(['dans','avec','pour','mais','donc','cette','aussi','très','bien','tout','plus','comme','sans','sous','lors','même','chez','leur','leurs','entre','après','avant','votre','notre','avoir','être','faire','nous','vous','ils','elles','elle','que','qui','une','des','les','est','sur','par','se','ne','ce','cet','ces','mon','ton','son','ses','mes','tes','aux','été','être']);
+  Object.keys(freq).forEach(w=>{if(stopWords.has(w))delete freq[w];});
+
+  const scored=sentences.map(s=>{
+    const sw=s.toLowerCase().split(/\s+/);
+    const score=sw.reduce((acc,w)=>{const c=w.replace(/[^a-zàâéèêëîïôùûüç]/gi,'');return acc+(freq[c]||0);},0)/Math.max(sw.length,1);
+    return {s:s.trim(),score};
+  });
+
+  let result='';
+  if(resTab===3){
+    // Bullet points — top 5 sentences
+    const top=scored.sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.s);
+    result=top.map(s=>`• ${s}`).join('<br>');
+  } else if(resTab===0){
+    // Court — top 3 sentences, in original order
+    const topSet=new Set(scored.sort((a,b)=>b.score-a.score).slice(0,3).map(x=>x.s));
+    result=sentences.filter(s=>topSet.has(s.trim())).slice(0,3).join(' ');
+  } else if(resTab===1){
+    // Moyen — top 5 sentences in original order
+    const topSet=new Set(scored.sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.s));
+    result=sentences.filter(s=>topSet.has(s.trim())).join(' ');
+  } else {
+    // Détaillé — points clés
+    const top=scored.sort((a,b)=>b.score-a.score).slice(0,7);
+    const byPos=top.sort((a,b)=>sentences.indexOf(sentences.find(s=>s.trim()===a.s))-sentences.indexOf(sentences.find(s=>s.trim()===b.s)));
+    result='<b>Points clés :</b><br>'+byPos.map(x=>`• ${x.s}`).join('<br>');
+  }
+  out.innerHTML=result.replace(/\n/g,'<br>').replace(/•/g,'<span style="color:var(--accent)">•</span>')||'<p style="color:var(--muted)">Texte trop court pour être résumé.</p>';
+}
 // ═══════════════════════════════════════════
 // GÉNÉRATEUR DE CONTENU IA
 // ═══════════════════════════════════════════
@@ -8250,39 +8274,32 @@ function renderGenerateur(el){
     </div>`;
 }
 
-async function lancerGenerateur(){
+function lancerGenerateur(){
   const type=document.getElementById('gen-type').value;
   const ctx=document.getElementById('gen-context').value.trim();
   const langue=document.getElementById('gen-langue').value;
   const out=document.getElementById('gen-out');
   if(!ctx){out.textContent='⚠️ Entrez un contexte.';return;}
-  out.textContent='⏳ Génération en cours...';
-  const prompts={
-    email_pro:`Rédige un email professionnel en ${langue} basé sur ce contexte : ${ctx}`,
-    email_relance:`Rédige un email de relance courtois et efficace en ${langue}. Contexte : ${ctx}`,
-    lettre_motiv:`Rédige une lettre de motivation percutante en ${langue}. Contexte : ${ctx}`,
-    post_linkedin:`Rédige un post LinkedIn engageant en ${langue}. Sujet : ${ctx}. Inclus des emojis appropriés et des hashtags.`,
-    post_facebook:`Rédige un post Facebook sympathique en ${langue}. Sujet : ${ctx}. Ton décontracté, avec emojis.`,
-    sms_pro:`Rédige un SMS professionnel court et clair en ${langue}. Message : ${ctx}`,
-    description:`Rédige une description produit attrayante en ${langue}. Produit : ${ctx}`,
-    biographie:`Rédige une biographie courte et professionnelle en ${langue}. Infos : ${ctx}`,
-  };
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1500,
-        system:'Tu es un expert en communication et rédaction. Génère du contenu de qualité professionnelle.',
-        messages:[{role:'user',content:prompts[type]||ctx}]
-      })
-    });
-    const data=await resp.json();
-    out.textContent=data.content?.[0]?.text||'Erreur';
-  }catch(e){out.textContent='Erreur : '+e.message;}
-}
+  out.textContent='⏳ Génération...';
 
+  const lang=langue==='Français'?'fr':'en';
+  const date=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+
+  const templates={
+    email_pro:`Objet : ${ctx.split('\n')[0]}\n\nMadame, Monsieur,\n\nJe me permets de vous contacter au sujet de ${ctx}.\n\nJe reste à votre disposition pour tout renseignement complémentaire et vous adresse mes cordiales salutations.\n\n[Votre prénom et nom]`,
+    email_relance:`Objet : Relance — ${ctx.split('\n')[0]}\n\nMadame, Monsieur,\n\nSauf erreur de ma part, je n'ai pas eu de retour concernant ${ctx}.\n\nPourriez-vous me tenir informé(e) de l'avancée de ce dossier ? Je reste disponible pour en discuter.\n\nCordialement,\n[Votre prénom et nom]`,
+    lettre_motiv:`[Votre Nom]\n[Votre adresse]\n${date}\n\nMadame, Monsieur,\n\nC'est avec un vif intérêt que je vous adresse ma candidature pour le poste de ${ctx}.\n\nFort(e) d'une solide expérience et d'une réelle motivation pour ce secteur, je suis convaincu(e) de pouvoir apporter une contribution significative à votre équipe.\n\nJe serais ravi(e) de vous rencontrer pour vous présenter ma candidature plus en détail.\n\nVeuillez agréer l'expression de mes salutations distinguées.\n[Votre signature]`,
+    post_linkedin:`🚀 ${ctx}\n\nJe suis ravi(e) de partager avec vous cette réflexion qui me tient à cœur.\n\nDans un monde en constante évolution, il est essentiel de rester curieux et d'apprendre chaque jour.\n\nQue pensez-vous de ce sujet ? Partagez votre avis en commentaire ! 👇\n\n#Professionnel #Innovation #Développement`,
+    post_facebook:`😊 ${ctx}\n\nJ'avais envie de partager ça avec vous aujourd'hui ! Qu'en pensez-vous ?\n\n❤️ Likez si vous êtes d'accord !`,
+    sms_pro:`Bonjour, je vous contacte au sujet de ${ctx}. Pouvez-vous me recontacter svp ? Merci.`,
+    description:`✨ ${ctx.split('\n')[0]}\n\n${ctx}\n\n✅ Qualité garantie\n✅ Livraison rapide\n✅ Service client réactif\n\n🛒 Commandez maintenant !`,
+    biographie:`${ctx} est un(e) professionnel(le) passionné(e) par son domaine. Avec une solide expérience et un sens aigu du détail, il/elle accompagne ses clients et collaborateurs avec expertise et bienveillance.\n\nToujours à l'affût des dernières tendances, ${ctx.split(' ')[0]} combine rigueur professionnelle et créativité pour obtenir des résultats concrets.`,
+  };
+
+  setTimeout(()=>{
+    out.textContent = templates[type] || `Modèle de ${type} pour : ${ctx}`;
+  }, 300);
+}
 // ═══════════════════════════════════════════
 // COÛT TRAJET VOITURE
 // ═══════════════════════════════════════════
@@ -8504,37 +8521,95 @@ function renderQuiz(el){
     <div id="quiz-container"></div>`;
 }
 
-async function genQuiz(){
+const QUIZ_DB = {
+  "Culture générale": [
+    {q:"Quelle est la capitale de l'Australie ?",options:["Sydney","Melbourne","Canberra","Brisbane"],answer:2,explication:"Canberra est la capitale, pas Sydney."},
+    {q:"En quelle année a eu lieu la Révolution française ?",options:["1776","1789","1799","1815"],answer:1,explication:"La Révolution française a débuté en 1789."},
+    {q:"Combien de continents y a-t-il sur Terre ?",options:["5","6","7","8"],answer:2,explication:"Les 7 continents : Afrique, Antarctique, Asie, Europe, Amérique du Nord, Océanie, Amérique du Sud."},
+    {q:"Quel est l'élément chimique le plus abondant dans l'univers ?",options:["Oxygène","Carbone","Hydrogène","Hélium"],answer:2,explication:"L'hydrogène représente ~75% de la masse de l'univers."},
+    {q:"Qui a peint la Joconde ?",options:["Michel-Ange","Raphaël","Léonard de Vinci","Botticelli"],answer:2,explication:"La Joconde a été peinte par Léonard de Vinci vers 1503-1519."},
+    {q:"Quelle est la plus haute montagne du monde ?",options:["K2","Mont Blanc","Everest","Aconcagua"],answer:2,explication:"L'Everest culmine à 8 849 m."},
+    {q:"Dans quel pays se trouve le Taj Mahal ?",options:["Pakistan","Inde","Bangladesh","Népal"],answer:1,explication:"Le Taj Mahal est à Agra, en Inde."},
+    {q:"Combien d'os comporte le corps humain adulte ?",options:["186","206","226","246"],answer:1,explication:"Le corps humain adulte a 206 os."},
+    {q:"Quel est le plus grand océan du monde ?",options:["Atlantique","Indien","Pacifique","Arctique"],answer:2,explication:"Le Pacifique couvre plus d'un tiers de la Terre."},
+    {q:"Quelle est la langue la plus parlée dans le monde ?",options:["Anglais","Espagnol","Mandarin","Hindi"],answer:2,explication:"Le mandarin est la langue maternelle d'1 milliard+ de personnes."},
+  ],
+  "Science": [
+    {q:"Quelle est la formule chimique de l'eau ?",options:["HO","H2O","H3O","OH2"],answer:1,explication:"2 atomes d'hydrogène + 1 atome d'oxygène."},
+    {q:"Quelle planète est la plus proche du Soleil ?",options:["Vénus","Terre","Mars","Mercure"],answer:3,explication:"Mercure est la planète la plus proche du Soleil."},
+    {q:"Qui a découvert la pénicilline ?",options:["Louis Pasteur","Marie Curie","Alexander Fleming","Albert Einstein"],answer:2,explication:"Fleming a découvert la pénicilline en 1928."},
+    {q:"Combien de chromosomes possède un être humain ?",options:["23","46","48","92"],answer:1,explication:"46 chromosomes = 23 paires."},
+    {q:"Quelle est la vitesse de la lumière ?",options:["100 000 km/s","200 000 km/s","300 000 km/s","400 000 km/s"],answer:2,explication:"~299 792 km/s dans le vide."},
+    {q:"Quel gaz les plantes absorbent-elles lors de la photosynthèse ?",options:["Oxygène","Azote","CO2","Hélium"],answer:2,explication:"Les plantes absorbent du CO2 pour produire de l'oxygène."},
+    {q:"Quel est le symbole chimique de l'or ?",options:["Ag","Au","Fe","Cu"],answer:1,explication:"Au vient du latin 'Aurum'."},
+    {q:"Combien de planètes composent notre système solaire ?",options:["7","8","9","10"],answer:1,explication:"8 planètes depuis la reclassification de Pluton en 2006."},
+    {q:"Quel scientifique a formulé la théorie de la relativité ?",options:["Newton","Darwin","Einstein","Curie"],answer:2,explication:"Albert Einstein a formulé la relativité restreinte en 1905."},
+    {q:"De quoi est composée l'atmosphère terrestre principalement ?",options:["Oxygène","CO2","Azote","Argon"],answer:2,explication:"L'azote représente environ 78% de l'atmosphère."},
+  ],
+  "Histoire": [
+    {q:"En quelle année Napoléon a-t-il été exilé à Sainte-Hélène ?",options:["1812","1814","1815","1821"],answer:2,explication:"Napoléon exilé en 1815 après Waterloo."},
+    {q:"Qui était le premier Président des États-Unis ?",options:["Thomas Jefferson","John Adams","George Washington","Benjamin Franklin"],answer:2,explication:"George Washington fut le 1er Président (1789-1797)."},
+    {q:"En quelle année a eu lieu la chute du Mur de Berlin ?",options:["1987","1988","1989","1990"],answer:2,explication:"Le Mur de Berlin est tombé le 9 novembre 1989."},
+    {q:"Qui a découvert l'Amérique pour les Européens en 1492 ?",options:["Vasco de Gama","Amerigo Vespucci","Christophe Colomb","Magellan"],answer:2,explication:"Christophe Colomb le 12 octobre 1492."},
+    {q:"Quelle guerre a duré de 1914 à 1918 ?",options:["Guerre de Crimée","Première Guerre mondiale","Guerre franco-prussienne","Seconde Guerre mondiale"],answer:1,explication:"La Première Guerre mondiale."},
+    {q:"Qui était Cléopâtre ?",options:["Impératrice romaine","Reine d'Égypte","Princesse grecque","Reine de Perse"],answer:1,explication:"Cléopâtre VII, dernière reine de la dynastie ptolémaïque."},
+    {q:"Qui a inventé l'imprimerie ?",options:["Leonardo da Vinci","Johannes Gutenberg","Galilée","Copernic"],answer:1,explication:"Johannes Gutenberg vers 1450."},
+    {q:"Quelle civilisation a construit les pyramides de Gizeh ?",options:["Sumérienne","Grecque","Égyptienne","Romaine"],answer:2,explication:"Les pyramides de Gizeh ont été construites par les Égyptiens anciens."},
+    {q:"En quelle année la France a-t-elle abolit la monarchie ?",options:["1789","1792","1799","1804"],answer:1,explication:"La Première République française est proclamée en 1792."},
+    {q:"Quel traité a mis fin à la Première Guerre mondiale ?",options:["Traité de Paris","Traité de Versailles","Traité de Berlin","Traité de Vienne"],answer:1,explication:"Le Traité de Versailles signé le 28 juin 1919."},
+  ],
+  "Géographie": [
+    {q:"Quel est le plus grand pays du monde ?",options:["Canada","États-Unis","Chine","Russie"],answer:3,explication:"La Russie ~17 millions km²."},
+    {q:"Quelle est la capitale du Brésil ?",options:["Rio de Janeiro","São Paulo","Brasília","Salvador"],answer:2,explication:"Brasília est la capitale depuis 1960."},
+    {q:"Quel fleuve est le plus long du monde ?",options:["Amazone","Nil","Mississippi","Yang-Tsé-Kiang"],answer:1,explication:"Le Nil mesure ~6 650 km."},
+    {q:"Quel est le désert le plus grand du monde ?",options:["Sahara","Gobi","Arabie","Antarctique"],answer:3,explication:"L'Antarctique est le plus grand désert (14 millions km²)."},
+    {q:"Dans quel océan se trouve Madagascar ?",options:["Pacifique","Atlantique","Indien","Arctique"],answer:2,explication:"Madagascar est dans l'océan Indien."},
+    {q:"Quelle est la capitale de la Nouvelle-Zélande ?",options:["Auckland","Christchurch","Wellington","Hamilton"],answer:2,explication:"Wellington est la capitale."},
+    {q:"Quel est le pays le plus peuplé du monde ?",options:["Chine","Inde","États-Unis","Indonésie"],answer:1,explication:"L'Inde a dépassé la Chine en 2023."},
+    {q:"Par combien de pays est bordée la France ?",options:["6","7","8","9"],answer:2,explication:"8 pays : Belgique, Luxembourg, Allemagne, Suisse, Italie, Monaco, Espagne, Andorre."},
+    {q:"Quelle est la plus grande île du monde ?",options:["Bornéo","Madagascar","Groenland","Nouvelle-Guinée"],answer:2,explication:"Le Groenland avec 2,16 millions km²."},
+    {q:"Quel pays possède le plus de lacs au monde ?",options:["Russie","Canada","Finlande","Brésil"],answer:1,explication:"Le Canada possède ~60% des lacs du monde."},
+  ],
+  "Sport": [
+    {q:"Combien de joueurs composent une équipe de football ?",options:["9","10","11","12"],answer:2,explication:"11 joueurs par équipe."},
+    {q:"Quel pays a remporté le plus de Coupes du Monde de football ?",options:["Allemagne","Brésil","Argentine","France"],answer:1,explication:"Le Brésil a remporté 5 Coupes du Monde."},
+    {q:"Dans quel sport utilise-t-on un volant ?",options:["Tennis","Squash","Badminton","Ping-pong"],answer:2,explication:"Le volant est utilisé au badminton."},
+    {q:"Quel est le record du monde du 100m masculin ?",options:["9.56s","9.58s","9.63s","9.72s"],answer:1,explication:"Usain Bolt, 9.58s en 2009."},
+    {q:"Quel club a remporté la Ligue des Champions 2025 ?",options:["Real Madrid","Arsenal","Inter Milan","PSG"],answer:3,explication:"Le PSG a battu l'Inter Milan 5-0 en finale."},
+    {q:"Combien de joueurs jouent dans une équipe de basketball ?",options:["4","5","6","7"],answer:1,explication:"5 joueurs par équipe sur le terrain."},
+    {q:"Quel pays a organisé les JO d'été 2024 ?",options:["Espagne","France","Allemagne","Italie"],answer:1,explication:"Paris 2024."},
+    {q:"Dans quel sport y a-t-il un 'try' ?",options:["Football","Rugby","Cricket","Polo"],answer:1,explication:"En rugby, un essai vaut 5 points."},
+    {q:"Quel sport se pratique à Wimbledon ?",options:["Golf","Tennis","Cricket","Polo"],answer:1,explication:"Wimbledon est le plus vieux tournoi de tennis du monde."},
+    {q:"Combien de points vaut un panier à 3 points au basketball ?",options:["2","3","4","1"],answer:1,explication:"Un panier derrière la ligne à 3 points vaut 3 points."},
+  ],
+  "Cinéma & Musique": [
+    {q:"Qui a réalisé le film Titanic (1997) ?",options:["Steven Spielberg","James Cameron","Christopher Nolan","Ridley Scott"],answer:1,explication:"James Cameron a réalisé Titanic."},
+    {q:"Quelle chanteuse s'appelle 'La Reine de la Pop' ?",options:["Beyoncé","Madonna","Lady Gaga","Whitney Houston"],answer:1,explication:"Madonna est surnommée La Reine de la Pop."},
+    {q:"Dans quel film trouve-t-on la réplique 'Que la Force soit avec toi' ?",options:["Star Trek","Star Wars","Dune","Avatar"],answer:1,explication:"Cette réplique vient de Star Wars."},
+    {q:"Quel groupe a sorti l'album 'Thriller' ?",options:["Prince","Michael Jackson","Whitney Houston","Earth Wind & Fire"],answer:1,explication:"Thriller est un album solo de Michael Jackson (1982)."},
+    {q:"Dans quelle ville se passe le film Amélie Poulain ?",options:["Lyon","Marseille","Paris","Bordeaux"],answer:2,explication:"À Montmartre, Paris."},
+    {q:"Quel film a remporté l'Oscar du meilleur film en 2020 ?",options:["1917","Joker","Parasite","Il était une fois à Hollywood"],answer:2,explication:"Parasite de Bong Joon-ho."},
+    {q:"Qui chante 'Hello' sorti en 2015 ?",options:["Beyoncé","Taylor Swift","Adele","Rihanna"],answer:2,explication:"Hello est d'Adele, album '25'."},
+    {q:"Quel groupe de rock est composé de Freddie Mercury ?",options:["Led Zeppelin","Queen","Rolling Stones","U2"],answer:1,explication:"Freddie Mercury était le chanteur de Queen."},
+    {q:"Quel acteur joue Iron Man dans les films Marvel ?",options:["Chris Evans","Chris Hemsworth","Robert Downey Jr.","Mark Ruffalo"],answer:2,explication:"Robert Downey Jr. incarne Tony Stark."},
+    {q:"Combien d'Oscars a remporté le film Titanic ?",options:["9","10","11","12"],answer:2,explication:"Titanic a remporté 11 Oscars en 1998."},
+  ],
+};
+
+function genQuiz(){
   const theme=document.getElementById('quiz-theme').value;
-  const niveau=document.getElementById('quiz-niveau').value;
-  const nb=document.getElementById('quiz-nb').value;
+  const nb=parseInt(document.getElementById('quiz-nb').value)||5;
   const container=document.getElementById('quiz-container');
   const scoreEl=document.getElementById('quiz-score');
-  container.innerHTML='<div style="text-align:center;padding:2rem"><div style="font-size:28px">🤖</div><p style="color:var(--muted);font-size:13px;margin-top:8px">Génération du quiz...</p></div>';
   scoreEl.innerHTML='';
-  quizScore=0; quizTotal=0; quizAnswered=false;
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:2000,
-        system:'Tu génères des quiz en français. Réponds UNIQUEMENT en JSON valide sans markdown. Format: {"questions":[{"q":"Question ?","options":["A","B","C","D"],"answer":0,"explication":"..."},...]}. answer est l\'index de la bonne réponse (0-3).',
-        messages:[{role:'user',content:`Génère ${nb} questions de quiz sur le thème "${theme}" niveau ${niveau} en français.`}]
-      })
-    });
-    const data=await resp.json();
-    let json=data.content?.[0]?.text||'{}';
-    json=json.replace(/```json|```/g,'').trim();
-    quizData=JSON.parse(json);
-    quizTotal=quizData.questions.length;
-    renderQuizQuestions();
-  }catch(e){
-    container.innerHTML='<p style="color:red">Erreur : '+e.message+'</p>';
-  }
+  quizScore=0; quizTotal=0;
+  let pool = QUIZ_DB[theme] || Object.values(QUIZ_DB).flat();
+  pool = pool.sort(() => Math.random() - 0.5);
+  const selected = pool.slice(0, Math.min(nb, pool.length));
+  quizData = {questions: selected};
+  quizTotal = selected.length;
+  renderQuizQuestions();
 }
-
 function renderQuizQuestions(){
   const container=document.getElementById('quiz-container');
   if(!quizData?.questions?.length){container.innerHTML='<p style="color:var(--muted)">Aucune question générée.</p>';return;}
@@ -8600,44 +8675,241 @@ function renderBlague(el){
     </div>`;
 }
 
-async function genBlague(){
+const BLAGUES_DB = {
+  'Blague courte': [
+    "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ? Parce que sinon ils tomberaient dans le bateau !",
+    "Un homme entre dans une bibliothèque et demande : "Avez-vous des livres sur la paranoïa ?" La bibliothécaire chuchote : "Ils sont derrière vous..."",
+    "Qu'est-ce qu'un canif ? Un petit fien !",
+    "Comment appelle-t-on un chat tombé dans un pot de peinture le jour de Noël ? Un chat-peint de Noël !",
+    "Pourquoi les girafes ont-elles un long cou ? Parce que leurs pieds sentent mauvais.",
+    "Qu'est-ce qu'un crocodile qui surveille la cour d'école ? Un sac à dents.",
+    "Qu'est-ce qu'un caniche au Sahara ? Un sandwich.",
+    "Comment s'appelle un boomerang qui ne revient pas ? Un bâton.",
+    "Quel est le comble pour un électricien ? De ne pas être au courant.",
+    "Qu'est-ce qu'un cochon dans un placard ? Un placard à cochon.",
+    "Comment appelle-t-on un chat qui travaille pour la police ? Un miaou-fficier.",
+    "Qu'est-ce que deux piles qui se marient ? Une bonne énergie.",
+    "Pourquoi Batman ne mange-t-il jamais avant un combat ? Il préfère combattre le ventre vide.",
+    "C'est l'histoire d'un homme qui rentre dans un bar... Aïe !",
+    "Qu'est-ce qu'un chat multiplié par deux ? Un deux-chat.",
+  ],
+  'Blague de papa': [
+    "Je voulais raconter une blague sur le papier... mais c'est déchirant.",
+    "Pourquoi les œufs ne font-ils pas de sport ? Parce qu'ils ont peur de se casser.",
+    "Quel est le sport préféré des électriciens ? Le tennis, parce que aime bien les échanges.",
+    "Mon fils m'a demandé d'arrêter de chanter 'I'm A Believer'. Je pense qu'il l'a cru un moment, mais regardez maintenant, il est un croyant !",
+    "Je mange mes M&Ms par ordre alphabétique... M, M.",
+    "Pourquoi les plombiers n'ont-ils pas d'amis ? Parce qu'ils sont toujours dans la merde.",
+    "J'ai un ami boulanger. Il est vraiment dans le pétrin.",
+    "Mon boulanger est décédé. Il s'est fait avoir par un pain.",
+    "Pourquoi les squelettes ne se battent-ils pas entre eux ? Parce qu'ils n'ont pas de tripes.",
+    "Quel est le comble d'un jardinier ? De tomber dans les pommes.",
+    "Pourquoi les informaticiens portent-ils des lunettes ? Parce qu'ils ne peuvent pas Java.",
+    "Mon dictionnaire vient de mourir. Je n'ai pas les mots.",
+    "Je suis en train de lire un livre sur l'antigravité. Il est impossible à poser.",
+    "Quel est le sport préféré des boulangers ? La baguette.",
+    "J'ai essayé de faire une blague sur la construction... mais je n'ai pas posé les bonnes bases.",
+  ],
+  'Blague sur les informaticiens': [
+    "Un informaticien rentre de courses avec 10 bouteilles de lait parce que sa femme lui a dit : 'Va acheter une bouteille de lait, et s'il y a des œufs, prends 10.' Il y avait des œufs.",
+    "Il y a 10 types de personnes : ceux qui comprennent le binaire et les autres.",
+    "Pourquoi les programmeurs confondent-ils Halloween et Noël ? Parce que Oct 31 = Dec 25.",
+    "Comment un informaticien ouvre-t-il une bouteille de vin ? Il cherche l'application.",
+    "Un programmeur va faire les courses. Sa femme lui dit : "Prends un litre de lait, et si tu trouves des œufs, prends-en 6." Il revient avec 6 litres de lait. "J'ai trouvé des œufs."",
+    "Pourquoi les développeurs n'aiment-ils pas la nature ? Il y a trop de bugs.",
+    "Comment savoir qu'un programmeur est extraverti ? Il regarde vos chaussures au lieu des siennes.",
+    "Un développeur dit à sa femme : "Je vais au magasin". Elle répond : "Pendant que tu y es, prends du lait." Il n'est jamais revenu.",
+    "Quel est le café préféré des programmeurs ? Java !",
+    "Pourquoi les programmeurs portent-ils des lunettes ? Parce qu'ils ne peuvent pas C#.",
+    "Un débuggeur entre dans un bar, commande une bière, puis en commande une autre, puis en commande 0.",
+    "Comment s'appelle un groupe de développeurs qui font du rap ? Ctrl + Alt + MC.",
+    "Quelle est la différence entre un développeur junior et un développeur senior ? Le senior sait pourquoi son code fonctionne.",
+    "Pourquoi les développeurs préfèrent-ils le dark mode ? La lumière attire les bugs.",
+    "La récursion est drôle. La récursion est drôle. La récursion est drôle.",
+  ],
+  'Blague sur les médecins': [
+    "Un médecin dit à son patient : "J'ai deux nouvelles, une bonne et une mauvaise." Le patient : "La bonne d'abord." Le médecin : "Vous avez 24h à vivre." Le patient : "Et la mauvaise ?" "J'aurais dû vous appeler hier."",
+    "Un homme va chez le médecin. Le médecin lui dit : "Vous buvez trop." L'homme répond : "Docteur, vous avez regardé mon dossier ?" "Non, vous avez renversé votre verre."",
+    "Docteur, j'ai avalé une montre ! — Pas d'inquiétude, je vais vous donner un médicament. — Pour quoi faire ? — Pour tuer le temps.",
+    "Le médecin dit au patient : "Vos analyses montrent que vous vivrez jusqu'à 80 ans." "Mais j'ai 80 ans !" "Exactement, c'était pas si dur finalement."",
+    "Un malade dit à son médecin : "Docteur, j'ai l'impression que personne ne m'écoute." Le médecin dit : "Suivant !"",
+    "Docteur, depuis que vous m'avez opéré du bras gauche, je ne peux plus jouer du violon. — C'est étrange, vous en jouiez avant ? — Non, mais quand même !",
+    "Le médecin dit au patient : "Vous devez marcher 5 km par jour pendant un an." Un an plus tard, le patient appelle : "Docteur, je suis à 1825 km de chez moi, que faire ?"",
+    "Un patient dit à son psy : "Docteur, je me prends pour un pont." Le psy répond : "Et qu'est-ce qui vous a passé par la tête ?" "Une voiture, deux motos et un camion."",
+    "Le médecin demande : "Vous fumez ?" "Non." "Vous buvez ?" "Non." "Vous sortez le soir ?" "Non." "Alors pourquoi voulez-vous vivre plus longtemps ?"",
+    "Un patient dit : "Docteur, j'avale des meubles." Le médecin : "Vous avez l'air d'avoir l'estomac dans les tables."",
+    "Docteur, j'ai peur des araignées. — Arachnophobie. — Et des voitures. — Ochlophobie. — Et d'être en retard. — Bonne gestion du temps.",
+    "Le médecin annonce : "Il vous reste 3 minutes à vivre." Le patient : "Faites quelque chose !" Alors le médecin se prépare un café.",
+    ""Docteur, combien d'aspirines dois-je prendre ?" "4 par jour." Le lendemain : "Toujours mal à la tête." "Vous les avez prises comment ?" "Une par jour, j'en ai pour 4 jours !"",
+    "Quel est le comble d'un anesthésiste ? Travailler de façon inconsciente.",
+    "Pourquoi les chirurgiens portent-ils des masques ? Pour ne pas être reconnus en cas d'erreur.",
+  ],
+  'Blague sur le sport': [
+    "Pourquoi les footballeurs sautent-ils de joie après un but ? Parce que s'ils tombaient, ils se feraient mal.",
+    "Quelle est la différence entre un joueur de foot et un pizza ? La pizza nourrit une famille de 4.",
+    "Pourquoi le moniteur de natation ne voit-il jamais ses élèves après les cours ? Parce qu'ils se noient tous.",
+    "Un joueur de tennis va chez le médecin. "Docteur, j'ai mal au bras." "Vous devriez arrêter de jouer." "Mais je commence à peine !" "Justement."",
+    "Pourquoi les cyclistes pédalent-ils ? Parce que le klaxon est en panne.",
+    "C'est l'histoire d'un escrimeur qui s'en va faire des courses. Sa femme lui dit : "Rapporte du pain." Il rentre les mains vides. "J'avais oublié mon fleuret."",
+    "Un rugbyman entre dans une bibliothèque. "Je voudrais un steak-frites." La bibliothécaire chuchote : "Monsieur, c'est une bibliothèque." "Pardon," chuchote-t-il à son tour, "je voudrais un steak-frites."",
+    "Qu'est-ce qu'un arbitre aveugle ? Un arbitre.",
+    "Combien faut-il de supporters pour changer une ampoule ? Les trois, un pour visser l'ampoule, les deux autres pour soutenir que l'ancienne était mieux.",
+    "Un marathonien s'arrête à mi-course. Son entraîneur crie : "Qu'est-ce que tu fais ?" "Je reprends mon souffle." "Mais tu n'as couru que 500m !" "Oui, mais à mon rythme, c'est déjà la mi-temps."",
+    "Pourquoi Zidane ne pouvait-il pas jouer aux échecs ? Parce qu'il donnait toujours un coup de boule.",
+    "Quel est le sport préféré des Japonais ? Le Ju-do, parce que c'est pas cher.",
+    "Comment s'appelle un footballeur sans club ? Au chômage.",
+    "Qu'est-ce qu'un lanceur de marteau qui perd son marteau ? Un lanceur.",
+    "Quel est le point commun entre un gardien de foot nul et un taxi ? Ils laissent entrer tout le monde.",
+  ],
+  'Jeu de mots': [
+    "J'ai essayé de capturer du brouillard hier. Je me suis raté.",
+    "Un groupe de musiciens joue dans la tempête. C'est un orchestre-déchaîné.",
+    "Qu'est-ce qu'un chat qui tombe dans un pot de peinture ? Un chat-peint.",
+    "Pourquoi les plongeurs plongent-ils dans la mer et pas dans les lacs ? Parce que les lacs, c'est trop lacustre.",
+    "J'ai voulu ouvrir un restaurant dans la jungle. Mais les coûts étaient trop élevés.",
+    "Qu'est-ce qu'un Belge sous un arbre ? Sylvain.",
+    "Qu'est-ce qu'un pou sur une tête chauve ? Un sans abri.",
+    "Qu'est-ce qu'un croissant qui se noie ? Un croissant aux amandes.",
+    "Comment appelle-t-on un chat qui fait de la comptabilité ? Un chat-comptable.",
+    "Je connais une blague sur le vide... mais elle ne contient rien.",
+    "Qu'est-ce qu'un vampire végétarien ? Dracula-courgette.",
+    "Mon chat s'est mis à faire du tricot. Je ne sais pas ce qu'il a dans la tête, mais en tout cas, il a des mailles.",
+    "Quel est le comble pour un coiffeur ? Avoir une brosse à dents.",
+    "Qu'est-ce qu'un philosophe sous la pluie ? Un penseur mouillé.",
+    "J'ai fait une blague sur l'escalier. Elle marche à tous les coups.",
+  ],
+  'Blague de maternelle': [
+    "Pourquoi les abeilles ont-elles du miel ? Parce que les guêpes en ont pas !",
+    "Qu'est-ce qu'un éléphant qui fait du vélo ? Un éléphant agile !",
+    "Qu'est-ce qu'un pingouin au Sahara ? Perdu !",
+    "Toc toc ! Qui est là ? La vache. La vache qui ? La vache qui rit !",
+    "Pourquoi le lion mange toujours les clowns ? Pour voir si ça goûte drôle !",
+    "Qu'est-ce qu'un crocodile qui mange des carottes ? Un crocodile-vitaminé !",
+    "Qu'est-ce qu'un chien dans de la boue ? Un chien-croûtant !",
+    "Pourquoi les poissons vivent-ils dans l'eau ? Parce que la cabine téléphonique est occupée !",
+    "Comment appelle-t-on un chat qui mange des citrons ? Un chat-grincheux !",
+    "Qu'est-ce qu'un éléphant dans un frigo ? Un éléphant avec froid !",
+    "Pourquoi les girafes ont-elles un long cou ? Pour atteindre les bonbons en haut de l'arbre !",
+    "Qu'est-ce qu'une vache qui tremble ? Un milk-shake !",
+    "Comment s'appelle un cheval qui perd ses dents ? Un cheval-dentiste !",
+    "Qu'est-ce qu'un chat dans la neige ? Un chat-pelé !",
+    "Toc toc ! Qui est là ? Boo. Boo qui ? Boo hoo, ne pleure pas !"
+  ]
+};
+
+function genBlague(){
   const type=document.getElementById('bl-type').value;
   const el=document.getElementById('bl-result');
-  el.textContent='⏳ Génération...';
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:300,
-        system:'Tu es un comique français. Génère une blague drôle et originale. Retourne uniquement la blague, sans commentaire.',
-        messages:[{role:'user',content:'Génère une '+type+' en français.'}]
-      })
-    });
-    const data=await resp.json();
-    el.textContent=data.content?.[0]?.text||'Erreur';
-  }catch(e){el.textContent='Erreur : '+e.message;}
+  const blagues = BLAGUES_DB[type] || BLAGUES_DB['Blague courte'];
+  const idx = Math.floor(Math.random() * blagues.length);
+  el.textContent = blagues[idx];
 }
 
-async function genCitation(){
+const CITATIONS_DB = {
+  'Motivation': [
+    '"Le succès, c\'est tomber sept fois et se relever huit." — Proverbe japonais',
+    '"Vous ne pouvez pas retourner en arrière et changer le début, mais vous pouvez commencer là où vous êtes et changer la fin." — C.S. Lewis',
+    '"La seule façon de faire du bon travail est d\'aimer ce que vous faites." — Steve Jobs',
+    '"Croyez en vous-même et en tout ce que vous êtes. Sachez qu\'il y a quelque chose à l\'intérieur de vous qui est plus grand que n\'importe quel obstacle." — Christian D. Larson',
+    '"Ce n\'est pas la montagne que nous conquérons, mais nous-mêmes." — Edmund Hillary',
+    '"Votre seule limite, c\'est vous-même." — Anonyme',
+    '"Chaque expert a été un débutant." — Helen Hayes',
+    '"La vie, c\'est comme une bicyclette, il faut avancer pour ne pas perdre l\'équilibre." — Albert Einstein',
+    '"Le meilleur moment pour planter un arbre, c\'était il y a 20 ans. Le deuxième meilleur moment, c\'est maintenant." — Proverbe chinois',
+    '"Ne comptez pas les jours, faites que les jours comptent." — Muhammad Ali',
+  ],
+  'Sagesse': [
+    '"La sagesse commence dans l\'émerveillement." — Socrate',
+    '"Ce que nous savons est une goutte, ce que nous ignorons est un océan." — Isaac Newton',
+    '"On ne voit bien qu\'avec le cœur. L\'essentiel est invisible pour les yeux." — Antoine de Saint-Exupéry',
+    '"L\'intelligence, c\'est la capacité de s\'adapter au changement." — Stephen Hawking',
+    '"La vie n\'est pas mesurée par le nombre de respirations que nous prenons, mais par les moments qui nous coupent le souffle." — Maya Angelou',
+    '"Il n\'y a qu\'une façon d\'éviter les critiques : ne rien faire, ne rien dire et n\'être rien." — Aristote',
+    '"La connaissance s\'acquiert par l\'expérience, tout le reste n\'est que de l\'information." — Albert Einstein',
+    '"Soyez le changement que vous voulez voir dans le monde." — Mahatma Gandhi',
+    '"La seule vraie sagesse est de savoir que vous ne savez rien." — Socrate',
+    '"Le bonheur est une direction, pas une destination." — Sydney J. Harris',
+  ],
+  'Amour': [
+    '"L\'amour ne se regarde pas, il se vit." — Antoine de Saint-Exupéry',
+    '"Aimer, ce n\'est pas se regarder l\'un l\'autre, c\'est regarder ensemble dans la même direction." — Antoine de Saint-Exupéry',
+    '"Le cœur a ses raisons que la raison ne connaît pas." — Blaise Pascal',
+    '"L\'amour est la seule réalité et ce n\'est pas un simple sentiment. C\'est la vérité ultime qui est au fond de la création." — Rabindranath Tagore',
+    '"On tombe amoureux d\'une personne non pas parce qu\'elle est parfaite, mais parce qu\'elle nous rend meilleur." — Anonyme',
+    '"L\'amour est un état dans lequel le bonheur d\'une autre personne est essentiel au vôtre." — Robert A. Heinlein',
+    '"Aimez comme si vous n\'aviez jamais été blessé, dansez comme si personne ne vous regardait." — Mark Twain',
+    '"Le véritable amour n\'est pas celui qui inspire des papillons dans le ventre, c\'est celui qui tient la main lors des tempêtes." — Anonyme',
+    '"L\'amour est la seule chose qui grandit quand on la partage." — Antoine de Saint-Exupéry',
+    '"Là où va l\'amour, la vie n\'est jamais vide." — Anonyme',
+  ],
+  'Amitié': [
+    '"Un ami est quelqu\'un qui vous connaît complètement et vous aime quand même." — Elbert Hubbard',
+    '"L\'amitié double les joies et divise les peines." — Francis Bacon',
+    '"Les vrais amis sont difficiles à trouver, difficiles à quitter et impossibles à oublier." — G. Randolf',
+    '"Un ami est quelqu\'un qui sait tout sur vous et l\'aime quand même." — Elbert Hubbard',
+    '"La vie est trop courte pour les faux amis." — Anonyme',
+    '"Dans la prospérité, nos amis nous connaissent. Dans l\'adversité, nous connaissons nos amis." — John Churton Collins',
+    '"L\'amitié n\'a pas de prix, mais elle a une valeur inestimable." — Anonyme',
+    '"Un ami fidèle vaut dix mille parents." — Euripide',
+    '"Les amis sont la famille que l\'on choisit." — Edna Buchanan',
+    '"La meilleure chose à tenir dans la vie, c\'est la main d\'un ami." — Audrey Hepburn',
+  ],
+  'Succès': [
+    '"Le succès n\'est pas final, l\'échec n\'est pas fatal : c\'est le courage de continuer qui compte." — Winston Churchill',
+    '"Le chemin vers le succès et le chemin vers l\'échec sont presque exactement les mêmes." — Colin R. Davis',
+    '"Le secret du succès est de commencer." — Mark Twain',
+    '"Quatre-vingt pour cent du succès, c\'est simplement se présenter." — Woody Allen',
+    '"Le succès arrive quand la préparation rencontre l\'opportunité." — Seneca',
+    '"Pour réussir, ta volonté de réussir doit être plus grande que ta peur d\'échouer." — Bill Cosby',
+    '"Le succès est la somme de petits efforts répétés jour après jour." — Robert Collier',
+    '"Ce n\'est pas la force, mais la persévérance qui fait les grandes œuvres." — Samuel Johnson',
+    '"Le talent sans travail n\'est qu\'une capacité latente." — Anonyme',
+    '"Chaque accomplissement commence par la décision d\'essayer." — John F. Kennedy',
+  ],
+  'Philosophie': [
+    '"Je pense, donc je suis." — René Descartes',
+    '"L\'homme est condamné à être libre." — Jean-Paul Sartre',
+    '"Ce que nous sommes est le résultat de ce que nous avons pensé." — Bouddha',
+    '"L\'ignorance n\'est pas ne pas savoir, c\'est refuser de savoir." — Malcolm X',
+    '"La vie doit être vécue à rebours, mais elle ne peut être comprise qu\'en avançant." — Søren Kierkegaard',
+    '"Le temps, c\'est de l\'argent." — Benjamin Franklin',
+    '"L\'existence précède l\'essence." — Jean-Paul Sartre',
+    '"Connais-toi toi-même." — Socrate',
+    '"Ce qui ne me tue pas me rend plus fort." — Friedrich Nietzsche',
+    '"Nous ne voyons pas les choses telles qu\'elles sont, nous les voyons telles que nous sommes." — Anaïs Nin',
+  ],
+  'Humour': [
+    '"Le rire est le soleil qui chasse l\'hiver du visage humain." — Victor Hugo',
+    '"Prends la vie du bon côté et tu auras les dents du bonheur." — Anonyme',
+    '"Le rire est la meilleure médecine, mais si tu ris sans raison, tu as besoin d\'un médecin." — Anonyme',
+    '"L\'humour est la politesse du désespoir." — Boris Vian',
+    '"Un jour sans rire est un jour perdu." — Charlie Chaplin',
+    '"La vie serait tragique si elle n\'était pas drôle." — Stephen Hawking',
+    '"Le sens de l\'humour est le meilleur signe de l\'intelligence." — Anonyme',
+    '"On rit bien des autres, mais souvent c\'est pour ne pas pleurer de soi." — Anonyme',
+    '"Le rire, c\'est se faire justice sans avocat." — Victor Hugo',
+    '"Le meilleur moyen de ne pas avancer, c\'est de suivre une idée fixe." — Jacques Prévert',
+  ],
+  'Sport': [
+    '"La victoire est la plus belle des récompenses, mais c\'est l\'effort qui en fait le prix." — Anonyme',
+    '"Le sport ne construit pas le caractère, il le révèle." — Heywood Broun',
+    '"Ce n\'est pas la taille du chien dans le combat qui compte, c\'est la taille du combat dans le chien." — Mark Twain',
+    '"Champions ne lâchent jamais, les lâcheurs ne deviennent jamais champions." — Vince Lombardi',
+    '"La douleur est temporaire, la fierté est pour toujours." — Anonyme',
+    '"Je ne perds jamais. Soit je gagne, soit j\'apprends." — Nelson Mandela',
+    '"Courez vite, courez longtemps, mais courez heureux." — Anonyme',
+    '"Le sport, c\'est la guerre sans les armes." — George Orwell',
+    '"Ce n\'est pas l\'adversaire qu\'il faut vaincre, c\'est soi-même." — Pierre de Coubertin',
+    '"L\'important, c\'est de participer." — Pierre de Coubertin',
+  ],
+};
+
+function genCitation(){
   const theme=document.getElementById('cit-theme').value;
   const el=document.getElementById('cit-result');
-  el.textContent='⏳ Génération...';
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:200,
-        system:'Tu génères des citations inspirantes. Format: "Citation." — Auteur. Retourne uniquement la citation.',
-        messages:[{role:'user',content:'Génère une citation sur le thème "'+theme+'" en français.'}]
-      })
-    });
-    const data=await resp.json();
-    el.textContent=data.content?.[0]?.text||'Erreur';
-  }catch(e){el.textContent='Erreur : '+e.message;}
+  const cits = CITATIONS_DB[theme] || CITATIONS_DB['Motivation'];
+  const idx = Math.floor(Math.random() * cits.length);
+  el.textContent = cits[idx];
 }
 
 
@@ -8849,6 +9121,39 @@ function drawCristal(ctx, t){
   });
 }
 
+const CRISTAL_PREDICTIONS = [
+  "Les étoiles murmures que de nouveaux horizons s'ouvrent devant vous. Une opportunité inattendue se présente — saisissez-la avec confiance.",
+  "Je perçois une énergie lumineuse autour de vous. Quelqu'un que vous avez perdu de vue cherche à vous retrouver.",
+  "La brume se dissipe... je vois un changement positif dans votre vie professionnelle. Restez attentif aux signes.",
+  "Les cristaux vibrent d'une énergie douce. L'amour est proche, plus proche que vous ne le pensez.",
+  "Une période de transformation s'annonce. Ce qui vous semblait impossible devient soudain à portée de main.",
+  "Je vois des liens forts qui se consolident. Les personnes proches de vous seront votre force dans les jours à venir.",
+  "Les astres s'alignent en votre faveur. Une décision que vous hésitez à prendre mérite d'être prise.",
+  "La boule révèle une période créative exceptionnelle. Exprimez vos idées sans retenue — elles valent de l'or.",
+  "Une surprise agréable se prépare dans l'ombre. Faites confiance au temps qui passe.",
+  "Je perçois de l'abondance autour de vous. Un projet que vous portez depuis longtemps commence enfin à prendre forme.",
+  "Les vibrations sont puissantes ce soir. Une rencontre ou une conversation changera votre perspective.",
+  "La boule voit un chemin se clarifier. La patience que vous avez eue sera récompensée au-delà de vos espérances.",
+  "Une énergie de renouveau vous entoure. Laissez tomber ce qui pèse — la légèreté vous attend.",
+  "Les mystères s'éclairent... votre intuition est votre meilleure alliée en ce moment. Écoutez-la.",
+  "Je sens une créativité bouillonnante en vous. C'est le moment idéal pour concrétiser vos projets.",
+  "La brume révèle un voyage, réel ou intérieur. De nouveaux horizons s'annoncent.",
+  "Les forces de l'univers se concentrent sur vous. Une période de chance douce s'installe.",
+  "Je vois des liens de confiance qui se renforcent. Votre entourage vous soutient plus que vous ne le réalisez.",
+  "Une belle opportunité professionnelle pointe à l'horizon. Soyez prêt(e) à la saisir.",
+  "La boule vibre d'une énergie apaisante. Une solution que vous cherchez arrivera naturellement.",
+  "Les étoiles tracent un chemin de lumière. Ce que vous semez aujourd'hui fleurira demain.",
+  "Je perçois un lien fort qui traverse le temps. Quelqu'un pense à vous en ce moment même.",
+  "Les cristaux chantent une mélodie douce. La santé et la sérénité vous accompagnent.",
+  "Une période de clarté mentale arrive. Les décisions difficiles deviendront plus simples.",
+  "La boule révèle que votre courage sera votre plus grand atout dans les semaines qui viennent.",
+  "Je vois une belle surprise liée à la famille ou aux amis. Les liens du cœur se renforcent.",
+  "Les vibrations cosmiques annoncent un renouveau. Quelque chose de beau se prépare en silence.",
+  "La boule perçoit votre force intérieure. Vous avez toutes les ressources pour surmonter ce qui vous préoccupe.",
+  "Je vois de la lumière sur votre chemin. Une période de récolte après beaucoup d'efforts s'annonce.",
+  "Les mystères de l'univers s'alignent en votre faveur. Faites confiance au processus.",
+];
+
 async function awakeCristal(){
   if(cristalPhase === 'awakening') return;
   cristalPhase = 'awakening';
@@ -8859,55 +9164,31 @@ async function awakeCristal(){
   if(invite) invite.textContent = '✨ La boule s\'éveille... les vibrations se concentrent...';
   if(pred) pred.innerHTML = '';
 
-  // Add pulse animation
   const pulse = document.getElementById('cristal-pulse');
-  if(pulse){
-    pulse.style.animation = 'none';
-    pulse.style.boxShadow = '0 0 30px 10px rgba(168,85,247,0.5)';
-  }
+  if(pulse){ pulse.style.animation = 'none'; pulse.style.boxShadow = '0 0 30px 10px rgba(168,85,247,0.5)'; }
 
-  // Wait for dramatic effect
   await new Promise(r => setTimeout(r, 2500));
   if(invite) invite.textContent = '🔮 Les mystères se révèlent...';
   await new Promise(r => setTimeout(r, 1000));
 
-  // Fetch prediction from AI
-  try{
-    const themes = ['amour et relations','travail et carrière','finances','santé et bien-être','projets personnels','rencontres et opportunités','famille','créativité'];
-    const theme = themes[Math.floor(Math.random() * themes.length)];
-    const today = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  const text = CRISTAL_PREDICTIONS[Math.floor(Math.random() * CRISTAL_PREDICTIONS.length)];
+  const today = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  const themes = ['amour et relations','travail et carrière','finances','santé et bien-être','projets personnels','rencontres et opportunités','famille','créativité'];
+  const theme = themes[Math.floor(Math.random() * themes.length)];
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 300,
-        system: 'Tu es une voyante mystérieuse et bienveillante. Tu donnes des prédictions poétiques, positives et inspirantes. Ton style est mystérieux, avec des métaphores, jamais alarmiste. Réponds en 3-4 phrases maximum.',
-        messages: [{role:'user', content: `Donne une prédiction du jour pour ${today}, axée sur le thème "${theme}". Commence par une phrase mystérieuse sur ce que tu vois dans la boule.`}]
-      })
-    });
-    const data = await resp.json();
-    const text = data.content?.[0]?.text || '';
-    cristalPhase = 'revealing';
-    if(pred){
-      pred.innerHTML = `
-        <div style="background:linear-gradient(135deg,#1E0533,#3B0764);border-radius:var(--radius-lg);padding:1.5rem;border:1px solid #7C3AED;box-shadow:0 0 30px rgba(168,85,247,0.3)">
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#A855F7;margin-bottom:12px">✨ Vision du ${today}</div>
-          <p style="color:#F3E8FF;font-size:15px;line-height:1.8;font-style:italic;margin:0">${text}</p>
-          <div style="margin-top:12px;font-size:11px;color:#7C3AED">🔮 ${theme.charAt(0).toUpperCase()+theme.slice(1)}</div>
-        </div>`;
-    }
-    if(invite) invite.textContent = 'La boule a parlé... consultez-la à nouveau demain';
-  } catch(e){
-    cristalPhase = 'idle';
-    if(pred) pred.innerHTML = '<p style="color:var(--muted)">Les étoiles ne sont pas alignées... réessayez.</p>';
+  cristalPhase = 'revealing';
+  if(pred){
+    pred.innerHTML = `
+      <div style="background:linear-gradient(135deg,#1E0533,#3B0764);border-radius:var(--radius-lg);padding:1.5rem;border:1px solid #7C3AED;box-shadow:0 0 30px rgba(168,85,247,0.3)">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#A855F7;margin-bottom:12px">✨ Vision du ${today}</div>
+        <p style="color:#F3E8FF;font-size:15px;line-height:1.8;font-style:italic;margin:0">${text}</p>
+        <div style="margin-top:12px;font-size:11px;color:#7C3AED">🔮 ${theme.charAt(0).toUpperCase()+theme.slice(1)}</div>
+      </div>`;
   }
-
+  if(invite) invite.textContent = 'La boule a parlé... consultez-la à nouveau demain';
   if(btn){ btn.disabled = false; btn.textContent = '🔮 Consulter à nouveau'; }
   if(pulse) pulse.style.boxShadow = '0 0 15px 5px rgba(168,85,247,0.2)';
 }
-
 
 // ═══════════════════════════════════════════
 // CALCULATEUR DE SOMMEIL
