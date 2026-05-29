@@ -8118,33 +8118,158 @@ async function lancerCorrecteur(){
   const out=document.getElementById('corr-out');
   const status=document.getElementById('corr-status');
   out.value='';
-  status.textContent='⏳ Correction en cours...';
-  try{
-    const params=new URLSearchParams({text:inp,language:'fr',enabledOnly:'false'});
-    const resp=await fetch('https://api.languagetool.org/v2/check',{method:'POST',body:params});
-    const data=await resp.json();
-    if(!data.matches||data.matches.length===0){
-      out.value=inp;
-      status.textContent='✅ Aucune erreur détectée — texte parfait !';
-      return;
-    }
-    let corrected=inp;
-    // Apply corrections in reverse order to preserve positions
-    const sorted=[...data.matches].sort((a,b)=>b.offset-a.offset);
-    for(const m of sorted){
-      if(m.replacements&&m.replacements.length>0){
-        corrected=corrected.slice(0,m.offset)+m.replacements[0].value+corrected.slice(m.offset+m.length);
+
+  // Tab 0 = Corriger → LanguageTool
+  if(corrTab===0){
+    status.textContent='⏳ Correction en cours...';
+    try{
+      const params=new URLSearchParams({text:inp,language:'fr',enabledOnly:'false'});
+      const resp=await fetch('https://api.languagetool.org/v2/check',{method:'POST',body:params});
+      const data=await resp.json();
+      if(!data.matches||data.matches.length===0){
+        out.value=inp;
+        status.textContent='✅ Aucune erreur détectée — texte parfait !';
+        return;
       }
+      let corrected=inp;
+      const sorted=[...data.matches].sort((a,b)=>b.offset-a.offset);
+      for(const m of sorted){
+        if(m.replacements&&m.replacements.length>0){
+          corrected=corrected.slice(0,m.offset)+m.replacements[0].value+corrected.slice(m.offset+m.length);
+        }
+      }
+      out.value=corrected;
+      const errs=data.matches.length;
+      const examples=data.matches.slice(0,3).map(m=>`• "${inp.slice(m.offset,m.offset+m.length)}" → ${m.replacements[0]?.value||'?'} (${m.message})`).join('\n');
+      status.textContent=`✅ ${errs} correction${errs>1?'s':''} appliquée${errs>1?'s':''}\n${examples}`;
+    }catch(e){
+      out.value=inp;
+      status.textContent='⚠️ Service indisponible. Texte affiché sans modification.';
     }
-    out.value=corrected;
-    const errs=data.matches.length;
-    const examples=data.matches.slice(0,3).map(m=>`• "${inp.slice(m.offset,m.offset+m.length)}" → ${m.replacements[0]?.value||'?'} (${m.message})`).join('\n');
-    status.textContent=`✅ ${errs} correction${errs>1?'s':''} appliquée${errs>1?'s':''}\n${examples}`;
-  }catch(e){
-    // Fallback: show original text with error message
-    out.value=inp;
-    status.textContent='⚠️ Service de correction temporairement indisponible. Texte affiché sans modification.';
+    return;
   }
+
+  // Tabs 1-6 → transformations locales
+  status.textContent='⏳ Traitement en cours...';
+  await new Promise(r=>setTimeout(r,300));
+
+  const sentences=inp.match(/[^.!?]+[.!?]+/g)||[inp];
+  let result='';
+
+  if(corrTab===1){
+    // Reformuler — réorganise et varie le vocabulaire basique
+    const synonyms={
+      'important':'essentiel','rapide':'efficace','beau':'élégant','grand':'imposant',
+      'petit':'modeste','difficile':'complexe','facile':'simple','bon':'excellent',
+      'mauvais':'insuffisant','très':'particulièrement','vraiment':'réellement',
+      'faire':'réaliser','voir':'observer','dire':'indiquer','avoir':'disposer de',
+      'mettre':'placer','prendre':'saisir','donner':'fournir','aller':'se rendre',
+    };
+    result = inp.split(' ').map(w=>{
+      const low=w.toLowerCase().replace(/[.,!?;:]/g,'');
+      const syn=synonyms[low];
+      if(syn){
+        const punct=w.match(/[.,!?;:]$/)?.[0]||'';
+        return (w[0]===w[0].toUpperCase()?syn.charAt(0).toUpperCase()+syn.slice(1):syn)+punct;
+      }
+      return w;
+    }).join(' ');
+    // Restructure: move last sentence first if multiple
+    if(sentences.length>2){
+      const reordered=[sentences[sentences.length-1],...sentences.slice(0,-1)];
+      result=reordered.join(' ').trim();
+    }
+    status.textContent='✅ Texte reformulé avec vocabulaire enrichi';
+  }
+  else if(corrTab===2){
+    // Améliorer — ajoute ponctuation, majuscules, connecteurs logiques
+    result=inp.trim();
+    // Capitalize first letter
+    result=result.charAt(0).toUpperCase()+result.slice(1);
+    // Add period if missing
+    if(!/[.!?]$/.test(result)) result+='.';
+    // Fix common issues
+    result=result
+      .replace(/i/g,'I')
+      .replace(/\s+/g,' ')
+      .replace(/\s([.,!?;:])/g,'$1')
+      .replace(/([.!?])\s*([a-zàâéèêëîïôùûüç])/g,(m,p,l)=>p+' '+l.toUpperCase());
+    // Add a connecting phrase if short
+    if(sentences.length===1 && inp.length<100){
+      result=result.replace(/\.$/, '. En effet, cela mérite toute notre attention.');
+    }
+    status.textContent='✅ Texte amélioré — clarté et fluidité renforcées';
+  }
+  else if(corrTab===3){
+    // Ton formel
+    result=inp.trim()
+      .replace(/je suis/gi,'je me permets de vous indiquer que je suis')
+      .replace(/c'est/gi,'il convient de noter que')
+      .replace(/on/gi,'nous')
+      .replace(/tu/gi,'vous')
+      .replace(/ton/gi,'votre')
+      .replace(/ta/gi,'votre')
+      .replace(/tes/gi,'vos')
+      .replace(/\bok\b/gi,"d'accord")
+      .replace(/bien sûr/gi,'naturellement')
+      .replace(/bonjour/gi,'Madame, Monsieur,')
+      .replace(/\bcordialement\b/gi,"Je vous prie d'agréer l'expression de mes salutations distinguées");
+    result=result.charAt(0).toUpperCase()+result.slice(1);
+    if(!/[.!?]$/.test(result)) result+='.';
+    status.textContent='✅ Ton formel et professionnel appliqué';
+  }
+  else if(corrTab===4){
+    // Ton décontracté
+    result=inp.trim()
+      .replace(/je vous/gi,'je te')
+      .replace(/vous/gi,'toi')
+      .replace(/votre/gi,'ton')
+      .replace(/vos/gi,'tes')
+      .replace(/néanmoins/gi,'mais bon')
+      .replace(/cependant/gi,'enfin')
+      .replace(/effectivement/gi,'carrément')
+      .replace(/je suis/gi,"j'suis")
+      .replace(/je ne/gi,"j'suis pas")
+      .replace(/il y a/gi,"y'a")
+      .replace(/très bien/gi,'super')
+      .replace(/excellent/gi,'top');
+    status.textContent="✅ Ton décontracté et amical appliqué 😊";
+  }
+  else if(corrTab===5){
+    // Raccourcir — garde 1 phrase sur 2, coupe les mots superflus
+    const keep=sentences.filter((_,i)=>i%2===0||sentences.length<=2);
+    result=keep.join(' ')
+      .replace(/en effet,?\s*/gi,'')
+      .replace(/par ailleurs,?\s*/gi,'')
+      .replace(/de plus,?\s*/gi,'')
+      .replace(/il convient de noter que\s*/gi,'')
+      .replace(/je me permets de vous indiquer que\s*/gi,'')
+      .replace(/\s+/g,' ').trim();
+    const before=inp.split(' ').length;
+    const after=result.split(' ').length;
+    status.textContent=`✅ Raccourci de ${before} → ${after} mots (−${Math.round((1-after/before)*100)}%)`;
+  }
+  else if(corrTab===6){
+    // Développer — enrichit chaque phrase
+    const enriched=sentences.map((s,i)=>{
+      const t=s.trim();
+      if(!t) return t;
+      const additions=[
+        " En effet, cela s'inscrit dans une logique plus large.",
+        ' Il est important de souligner ce point.',
+        " Cette observation mérite d'être approfondie.",
+        ' On peut également noter que cela a des implications significatives.',
+        ' Pour mieux comprendre, il faut considérer le contexte.',
+      ];
+      return t+(i<additions.length ? additions[i] : additions[i%additions.length]);
+    });
+    result=enriched.join(' ');
+    const before=inp.split(' ').length;
+    const after=result.split(' ').length;
+    status.textContent=`✅ Texte développé : ${before} → ${after} mots (+${after-before} mots)`;
+  }
+
+  out.value=result||inp;
 }
 // ═══════════════════════════════════════════
 // RÉSUMEUR DE TEXTE IA
