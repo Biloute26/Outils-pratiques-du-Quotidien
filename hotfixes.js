@@ -216,8 +216,41 @@ window.loadUpcomingMatches = async function(key) {
   };
 })();
 
-// FIX 9: awakeCristal — fix catch block
+// FIX 9: awakeCristal — version statique (sans API)
 (function(){
+  const CRISTAL_PREDS = [
+    "Les étoiles murmures que de nouveaux horizons s'ouvrent devant vous. Une opportunité inattendue se présente — saisissez-la avec confiance.",
+    "Je perçois une énergie lumineuse autour de vous. Quelqu'un que vous avez perdu de vue cherche à vous retrouver.",
+    "La brume se dissipe... je vois un changement positif dans votre vie professionnelle. Restez attentif aux signes.",
+    "Les cristaux vibrent d'une énergie douce. L'amour est proche, plus proche que vous ne le pensez.",
+    "Une période de transformation s'annonce. Ce qui vous semblait impossible devient soudain à portée de main.",
+    "Je vois des liens forts qui se consolident. Les personnes proches de vous seront votre force dans les jours à venir.",
+    "Les astres s'alignent en votre faveur. Une décision que vous hésitez à prendre mérite d'être prise.",
+    "La boule révèle une période créative exceptionnelle. Exprimez vos idées sans retenue — elles valent de l'or.",
+    "Une surprise agréable se prépare dans l'ombre. Faites confiance au temps qui passe.",
+    "Je perçois de l'abondance autour de vous. Un projet que vous portez depuis longtemps commence enfin à prendre forme.",
+    "Les vibrations sont puissantes ce soir. Une rencontre ou une conversation changera votre perspective.",
+    "La boule voit un chemin se clarifier. La patience que vous avez eue sera récompensée au-delà de vos espérances.",
+    "Une énergie de renouveau vous entoure. Laissez tomber ce qui pèse — la légèreté vous attend.",
+    "Les mystères s'éclairent... votre intuition est votre meilleure alliée en ce moment. Écoutez-la.",
+    "Je sens une créativité bouillonnante en vous. C'est le moment idéal pour concrétiser vos projets.",
+    "La brume révèle un voyage, réel ou intérieur. De nouveaux horizons s'annoncent.",
+    "Les forces de l'univers se concentrent sur vous. Une période de chance douce s'installe.",
+    "Je vois des liens de confiance qui se renforcent. Votre entourage vous soutient plus que vous ne le réalisez.",
+    "Une belle opportunité professionnelle pointe à l'horizon. Soyez prêt(e) à la saisir.",
+    "La boule vibre d'une énergie apaisante. Une solution que vous cherchez arrivera naturellement.",
+    "Les étoiles tracent un chemin de lumière. Ce que vous semez aujourd'hui fleurira demain.",
+    "Je perçois un lien fort qui traverse le temps. Quelqu'un pense à vous en ce moment même.",
+    "Les cristaux chantent une mélodie douce. La santé et la sérénité vous accompagnent.",
+    "Une période de clarté mentale arrive. Les décisions difficiles deviendront plus simples.",
+    "La boule révèle que votre courage sera votre plus grand atout dans les semaines qui viennent.",
+    "Je vois une belle surprise liée à la famille ou aux amis. Les liens du cœur se renforcent.",
+    "Les vibrations cosmiques annoncent un renouveau. Quelque chose de beau se prépare en silence.",
+    "La boule perçoit votre force intérieure. Vous avez toutes les ressources pour surmonter ce qui vous préoccupe.",
+    "Je vois de la lumière sur votre chemin. Une période de récolte après beaucoup d'efforts s'annonce.",
+    "Les mystères de l'univers s'alignent en votre faveur. Faites confiance au processus.",
+  ];
+
   window.awakeCristal = async function() {
     if(window.cristalPhase === 'awakening') return;
     window.cristalPhase = 'awakening';
@@ -226,44 +259,26 @@ window.loadUpcomingMatches = async function(key) {
     const pred = document.getElementById('cristal-prediction');
     const pulse = document.getElementById('cristal-pulse');
     if(btn) btn.disabled = true;
-    if(invite) invite.textContent = '✨ La boule s\'éveille... les vibrations se concentrent...';
+    if(invite) invite.textContent = "✨ La boule s'éveille... les vibrations se concentrent...";
     if(pred) pred.innerHTML = '';
     if(pulse) pulse.style.boxShadow = '0 0 30px 10px rgba(168,85,247,0.5)';
     await new Promise(r => setTimeout(r, 2500));
     if(invite) invite.textContent = '🔮 Les mystères se révèlent...';
     await new Promise(r => setTimeout(r, 1000));
-    try {
-      const themes = ['amour et relations','travail et carrière','finances','santé et bien-être','projets personnels','rencontres et opportunités','famille','créativité'];
-      const theme = themes[Math.floor(Math.random() * themes.length)];
-      const today = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 300,
-          system: 'Tu es une voyante mystérieuse et bienveillante. Tu donnes des prédictions poétiques, positives et inspirantes. Ton style est mystérieux, avec des métaphores, jamais alarmiste. Réponds en 3-4 phrases maximum.',
-          messages: [{role:'user', content: `Donne une prédiction du jour pour ${today}, axée sur le thème "${theme}". Commence par une phrase mystérieuse sur ce que tu vois dans la boule.`}]
-        })
-      });
-      const data = await resp.json();
-      const text = data.content?.[0]?.text || '';
-      window.cristalPhase = 'revealing';
-      if(pred) pred.innerHTML = `
-        <div style="background:linear-gradient(135deg,#1E0533,#3B0764);border-radius:var(--radius-lg);padding:1.5rem;border:1px solid #7C3AED;box-shadow:0 0 30px rgba(168,85,247,0.3)">
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#A855F7;margin-bottom:12px">✨ Vision du ${today}</div>
-          <p style="color:#F3E8FF;font-size:15px;line-height:1.8;font-style:italic;margin:0">${text}</p>
-          <div style="margin-top:12px;font-size:11px;color:#7C3AED">🔮 ${theme.charAt(0).toUpperCase()+theme.slice(1)}</div>
-        </div>`;
-      if(invite) invite.textContent = 'La boule a parlé... consultez-la à nouveau demain';
-      if(btn){ btn.disabled = false; btn.textContent = '🔮 Consulter à nouveau'; }
-      if(pulse) pulse.style.boxShadow = '0 0 15px 5px rgba(168,85,247,0.2)';
-    } catch(e) {
-      window.cristalPhase = 'idle';
-      if(pred) pred.innerHTML = '<p style="color:var(--muted)">Les étoiles ne sont pas alignées... réessayez.</p>';
-      if(btn){ btn.disabled = false; btn.textContent = '🔮 Consulter à nouveau'; }
-      if(pulse) pulse.style.boxShadow = '0 0 15px 5px rgba(168,85,247,0.2)';
-    }
+    const text = CRISTAL_PREDS[Math.floor(Math.random() * CRISTAL_PREDS.length)];
+    const today = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+    const themes = ['amour et relations','travail et carrière','finances','santé et bien-être','projets personnels','rencontres et opportunités','famille','créativité'];
+    const theme = themes[Math.floor(Math.random() * themes.length)];
+    window.cristalPhase = 'revealing';
+    if(pred) pred.innerHTML = `
+      <div style="background:linear-gradient(135deg,#1E0533,#3B0764);border-radius:var(--radius-lg);padding:1.5rem;border:1px solid #7C3AED;box-shadow:0 0 30px rgba(168,85,247,0.3)">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#A855F7;margin-bottom:12px">✨ Vision du ${today}</div>
+        <p style="color:#F3E8FF;font-size:15px;line-height:1.8;font-style:italic;margin:0">${text}</p>
+        <div style="margin-top:12px;font-size:11px;color:#7C3AED">🔮 ${theme.charAt(0).toUpperCase()+theme.slice(1)}</div>
+      </div>`;
+    if(invite) invite.textContent = 'La boule a parlé... consultez-la à nouveau demain';
+    if(btn){ btn.disabled = false; btn.textContent = '🔮 Consulter à nouveau'; }
+    if(pulse) pulse.style.boxShadow = '0 0 15px 5px rgba(168,85,247,0.2)';
   };
 })();
 
