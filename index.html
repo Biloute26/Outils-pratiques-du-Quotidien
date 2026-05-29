@@ -9769,37 +9769,113 @@ function calcDiff(){
 function renderRegex(el){
   el.innerHTML=`
     <div class="tool-header"><div class="tool-header-icon">🔍</div><div><h2>Testeur d'expressions régulières</h2><p>Testez et déboguez vos regex en temps réel</p></div></div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem">
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
-        <span style="font-size:18px;font-family:var(--mono);color:var(--accent)">/</span>
-        <input type="text" id="rx-pattern" value="\b\w+@\w+\.\w+\b" placeholder="Expression régulière..." oninput="testRegex()" style="flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:var(--mono);background:var(--bg)">
-        <span style="font-size:18px;font-family:var(--mono);color:var(--accent)">/</span>
-        <div style="display:flex;gap:4px">
-          ${['g','i','m','s'].map(f=>`<button onclick="toggleFlag('${f}')" id="rx-flag-${f}" style="width:28px;height:28px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--mono);cursor:pointer;background:var(--bg);font-weight:600" title="${{g:'Global',i:'Insensible casse',m:'Multiline',s:'Dotall'}[f]}">${f}</button>`).join('')}
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start">
+      <div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+            <span style="font-size:18px;font-family:var(--mono);color:var(--accent)">/</span>
+            <input type="text" id="rx-pattern" value="\b\w+@\w+\.\w+\b" placeholder="Expression régulière..." oninput="testRegex()" style="flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:var(--mono);background:var(--bg)">
+            <span style="font-size:18px;font-family:var(--mono);color:var(--accent)">/</span>
+            <div style="display:flex;gap:4px">
+              ${['g','i','m','s'].map(f=>`<button onclick="toggleFlag('${f}')" id="rx-flag-${f}" style="width:28px;height:28px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--mono);cursor:pointer;background:var(--bg);font-weight:600" title="${{g:'Global (tous les matches)',i:'Insensible à la casse',m:'Multiline (^ et $ par ligne)',s:'Dotall (. inclut \n)'}[f]}">${f}</button>`).join('')}
+            </div>
+            <div id="rx-status" style="font-size:12px;min-width:80px"></div>
+          </div>
+          <div style="margin-bottom:1rem">
+            <label class="fl">Texte de test</label>
+            <textarea id="rx-text" rows="5" oninput="testRegex()" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:var(--mono);background:var(--bg);resize:vertical">Contact: john@example.com ou marie@test.fr pour plus d'infos. Email invalide: pasdemail</textarea>
+          </div>
+          <div id="rx-result"></div>
         </div>
-        <div id="rx-status" style="font-size:12px;min-width:80px"></div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.2rem">
+          <p style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">📚 Regex courants — cliquez pour insérer</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px">
+            ${[
+              {label:'Email',rx:'\\\\b[A-Za-z0-9._%+\\\\-]+@[A-Za-z0-9.\\\\-]+\\\\.[A-Z|a-z]{2,}\\\\b',ex:'john@example.com'},
+              {label:'Téléphone FR',rx:'(?:(?:\\\\+|00)33|0)\\\\s*[1-9](?:[\\\\s.-]*\\\\d{2}){4}',ex:'06 12 34 56 78'},
+              {label:'URL',rx:'https?:\\\\/\\\\/[^\\\\s]+',ex:'https://site.com'},
+              {label:'Code postal FR',rx:'\\\\b[0-9]{5}\\\\b',ex:'75001'},
+              {label:'Date JJ/MM/AAAA',rx:'\\\\b(0?[1-9]|[12][0-9]|3[01])\\\\/(0?[1-9]|1[012])\\\\/([0-9]{4})\\\\b',ex:'31/12/2024'},
+              {label:'IPv4',rx:'\\\\b(?:[0-9]{1,3}\\\\.){3}[0-9]{1,3}\\\\b',ex:'192.168.1.1'},
+              {label:'IBAN',rx:'[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}',ex:'FR76 1234...'},
+              {label:'Mot de passe fort',rx:'(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,}',ex:'Min8, Maj, chiffre, !'},
+            ].map(r=>`<div onclick="document.getElementById('rx-pattern').value='${r.rx}';testRegex()" style="padding:8px 12px;background:var(--bg);border-radius:var(--radius);cursor:pointer;border:1px solid var(--border);transition:border-color .15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+              <div style="font-weight:600;color:var(--accent);font-size:12px">${r.label}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">ex: ${r.ex}</div>
+            </div>`).join('')}
+          </div>
+        </div>
       </div>
-      <div style="margin-bottom:1rem">
-        <label class="fl">Texte de test</label>
-        <textarea id="rx-text" rows="5" oninput="testRegex()" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:var(--mono);background:var(--bg);resize:vertical">Contact: john@example.com ou marie@test.fr pour plus d'infos. Email invalide: pasdemail</textarea>
-      </div>
-      <div id="rx-result"></div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.2rem">
-      <p style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">📚 Regex courants</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:6px">
-        ${[
-          {label:'Email',rx:'\\\\b[A-Za-z0-9._%+\\\\-]+@[A-Za-z0-9.\\\\-]+\\\\.[A-Z|a-z]{2,}\\\\b'},
-          {label:'Téléphone FR',rx:'(?:(?:\\\\+|00)33|0)\\\\s*[1-9](?:[\\\\s.-]*\\\\d{2}){4}'},
-          {label:'URL',rx:'https?:\\\\/\\\\/[^\\\\s]+'},
-          {label:'Code postal FR',rx:'\\\\b[0-9]{5}\\\\b'},
-          {label:'Date JJ/MM/AAAA',rx:'\\\\b(0?[1-9]|[12][0-9]|3[01])\\\\/(0?[1-9]|1[012])\\\\/([0-9]{4})\\\\b'},
-          {label:'IPv4',rx:'\\\\b(?:[0-9]{1,3}\\\\.){3}[0-9]{1,3}\\\\b'},
-          {label:'IBAN',rx:'[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}'},
-          {label:'Mot de passe fort',rx:'(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,}'},
-        ].map(r=>`<div onclick="document.getElementById('rx-pattern').value='${r.rx}';testRegex()" style="padding:8px 12px;background:var(--bg);border-radius:var(--radius);cursor:pointer;font-size:12px;border:1px solid var(--border)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-weight:600;color:var(--accent)">${r.label}</span>
-        </div>`).join('')}
+
+      <!-- PANNEAU D'AIDE -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.2rem;position:sticky;top:80px">
+        <p style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">📖 Guide rapide</p>
+
+        <div style="margin-bottom:14px">
+          <p style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Caractères spéciaux</p>
+          ${[
+            ['.',"N'importe quel caractère",'a.c → "abc", "axc"'],
+            ['\\d','Un chiffre (0-9)','\\d+ → "42", "7"'],
+            ['\\w','Lettre, chiffre ou _','\\w+ → "hello", "abc_1"'],
+            ['\\s','Espace, tab, retour','\\s+ → " ", "  "'],
+            ['\\b','Limite de mot','\\bfoo\\b → "foo" pas "foobar"'],
+            ['^','Début de chaîne','^Bonjour → ligne qui commence par Bonjour'],
+            ['$','Fin de chaîne','monde$ → ligne qui finit par monde'],
+          ].map(([sym,desc,ex])=>`
+            <div style="display:flex;gap:8px;align-items:start;padding:5px 0;border-bottom:1px solid var(--border)">
+              <code style="background:var(--accent-light);color:var(--accent);padding:1px 6px;border-radius:4px;font-size:12px;min-width:32px;text-align:center;flex-shrink:0">${sym}</code>
+              <div>
+                <div style="font-size:12px;font-weight:500">${desc}</div>
+                <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">${ex}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+
+        <div style="margin-bottom:14px">
+          <p style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Quantificateurs</p>
+          ${[
+            ['*','0 ou plusieurs fois','ab* → "a", "ab", "abbb"'],
+            ['+','1 ou plusieurs fois','ab+ → "ab", "abbb" pas "a"'],
+            ['?','0 ou 1 fois (optionnel)','colou?r → "color" et "colour"'],
+            ['{3}','Exactement 3 fois','\\d{3} → "123"'],
+            ['{2,5}','Entre 2 et 5 fois','\\d{2,5} → "12", "12345"'],
+          ].map(([sym,desc,ex])=>`
+            <div style="display:flex;gap:8px;align-items:start;padding:5px 0;border-bottom:1px solid var(--border)">
+              <code style="background:var(--accent-light);color:var(--accent);padding:1px 6px;border-radius:4px;font-size:12px;min-width:32px;text-align:center;flex-shrink:0">${sym}</code>
+              <div>
+                <div style="font-size:12px;font-weight:500">${desc}</div>
+                <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">${ex}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+
+        <div style="margin-bottom:14px">
+          <p style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Groupes & classes</p>
+          ${[
+            ['[abc]','Un des caractères listés','[aeiou] → voyelles'],
+            ['[^abc]','Aucun des caractères','[^0-9] → pas un chiffre'],
+            ['[a-z]','Plage de caractères','[a-zA-Z] → toutes lettres'],
+            ['(abc)','Groupe capturant','(\\d+) → capture le nombre'],
+            ['a|b','a ou b',"chat|chien → l'un ou l'autre"],
+          ].map(([sym,desc,ex])=>`
+            <div style="display:flex;gap:8px;align-items:start;padding:5px 0;border-bottom:1px solid var(--border)">
+              <code style="background:var(--accent-light);color:var(--accent);padding:1px 6px;border-radius:4px;font-size:12px;min-width:32px;text-align:center;flex-shrink:0">${sym}</code>
+              <div>
+                <div style="font-size:12px;font-weight:500">${desc}</div>
+                <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">${ex}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+
+        <div style="background:var(--accent-light);border-radius:var(--radius);padding:10px;margin-top:8px">
+          <p style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px">💡 Les drapeaux</p>
+          <div style="font-size:11px;color:var(--text);line-height:1.7">
+            <b>g</b> — cherche <i>tous</i> les matches (sinon juste le 1er)<br>
+            <b>i</b> — ignore majuscules/minuscules<br>
+            <b>m</b> — ^ et $ s\'appliquent à chaque ligne<br>
+            <b>s</b> — le point <code>.</code> inclut aussi les retours à la ligne
+          </div>
+        </div>
       </div>
     </div>`;
   testRegex();
