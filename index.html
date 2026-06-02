@@ -419,14 +419,10 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;
         <div class="tool-card" onclick="showTool('metiers')"><span class="fav-star" onclick="event.stopPropagation();toggleFav(\'metiers\',this)" title="Favori">★</span><span class="tool-card-icon">🔧</span><div class="tool-card-text"><div class="tool-card-name">Calculs techniques</div><div class="tool-card-desc">Béton, électricité, plomberie...</div></div></div>
       </div>
     </div>
-  
 <div class="cat-section cat-tv">
       <div class="cat-title">📻 Radio</div>
       <div class="cat-grid">
         </div></div>
-        <div class="tool-card" onclick="showTool('radio')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('radio',this)" title="Favori">★</span><span class="tool-card-icon">📻</span><div class="tool-card-text"><div class="tool-card-name">Répertoire Radio mondial</div><div class="tool-card-desc">150+ radios en direct par pays</div></div></div>
-      
-    
 <div class="cat-section cat-vie">
       <div class="cat-title">🛒 Coût de la vie</div>
       <div class="cat-grid">
@@ -10392,7 +10388,7 @@ window.showCat=function(cat){
   var ab=document.getElementById('cnav-'+cat);
   if(ab){ab.style.background='var(--accent)';ab.style.color='#fff';ab.style.border='2px solid var(--accent)';}
   var panel=document.getElementById('cat-panel');
-  if(panel){panel.innerHTML='';var sec=_s[cat];if(sec){var clone=sec.cloneNode(true);var grid=clone.querySelector('.cat-grid');if(grid)grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px';panel.appendChild(clone);}}
+  if(panel){panel.innerHTML='';var sec=_s[cat];if(sec){var clone=sec.cloneNode(true);clone.style.display='';var grid=clone.querySelector('.cat-grid');if(grid)grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px';panel.appendChild(clone);}}
   var ta=document.getElementById('tool-area');
   if(ta)ta.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;color:var(--muted);text-align:center"><div style="font-size:40px;margin-bottom:12px">🛠️</div><p style="font-size:14px;font-weight:500;color:var(--text)">Sélectionnez un outil</p><p style="font-size:12px;margin-top:4px">Cliquez sur une carte pour commencer</p></div>';
 };
