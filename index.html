@@ -20,6 +20,37 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2586059139929294" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>
+// Fix définitif : hook sur DOMContentLoaded AVANT showCat
+(function(){
+  var _origShowCat;
+  Object.defineProperty(window,'showCat',{
+    set:function(fn){
+      _origShowCat=fn;
+      window._showCatReady=true;
+    },
+    get:function(){
+      return function(cat){
+        // Réparer cat-hidden avant chaque appel showCat
+        var hidden=document.getElementById('cat-hidden');
+        if(hidden){
+          var all=Array.from(document.querySelectorAll('.cat-section'));
+          var outside=all.filter(function(s){return !hidden.contains(s);});
+          if(outside.length){
+            var ORDER=['cat-finance','cat-sante','cat-monde','cat-sport','cat-tech','cat-docs','cat-maison','cat-business','cat-fun','cat-calculs','cat-tv','cat-vie'];
+            outside.sort(function(a,b){return ORDER.indexOf(a.classList[1]||'')-ORDER.indexOf(b.classList[1]||'');});
+            outside.forEach(function(s){hidden.appendChild(s);});
+            if(typeof _catDone!=='undefined'){_catDone=false;_catCache={};}
+          }
+        }
+        if(_origShowCat)_origShowCat(cat);
+      };
+    },
+    configurable:true
+  });
+})();
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -10435,23 +10466,6 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof startClock==='
 console.log('✅ Outils Pratiques v2.2 OK');
 </script>
 
-<script>
-(function fixCatHidden(){
-  var hidden=document.getElementById('cat-hidden');
-  if(!hidden)return;
-  // Récupérer toutes les sections qui ne sont pas encore dans cat-hidden
-  var all=Array.from(document.querySelectorAll('.cat-section'));
-  var outside=all.filter(function(s){return !hidden.contains(s);});
-  // Les ordonner et les insérer
-  var ORDER=['cat-finance','cat-sante','cat-monde','cat-sport','cat-tech','cat-docs','cat-maison','cat-business','cat-fun','cat-calculs','cat-tv','cat-vie'];
-  outside.sort(function(a,b){
-    var ia=ORDER.indexOf(a.classList[1]||'');
-    var ib=ORDER.indexOf(b.classList[1]||'');
-    return ia-ib;
-  });
-  outside.forEach(function(s){hidden.appendChild(s);});
-  console.log('cat-hidden fixed: '+hidden.querySelectorAll('.cat-section').length+' sections');
-})();
-</script>
+
 </body>
 </html>
