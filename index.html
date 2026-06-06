@@ -10245,8 +10245,6 @@ window.showCat=function(cat){
   if(ab){ab.style.background='var(--accent)';ab.style.color='#fff';ab.style.border='2px solid var(--accent)';}
   var panel=document.getElementById('cat-panel');
   if(panel&&_catCache[cat]){panel.innerHTML='';panel.appendChild(_catCache[cat].cloneNode(true));}
-  var ta=document.getElementById('tool-area');
-  if(ta){ta.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;color:var(--muted);text-align:center"><div style="font-size:40px;margin-bottom:12px">🛠️</div><p style="font-size:14px;font-weight:500;color:var(--text)">Sélectionnez un outil</p><p style="font-size:12px;margin-top:4px">Cliquez sur une carte pour commencer</p></div>';}
 };
 
 
