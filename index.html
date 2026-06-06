@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Outils Pratiques du Quotidien — 72 outils gratuits en ligne</title>
-<meta name="description" content="72 outils gratuits : météo, TVA, crédit immobilier, IMC, QR code, mot de passe, foot live, radios, quiz, horoscope. Gratuit, sans inscription.">
+<meta name="description" content="72 outils gratuits : météo, TVA, crédit, IMC, QR code, mot de passe, foot live, radios, quiz, horoscope. Gratuit, sans inscription.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://biloute26.github.io/Outils-pratiques-du-Quotidien/">
 <meta property="og:title" content="Outils Pratiques du Quotidien — 72 outils gratuits">
@@ -233,18 +233,7 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;
 </style>
 </head>
 <body>
-<div id="api-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center">
-  <div style="background:var(--surface);border-radius:var(--radius-lg);padding:2rem;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
-    <h3 style="font-size:16px;font-weight:600;margin-bottom:8px">🔑 Clé API Anthropic</h3>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:1rem">Pour les outils IA (Correcteur, Résumeur, Générateur).<br>Obtenez-la sur <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">console.anthropic.com</a></p>
-    <input type="password" id="api-key-input" placeholder="sk-ant-..." style="margin-bottom:1rem;font-family:var(--mono);font-size:13px">
-    <div style="display:flex;gap:8px">
-      <button onclick="saveApiKey()" class="btn" style="height:40px;font-size:13px">Enregistrer</button>
-      <button onclick="document.getElementById('api-modal').style.display='none'" class="btn btn-outline" style="height:40px;font-size:13px">Annuler</button>
-    </div>
-    <p style="font-size:11px;color:var(--muted);margin-top:8px">Stockée localement dans votre navigateur.</p>
-  </div>
-</div>
+<div id="api-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center"><div style="background:var(--surface);border-radius:var(--radius-lg);padding:2rem;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><h3 style="font-size:16px;font-weight:600;margin-bottom:8px">🔑 Clé API Anthropic</h3><p style="font-size:13px;color:var(--muted);margin-bottom:1rem">Pour les outils IA (Correcteur, Résumeur, Générateur).<br>Obtenez-la sur <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">console.anthropic.com</a></p><input type="password" id="api-key-input" placeholder="sk-ant-..." style="margin-bottom:1rem;font-family:var(--mono);font-size:13px"><div style="display:flex;gap:8px"><button onclick="saveApiKey()" class="btn" style="height:40px;font-size:13px">Enregistrer</button><button onclick="document.getElementById('api-modal').style.display='none'" class="btn btn-outline" style="height:40px;font-size:13px">Annuler</button></div><p style="font-size:11px;color:var(--muted);margin-top:8px">Stockée localement dans votre navigateur.</p></div></div>
 <header>
   <div class="header-inner">
     <a href="#" class="logo" onclick="resetHome();return false">outils<span>.</span>pratiques</a>
@@ -287,18 +276,17 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;
 <main>
   <div class="ad-slot">[ Publicité AdSense ]</div>
   <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px">
-    <button onclick="showCat('finance')"  id="cnav-finance"  class="cnb2" style="padding:10px 6px;border:2px solid var(--accent);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff;text-align:center;font-family:var(--sans);transition:all .15s">💰 Finance</button>
-    <button onclick="showCat('sante')"    id="cnav-sante"    class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);text-align:center;font-family:var(--sans);transition:all .15s">📊 Santé</button>
-    <button onclick="showCat('monde')"    id="cnav-monde"    class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);text-align:center;font-family:var(--sans);transition:all .15s">🌍 Voyage</button>
-
-    <button onclick="showCat('tech')"     id="cnav-tech"     class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);text-align:center;font-family:var(--sans);transition:all .15s">🛠️ Tech</button>
-    <button onclick="showCat('docs')"     id="cnav-docs"     class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);text-align:center;font-family:var(--sans);transition:all .15s">✍️ Docs</button>
-    <button onclick="showCat('maison')"   id="cnav-maison"   class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);text-align:center;font-family:var(--sans);transition:all .15s">🏠 Maison</button>
-    <button onclick="showCat('business')" id="cnav-business" class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);text-align:center;font-family:var(--sans);transition:all .15s">💼 Pro</button>
-    <button onclick="showCat('fun')"      id="cnav-fun"      class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);text-align:center;font-family:var(--sans);transition:all .15s">🎮 Fun</button>
-    <button onclick="showCat('calculs')"  id="cnav-calculs"  class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);text-align:center;font-family:var(--sans);transition:all .15s">📐 Calculs</button>
-    <button onclick="showCat('tv')"       id="cnav-tv"       class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);text-align:center;font-family:var(--sans);transition:all .15s">📻 Radio</button>
-    <button onclick="showCat('vie')"      id="cnav-vie"      class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);text-align:center;font-family:var(--sans);transition:all .15s">🛒 Vie</button>
+    <button onclick="showCat('finance')"  id="cnav-finance"  class="cnb2" style="padding:10px 6px;border:2px solid var(--accent);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff;font-family:var(--sans)">💰 Finance</button>
+    <button onclick="showCat('sante')"    id="cnav-sante"    class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);font-family:var(--sans)">📊 Santé</button>
+    <button onclick="showCat('monde')"    id="cnav-monde"    class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);font-family:var(--sans)">🌍 Voyage</button>
+    <button onclick="showCat('tech')"     id="cnav-tech"     class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);font-family:var(--sans)">🛠️ Tech</button>
+    <button onclick="showCat('docs')"     id="cnav-docs"     class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);font-family:var(--sans)">✍️ Docs</button>
+    <button onclick="showCat('maison')"   id="cnav-maison"   class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);font-family:var(--sans)">🏠 Maison</button>
+    <button onclick="showCat('business')" id="cnav-business" class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);font-family:var(--sans)">💼 Pro</button>
+    <button onclick="showCat('fun')"      id="cnav-fun"      class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);font-family:var(--sans)">🎮 Fun</button>
+    <button onclick="showCat('calculs')"  id="cnav-calculs"  class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);font-family:var(--sans)">📐 Calculs</button>
+    <button onclick="showCat('tv')"       id="cnav-tv"       class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);font-family:var(--sans)">📻 Radio</button>
+    <button onclick="showCat('vie')"      id="cnav-vie"      class="cnb2" style="padding:10px 6px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text);font-family:var(--sans)">🛒 Vie</button>
   </div>
   <div id="cat-panel" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;min-height:80px;margin-bottom:12px"></div>
   <div id="tool-area"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;color:var(--muted);text-align:center"><div style="font-size:40px;margin-bottom:12px">🛠️</div><p style="font-size:14px;font-weight:500;color:var(--text)">Sélectionnez un outil</p><p style="font-size:12px;margin-top:4px">Cliquez sur une carte pour commencer</p></div></div>
@@ -331,10 +319,9 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;
         <div class="tool-card" onclick="showTool('timezone')"><span class="fav-star" onclick="event.stopPropagation();toggleFav(\'timezone\',this)" title="Favori">★</span><span class="tool-card-icon">🕐</span><div class="tool-card-text"><div class="tool-card-name">Décalage horaire</div><div class="tool-card-desc">100+ villes du monde</div></div></div>
         <div class="tool-card" onclick="showTool('indicatifs')"><span class="fav-star" onclick="event.stopPropagation();toggleFav(\'indicatifs\',this)" title="Favori">★</span><span class="tool-card-icon">📞</span><div class="tool-card-text"><div class="tool-card-name">Indicatifs téléphoniques</div><div class="tool-card-desc">Codes pays du monde</div></div></div>
         <div class="tool-card" onclick="showTool('traducteur')"><span class="fav-star" onclick="event.stopPropagation();toggleFav(\'traducteur\',this)" title="Favori">★</span><span class="tool-card-icon">🌐</span><div class="tool-card-text"><div class="tool-card-name">Traducteur</div><div class="tool-card-desc">Traduction instantanée</div></div></div>
-        <div class="tool-card" onclick="showTool('jours')"><span class="fav-star" onclick="event.stopPropagation();toggleFav(\'jours\',this)" title="Favori">★</span><span class="tool-card-icon">📆</span><div class="tool-card-text"><div class="tool-card-name">Calculateur de jours</div></div></div>
+        <div class="tool-card" onclick="showTool('jours')"><span class="fav-star" onclick="event.stopPropagation();toggleFav(\'jours\',this)" title="Favori">★</span><span class="tool-card-icon">📆</span><div class="tool-card-text"><div class="tool-card-name">Calculateur de jours</div><div class="tool-card-desc">Entre deux dates, délais</div></div></div>
       </div>
     </div>
-
 <div class="cat-section cat-tech">
       <div class="cat-title">🛠️ Outils Tech</div>
       <div class="cat-grid">
@@ -386,13 +373,14 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;
 <div class="cat-section cat-fun">
       <div class="cat-title">🎮 Fun & Divertissement</div>
       <div class="cat-grid">
-        <div class="tool-card" onclick="showTool('quiz')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('quiz',this)" title="Favori">★</span><span class="tool-card-icon">🧠</span><div class="tool-card-text"><div class="tool-card-name">Quiz culture générale</div><div class="tool-card-desc">Questions aléatoires</div></div></div>
-        <div class="tool-card" onclick="showTool('blague')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('blague',this)" title="Favori">★</span><span class="tool-card-icon">😄</span><div class="tool-card-text"><div class="tool-card-name">Blagues & Citations</div><div class="tool-card-desc">Humour et sagesse</div></div></div>
+        <div class="tool-card" onclick="showTool('quiz')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('quiz',this)" title="Favori">★</span><span class="tool-card-icon">🧠</span><div class="tool-card-text"><div class="tool-card-name">Quiz culture générale</div><div class="tool-card-desc">Questions IA</div></div></div>
+        <div class="tool-card" onclick="showTool('blague')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('blague',this)" title="Favori">★</span><span class="tool-card-icon">😄</span><div class="tool-card-text"><div class="tool-card-name">Blagues & Citations</div><div class="tool-card-desc">Générateur IA</div></div></div>
         <div class="tool-card" onclick="showTool('roue')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('roue',this)" title="Favori">★</span><span class="tool-card-icon">🎲</span><div class="tool-card-text"><div class="tool-card-name">Roue de la fortune</div><div class="tool-card-desc">Tirage aléatoire</div></div></div>
-        <div class="tool-card" onclick="showTool('cristal')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('cristal',this)" title="Favori">★</span><span class="tool-card-icon">🔮</span><div class="tool-card-text"><div class="tool-card-name">Boule de Cristal</div><div class="tool-card-desc">Prédiction du jour</div></div></div>
+        <div class="tool-card" onclick="showTool('cristal')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('cristal',this)" title="Favori">★</span><span class="tool-card-icon">🔮</span><div class="tool-card-text"><div class="tool-card-name">Boule de Cristal</div><div class="tool-card-desc">Prédiction du jour — touchez la boule</div></div></div>
         <div class="tool-card" onclick="showTool('tarot')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('tarot',this)" title="Favori">★</span><span class="tool-card-icon">🃏</span><div class="tool-card-text"><div class="tool-card-name">Tirage de Tarot</div><div class="tool-card-desc">Tirage en croix — 5 cartes</div></div></div>
         <div class="tool-card" onclick="showTool('compat')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('compat',this)" title="Favori">★</span><span class="tool-card-icon">💞</span><div class="tool-card-text"><div class="tool-card-name">Compatibilité astro</div><div class="tool-card-desc">Deux signes — affinités</div></div></div>
         <div class="tool-card" onclick="showTool('horoscope')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('horoscope',this)" title="Favori">★</span><span class="tool-card-icon">✨</span><div class="tool-card-text"><div class="tool-card-name">Horoscope</div><div class="tool-card-desc">Du jour par signe</div></div></div>
+      
         <div class="tool-card" onclick="showTool('metronome')"><span class="fav-star" onclick="event.stopPropagation();toggleFav('metronome',this)" title="Favori">★</span><span class="tool-card-icon">🎵</span><div class="tool-card-text"><div class="tool-card-name">Métronome</div><div class="tool-card-desc">Tempo réglable</div></div></div>
       </div>
     </div>
@@ -426,7 +414,7 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;
 <footer>© 2025 outils.pratiques · Gratuit · Sans inscription · Données à titre indicatif</footer>
 <script>
 
-var HOROSCOPES_STATIC={
+var HOROSCOPES={
   'Bélier':["Une énergie débordante vous anime. C'est le moment idéal pour lancer un nouveau projet.","La journée s'annonce dynamique. Vos initiatives portent leurs fruits.","Mars vous insuffle une énergie renouvelée. Une opportunité inattendue se présente."],
   'Taureau':["La stabilité est votre maître mot. Prenez le temps de savourer les petits plaisirs.","Vénus favorise vos relations affectives. Évitez les dépenses impulsives.","Votre persévérance légendaire paie enfin. Un projet avance dans la bonne direction."],
   'Gémeaux':["Votre curiosité vous ouvre des portes. Les échanges intellectuels sont favorisés.","Mercure stimule votre esprit vif. C'est le moment de communiquer et négocier.","Votre adaptabilité est précieuse. Une bonne nouvelle arrive par message."],
@@ -475,7 +463,7 @@ const SIGNS=[
   {name:'Poissons',icon:'♓',dates:'19 fév. – 20 mars'},
 ];
 
-const HOROSCOPES={
+const HOROSCOPES_ORIG={
   'Bélier':['Une énergie débordante vous anime aujourd\'hui. C\'est le moment idéal pour lancer un nouveau projet ou prendre une décision importante. Votre audace sera récompensée. En amour, une surprise agréable vous attend.','La journée s\'annonce dynamique. Vos initiatives portent leurs fruits et votre entourage remarque votre détermination. Restez attentif à votre santé : une bonne nuit de sommeil fera des merveilles.','Mars vous insuffle une énergie renouvelée. Les obstacles du passé s\'effacent. Sur le plan professionnel, une opportunité inattendue se présente. Saisissez-la sans hésiter.'],
   'Taureau':['La stabilité est votre maître mot aujourd\'hui. Prenez le temps de savourer les petits plaisirs de la vie. Une conversation avec un proche vous apportera réconfort et clarté.','Vénus favorise vos relations affectives. C\'est une belle journée pour exprimer vos sentiments. Sur le plan financier, évitez les dépenses impulsives et faites confiance à votre instinct.','Votre persévérance légendaire paie enfin. Un projet mûrement réfléchi avance dans la bonne direction. Votre sens pratique est un atout précieux ce jour.'],
   'Gémeaux':['Votre curiosité naturelle vous ouvre des portes insoupçonnées. Les échanges sont favorisés, notamment sur le plan intellectuel. Une rencontre pourrait changer votre perspective sur une situation.','Mercure stimule votre esprit vif. C\'est le bon moment pour communiquer, négocier ou convaincre. En soirée, offrez-vous une activité créative pour recharger vos batteries.','Votre adaptabilité est un don précieux aujourd\'hui. Vous jonglerez facilement entre vos différentes obligations. Une bonne nouvelle arrive par message.'],
@@ -2176,17 +2164,16 @@ function renderHoroscope(el){
 function showHoro(name,btn){
   document.querySelectorAll('.sign-btn').forEach(function(b){b.classList.remove('active');});
   if(btn)btn.classList.add('active');
-  var texts=HOROSCOPES_STATIC[name]||HOROSCOPES[name];
+  var texts=HOROSCOPES[name];
   if(!texts)return;
   var today=new Date();
   var seed=today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
   var text=texts[seed%texts.length];
   var stars='⭐'.repeat(3+(today.getDate()%3));
-  var sign=(typeof SIGNS!=='undefined'?SIGNS:[]).find(function(s){return s.name===name;})||{icon:'✨',dates:''};
+  var signs=typeof SIGNS!=='undefined'?SIGNS:[];
+  var sign=signs.find(function(s){return s.name===name;})||{icon:'✨',dates:''};
   var el=document.getElementById('horo-result');
-  if(el)el.innerHTML='<div class="horo-card"><h3>'+sign.icon+' '+name+'</h3>'+
-    (sign.dates?'<div class="dates">'+sign.dates+'</div>':'')+
-    '<div class="stars">'+stars+'</div><p style="font-size:14px;line-height:1.8">'+text+'</p></div>';
+  if(el)el.innerHTML='<div class="horo-card"><h3>'+sign.icon+' '+name+'</h3>'+(sign.dates?'<div class="dates">'+sign.dates+'</div>':'')+'<div class="stars">'+stars+'</div><p style="font-size:14px;line-height:1.8">'+text+'</p></div>';
 }
 
 function renderAge(el){
@@ -2909,188 +2896,46 @@ async function loadLeagueData(key){
 }
 
 function showFallbackStandings(key,el){
-  var fallbacks={
-    'ligue1':[
-      {pos:1,team:'PSG',j:34,g:26,n:5,p:3,pts:83},
-      {pos:2,team:'Monaco',j:34,g:22,n:6,p:6,pts:72},
-      {pos:3,team:'Marseille',j:34,g:20,n:7,p:7,pts:67},
-      {pos:4,team:'Lille',j:34,g:19,n:8,p:7,pts:65},
-      {pos:5,team:'Lyon',j:34,g:17,n:9,p:8,pts:60},
-      {pos:6,team:'Nice',j:34,g:16,n:9,p:9,pts:57},
-      {pos:7,team:'Lens',j:34,g:15,n:10,p:9,pts:55},
-      {pos:8,team:'Rennes',j:34,g:14,n:8,p:12,pts:50},
-      {pos:9,team:'Reims',j:34,g:13,n:9,p:12,pts:48},
-      {pos:10,team:'Strasbourg',j:34,g:12,n:10,p:12,pts:46},
-      {pos:11,team:'Toulouse',j:34,g:11,n:10,p:13,pts:43},
-      {pos:12,team:'Nantes',j:34,g:11,n:8,p:15,pts:41},
-      {pos:13,team:'Brest',j:34,g:10,n:9,p:15,pts:39},
-      {pos:14,team:'Montpellier',j:34,g:9,n:9,p:16,pts:36},
-      {pos:15,team:'Le Havre',j:34,g:9,n:7,p:18,pts:34},
-      {pos:16,team:'Saint-Étienne',j:34,g:7,n:10,p:17,pts:31},
-      {pos:17,team:'Auxerre',j:34,g:7,n:9,p:18,pts:30},
-      {pos:18,team:'Angers',j:34,g:5,n:8,p:21,pts:23},
-    ],
-    'pl':[
-      {pos:1,team:'Liverpool',j:38,g:28,n:6,p:4,pts:90},
-      {pos:2,team:'Arsenal',j:38,g:26,n:7,p:5,pts:85},
-      {pos:3,team:'Chelsea',j:38,g:24,n:7,p:7,pts:79},
-      {pos:4,team:'Nottm Forest',j:38,g:22,n:8,p:8,pts:74},
-      {pos:5,team:'Man City',j:38,g:21,n:9,p:8,pts:72},
-      {pos:6,team:'Bournemouth',j:38,g:20,n:8,p:10,pts:68},
-      {pos:7,team:'Newcastle',j:38,g:19,n:8,p:11,pts:65},
-      {pos:8,team:'Aston Villa',j:38,g:18,n:9,p:11,pts:63},
-      {pos:9,team:'Brighton',j:38,g:17,n:9,p:12,pts:60},
-      {pos:10,team:'Tottenham',j:38,g:16,n:8,p:14,pts:56},
-      {pos:11,team:'Brentford',j:38,g:14,n:9,p:15,pts:51},
-      {pos:12,team:'Man Utd',j:38,g:13,n:10,p:15,pts:49},
-      {pos:13,team:'Fulham',j:38,g:13,n:9,p:16,pts:48},
-      {pos:14,team:'Everton',j:38,g:11,n:10,p:17,pts:43},
-      {pos:15,team:'Wolverhampton',j:38,g:10,n:10,p:18,pts:40},
-      {pos:16,team:'Crystal Palace',j:38,g:9,n:11,p:18,pts:38},
-      {pos:17,team:'West Ham',j:38,g:9,n:9,p:20,pts:36},
-      {pos:18,team:'Leicester',j:38,g:7,n:9,p:22,pts:30},
-      {pos:19,team:'Ipswich',j:38,g:6,n:8,p:24,pts:26},
-      {pos:20,team:'Southampton',j:38,g:4,n:6,p:28,pts:18},
-    ],
-    'liga':[
-      {pos:1,team:'Barcelone',j:38,g:27,n:6,p:5,pts:87},
-      {pos:2,team:'Real Madrid',j:38,g:26,n:6,p:6,pts:84},
-      {pos:3,team:'Atlético',j:38,g:24,n:8,p:6,pts:80},
-      {pos:4,team:'Villarreal',j:38,g:20,n:9,p:9,pts:69},
-      {pos:5,team:'Athletic Bilbao',j:38,g:19,n:9,p:10,pts:66},
-      {pos:6,team:'Real Sociedad',j:38,g:18,n:8,p:12,pts:62},
-      {pos:7,team:'Bétis',j:38,g:16,n:10,p:12,pts:58},
-      {pos:8,team:'Séville',j:38,g:15,n:10,p:13,pts:55},
-      {pos:9,team:'Osasuna',j:38,g:14,n:9,p:15,pts:51},
-      {pos:10,team:'Valence',j:38,g:12,n:10,p:16,pts:46},
-      {pos:11,team:'Getafe',j:38,g:11,n:11,p:16,pts:44},
-      {pos:12,team:'Rayo Vallecano',j:38,g:11,n:10,p:17,pts:43},
-      {pos:13,team:'Majorque',j:38,g:10,n:12,p:16,pts:42},
-      {pos:14,team:'Celta Vigo',j:38,g:10,n:9,p:19,pts:39},
-      {pos:15,team:'Girona',j:38,g:9,n:10,p:19,pts:37},
-      {pos:16,team:'Alavés',j:38,g:9,n:8,p:21,pts:35},
-      {pos:17,team:'Leganés',j:38,g:8,n:10,p:20,pts:34},
-      {pos:18,team:'Espanyol',j:38,g:7,n:9,p:22,pts:30},
-      {pos:19,team:'Las Palmas',j:38,g:6,n:9,p:23,pts:27},
-      {pos:20,team:'Valladolid',j:38,g:4,n:8,p:26,pts:20},
-    ],
-    'bundesliga':[
-      {pos:1,team:'Bayern Munich',j:34,g:24,n:5,p:5,pts:77},
-      {pos:2,team:'Leverkusen',j:34,g:22,n:7,p:5,pts:73},
-      {pos:3,team:'Francfort',j:34,g:20,n:7,p:7,pts:67},
-      {pos:4,team:'RB Leipzig',j:34,g:18,n:8,p:8,pts:62},
-      {pos:5,team:'Dortmund',j:34,g:17,n:8,p:9,pts:59},
-      {pos:6,team:'Fribourg',j:34,g:15,n:9,p:10,pts:54},
-      {pos:7,team:'Hoffenheim',j:34,g:14,n:9,p:11,pts:51},
-      {pos:8,team:'Werder',j:34,g:13,n:10,p:11,pts:49},
-      {pos:9,team:'Stuttgart',j:34,g:13,n:8,p:13,pts:47},
-      {pos:10,team:'Augsbourg',j:34,g:12,n:9,p:13,pts:45},
-      {pos:11,team:'Wolfsburg',j:34,g:11,n:10,p:13,pts:43},
-      {pos:12,team:'Gladbach',j:34,g:10,n:11,p:13,pts:41},
-      {pos:13,team:'Union Berlin',j:34,g:10,n:8,p:16,pts:38},
-      {pos:14,team:'Mainz',j:34,g:9,n:9,p:16,pts:36},
-      {pos:15,team:'Heidenheim',j:34,g:8,n:9,p:17,pts:33},
-      {pos:16,team:'Hertha',j:34,g:7,n:8,p:19,pts:29},
-      {pos:17,team:'Kiel',j:34,g:5,n:7,p:22,pts:22},
-      {pos:18,team:'Holstein',j:34,g:4,n:6,p:24,pts:18},
-    ],
-    'seriea':[
-      {pos:1,team:'Inter Milan',j:38,g:26,n:5,p:7,pts:83},
-      {pos:2,team:'Napoli',j:38,g:24,n:6,p:8,pts:78},
-      {pos:3,team:'Atalanta',j:38,g:22,n:8,p:8,pts:74},
-      {pos:4,team:'Juventus',j:38,g:20,n:10,p:8,pts:70},
-      {pos:5,team:'Milan',j:38,g:19,n:9,p:10,pts:66},
-      {pos:6,team:'Lazio',j:38,g:18,n:8,p:12,pts:62},
-      {pos:7,team:'Fiorentina',j:38,g:17,n:8,p:13,pts:59},
-      {pos:8,team:'Roma',j:38,g:15,n:10,p:13,pts:55},
-      {pos:9,team:'Bologna',j:38,g:14,n:9,p:15,pts:51},
-      {pos:10,team:'Torino',j:38,g:12,n:11,p:15,pts:47},
-      {pos:11,team:'Udinese',j:38,g:11,n:10,p:17,pts:43},
-      {pos:12,team:'Genoa',j:38,g:11,n:9,p:18,pts:42},
-      {pos:13,team:'Cagliari',j:38,g:10,n:10,p:18,pts:40},
-      {pos:14,team:'Parma',j:38,g:9,n:10,p:19,pts:37},
-      {pos:15,team:'Como',j:38,g:9,n:9,p:20,pts:36},
-      {pos:16,team:'Lecce',j:38,g:8,n:10,p:20,pts:34},
-      {pos:17,team:'Verona',j:38,g:7,n:11,p:20,pts:32},
-      {pos:18,team:'Monza',j:38,g:7,n:9,p:22,pts:30},
-      {pos:19,team:'Venezia',j:38,g:5,n:9,p:24,pts:24},
-      {pos:20,team:'Empoli',j:38,g:5,n:8,p:25,pts:23},
-    ],
-  };
-  if(fallbacks[key]){
-    var data=fallbacks[key];
-    var html='<div style="overflow-x:auto"><table class="foot-table"><thead><tr><th>#</th><th>Équipe</th><th>J</th><th>G</th><th>N</th><th>P</th><th class="pts">Pts</th></tr></thead><tbody>';
-    data.forEach(function(t){
-      var bg=t.pos<=3?'background:var(--accent-light)':t.pos>=data.length-2?'background:#FFF0F0':'';
-      html+='<tr style="border-bottom:0.5px solid var(--border);'+bg+'"><td style="padding:8px 4px;color:var(--muted)">'+t.pos+'</td><td style="padding:8px 4px;font-weight:500">'+t.team+'</td><td style="padding:8px 4px;text-align:center">'+t.j+'</td><td style="padding:8px 4px;text-align:center">'+t.g+'</td><td style="padding:8px 4px;text-align:center">'+t.n+'</td><td style="padding:8px 4px;text-align:center">'+t.p+'</td><td class="pts" style="padding:8px 4px;text-align:center">'+t.pts+'</td></tr>';
-    });
-    html+='</tbody></table></div><div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:right">⚡ Saison 2024-25 · mise à jour live en cours...</div>';
-    el.innerHTML=html;
-    return;
-  }
-  el.innerHTML='<p style="color:var(--muted);padding:1rem">Chargement...</p>';
+  var fb={'ligue1':[{pos:1,team:'PSG',j:34,g:26,n:5,p:3,pts:83},{pos:2,team:'Monaco',j:34,g:22,n:6,p:6,pts:72},{pos:3,team:'Marseille',j:34,g:20,n:7,p:7,pts:67},{pos:4,team:'Lille',j:34,g:19,n:8,p:7,pts:65},{pos:5,team:'Lyon',j:34,g:17,n:9,p:8,pts:60},{pos:6,team:'Nice',j:34,g:16,n:9,p:9,pts:57},{pos:7,team:'Lens',j:34,g:15,n:10,p:9,pts:55},{pos:8,team:'Rennes',j:34,g:14,n:8,p:12,pts:50},{pos:9,team:'Reims',j:34,g:13,n:9,p:12,pts:48},{pos:10,team:'Strasbourg',j:34,g:12,n:10,p:12,pts:46},{pos:11,team:'Toulouse',j:34,g:11,n:10,p:13,pts:43},{pos:12,team:'Nantes',j:34,g:11,n:8,p:15,pts:41},{pos:13,team:'Brest',j:34,g:10,n:9,p:15,pts:39},{pos:14,team:'Montpellier',j:34,g:9,n:9,p:16,pts:36},{pos:15,team:'Le Havre',j:34,g:9,n:7,p:18,pts:34},{pos:16,team:'Saint-Étienne',j:34,g:7,n:10,p:17,pts:31},{pos:17,team:'Auxerre',j:34,g:7,n:9,p:18,pts:30},{pos:18,team:'Angers',j:34,g:5,n:8,p:21,pts:23}],'pl':[{pos:1,team:'Liverpool',j:38,g:28,n:6,p:4,pts:90},{pos:2,team:'Arsenal',j:38,g:26,n:7,p:5,pts:85},{pos:3,team:'Chelsea',j:38,g:24,n:7,p:7,pts:79},{pos:4,team:'Nottm Forest',j:38,g:22,n:8,p:8,pts:74},{pos:5,team:'Man City',j:38,g:21,n:9,p:8,pts:72},{pos:6,team:'Bournemouth',j:38,g:20,n:8,p:10,pts:68},{pos:7,team:'Newcastle',j:38,g:19,n:8,p:11,pts:65},{pos:8,team:'Aston Villa',j:38,g:18,n:9,p:11,pts:63},{pos:9,team:'Brighton',j:38,g:17,n:9,p:12,pts:60},{pos:10,team:'Tottenham',j:38,g:16,n:8,p:14,pts:56},{pos:11,team:'Brentford',j:38,g:14,n:9,p:15,pts:51},{pos:12,team:'Man Utd',j:38,g:13,n:10,p:15,pts:49},{pos:13,team:'Fulham',j:38,g:13,n:9,p:16,pts:48},{pos:14,team:'Everton',j:38,g:11,n:10,p:17,pts:43},{pos:15,team:'Wolverhampton',j:38,g:10,n:10,p:18,pts:40},{pos:16,team:'Crystal Palace',j:38,g:9,n:11,p:18,pts:38},{pos:17,team:'West Ham',j:38,g:9,n:9,p:20,pts:36},{pos:18,team:'Leicester',j:38,g:7,n:9,p:22,pts:30},{pos:19,team:'Ipswich',j:38,g:6,n:8,p:24,pts:26},{pos:20,team:'Southampton',j:38,g:4,n:6,p:28,pts:18}],'liga':[{pos:1,team:'Barcelone',j:38,g:27,n:6,p:5,pts:87},{pos:2,team:'Real Madrid',j:38,g:26,n:6,p:6,pts:84},{pos:3,team:'Atlético',j:38,g:24,n:8,p:6,pts:80},{pos:4,team:'Villarreal',j:38,g:20,n:9,p:9,pts:69},{pos:5,team:'Athletic Bilbao',j:38,g:19,n:9,p:10,pts:66},{pos:6,team:'Real Sociedad',j:38,g:18,n:8,p:12,pts:62},{pos:7,team:'Bétis',j:38,g:16,n:10,p:12,pts:58},{pos:8,team:'Séville',j:38,g:15,n:10,p:13,pts:55},{pos:9,team:'Osasuna',j:38,g:14,n:9,p:15,pts:51},{pos:10,team:'Valence',j:38,g:12,n:10,p:16,pts:46},{pos:11,team:'Getafe',j:38,g:11,n:11,p:16,pts:44},{pos:12,team:'Rayo Vallecano',j:38,g:11,n:10,p:17,pts:43},{pos:13,team:'Majorque',j:38,g:10,n:12,p:16,pts:42},{pos:14,team:'Celta Vigo',j:38,g:10,n:9,p:19,pts:39},{pos:15,team:'Girona',j:38,g:9,n:10,p:19,pts:37},{pos:16,team:'Alavés',j:38,g:9,n:8,p:21,pts:35},{pos:17,team:'Leganés',j:38,g:8,n:10,p:20,pts:34},{pos:18,team:'Espanyol',j:38,g:7,n:9,p:22,pts:30},{pos:19,team:'Las Palmas',j:38,g:6,n:9,p:23,pts:27},{pos:20,team:'Valladolid',j:38,g:4,n:8,p:26,pts:20}],'bundesliga':[{pos:1,team:'Bayern Munich',j:34,g:24,n:5,p:5,pts:77},{pos:2,team:'Leverkusen',j:34,g:22,n:7,p:5,pts:73},{pos:3,team:'Francfort',j:34,g:20,n:7,p:7,pts:67},{pos:4,team:'RB Leipzig',j:34,g:18,n:8,p:8,pts:62},{pos:5,team:'Dortmund',j:34,g:17,n:8,p:9,pts:59},{pos:6,team:'Fribourg',j:34,g:15,n:9,p:10,pts:54},{pos:7,team:'Hoffenheim',j:34,g:14,n:9,p:11,pts:51},{pos:8,team:'Werder',j:34,g:13,n:10,p:11,pts:49},{pos:9,team:'Stuttgart',j:34,g:13,n:8,p:13,pts:47},{pos:10,team:'Augsbourg',j:34,g:12,n:9,p:13,pts:45},{pos:11,team:'Wolfsburg',j:34,g:11,n:10,p:13,pts:43},{pos:12,team:'Gladbach',j:34,g:10,n:11,p:13,pts:41},{pos:13,team:'Union Berlin',j:34,g:10,n:8,p:16,pts:38},{pos:14,team:'Mainz',j:34,g:9,n:9,p:16,pts:36},{pos:15,team:'Heidenheim',j:34,g:8,n:9,p:17,pts:33},{pos:16,team:'Hertha',j:34,g:7,n:8,p:19,pts:29},{pos:17,team:'Kiel',j:34,g:5,n:7,p:22,pts:22},{pos:18,team:'Holstein',j:34,g:4,n:6,p:24,pts:18}],'seriea':[{pos:1,team:'Inter Milan',j:38,g:26,n:5,p:7,pts:83},{pos:2,team:'Napoli',j:38,g:24,n:6,p:8,pts:78},{pos:3,team:'Atalanta',j:38,g:22,n:8,p:8,pts:74},{pos:4,team:'Juventus',j:38,g:20,n:10,p:8,pts:70},{pos:5,team:'Milan',j:38,g:19,n:9,p:10,pts:66},{pos:6,team:'Lazio',j:38,g:18,n:8,p:12,pts:62},{pos:7,team:'Fiorentina',j:38,g:17,n:8,p:13,pts:59},{pos:8,team:'Roma',j:38,g:15,n:10,p:13,pts:55},{pos:9,team:'Bologna',j:38,g:14,n:9,p:15,pts:51},{pos:10,team:'Torino',j:38,g:12,n:11,p:15,pts:47},{pos:11,team:'Udinese',j:38,g:11,n:10,p:17,pts:43},{pos:12,team:'Genoa',j:38,g:11,n:9,p:18,pts:42},{pos:13,team:'Cagliari',j:38,g:10,n:10,p:18,pts:40},{pos:14,team:'Parma',j:38,g:9,n:10,p:19,pts:37},{pos:15,team:'Como',j:38,g:9,n:9,p:20,pts:36},{pos:16,team:'Lecce',j:38,g:8,n:10,p:20,pts:34},{pos:17,team:'Verona',j:38,g:7,n:11,p:20,pts:32},{pos:18,team:'Monza',j:38,g:7,n:9,p:22,pts:30},{pos:19,team:'Venezia',j:38,g:5,n:9,p:24,pts:24},{pos:20,team:'Empoli',j:38,g:5,n:8,p:25,pts:23}]};
+  if(!fb[key]){el.innerHTML='<p style="color:var(--muted);padding:1rem">Chargement...</p>';return;}
+  var data=fb[key];
+  var html='<div style="overflow-x:auto"><table class="foot-table"><thead><tr><th>#</th><th>Équipe</th><th>J</th><th>G</th><th>N</th><th>P</th><th class="pts">Pts</th></tr></thead><tbody>';
+  data.forEach(function(t){var bg=t.pos<=3?'background:var(--accent-light)':t.pos>=data.length-2?'background:#FFF0F0':'';html+='<tr style="border-bottom:0.5px solid var(--border);'+bg+'"><td style="padding:8px 4px;color:var(--muted)">'+t.pos+'</td><td style="padding:8px 4px;font-weight:500">'+t.team+'</td><td style="padding:8px 4px;text-align:center">'+t.j+'</td><td style="padding:8px 4px;text-align:center">'+t.g+'</td><td style="padding:8px 4px;text-align:center">'+t.n+'</td><td style="padding:8px 4px;text-align:center">'+t.p+'</td><td class="pts" style="padding:8px 4px;text-align:center">'+t.pts+'</td></tr>';});
+  html+='</tbody></table></div><div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:right">⚡ Saison 2024-25 · mise à jour live en cours...</div>';
+  el.innerHTML=html;
 }
-
 
 async function loadLeagueData(key){
   var league=LEAGUES[key];
   var el=document.getElementById('foot-result');
   if(!el)return;
-
-  // Afficher les données statiques immédiatement
-  if(currentTab==='classement') showFallbackStandings(key,el);
-
-  // Tenter le proxy en arrière-plan
+  if(currentTab==='classement')showFallbackStandings(key,el);
   try{
     if(currentTab==='classement'){
       var r=await fetch('https://football-proxy.widehem-olivier.workers.dev/competitions/'+league.id+'/standings');
-      if(!r.ok) throw new Error(r.status);
+      if(!r.ok)throw new Error(r.status);
       var d=await r.json();
       if(d.standings&&d.standings[0]){
-        var standings=d.standings[0].table;
+        var st=d.standings[0].table;
         var html='<div style="overflow-x:auto"><table class="foot-table"><thead><tr><th>#</th><th>Équipe</th><th>J</th><th>G</th><th>N</th><th>P</th><th>Diff</th><th class="pts">Pts</th></tr></thead><tbody>';
-        standings.forEach(function(t,i){
-          var bg=i<3?'background:var(--accent-light)':i>=standings.length-3?'background:#FFF0F0':'';
-          html+='<tr style="border-bottom:0.5px solid var(--border);'+bg+'"><td style="padding:8px 4px;color:var(--muted)">'+t.position+'</td><td style="padding:8px 4px;font-weight:500">'+t.team.name+'</td><td style="padding:8px 4px;text-align:center">'+t.playedGames+'</td><td style="padding:8px 4px;text-align:center">'+t.won+'</td><td style="padding:8px 4px;text-align:center">'+t.draw+'</td><td style="padding:8px 4px;text-align:center">'+t.lost+'</td><td style="padding:8px 4px;text-align:center">'+(t.goalDifference>0?'+':'')+t.goalDifference+'</td><td class="pts" style="padding:8px 4px;text-align:center">'+t.points+'</td></tr>';
-        });
+        st.forEach(function(t,i){var bg=i<3?'background:var(--accent-light)':i>=st.length-3?'background:#FFF0F0':'';html+='<tr style="border-bottom:0.5px solid var(--border);'+bg+'"><td style="padding:8px 4px;color:var(--muted)">'+t.position+'</td><td style="padding:8px 4px;font-weight:500">'+t.team.name+'</td><td style="padding:8px 4px;text-align:center">'+t.playedGames+'</td><td style="padding:8px 4px;text-align:center">'+t.won+'</td><td style="padding:8px 4px;text-align:center">'+t.draw+'</td><td style="padding:8px 4px;text-align:center">'+t.lost+'</td><td style="padding:8px 4px;text-align:center">'+(t.goalDifference>0?'+':'')+t.goalDifference+'</td><td class="pts" style="padding:8px 4px;text-align:center">'+t.points+'</td></tr>';});
         html+='</tbody></table></div><div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:right">🔴 Live · '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div>';
         el.innerHTML=html;
         if(window._footTimer)clearTimeout(window._footTimer);
         window._footTimer=setTimeout(function(){if(currentLeague===key&&currentTab==='classement')loadLeagueData(key);},180000);
       }
-    } else if(currentTab==='matchs'){
+    }else if(currentTab==='matchs'){
       var r=await fetch('https://football-proxy.widehem-olivier.workers.dev/competitions/'+league.id+'/matches?status=FINISHED&limit=10');
-      if(!r.ok) throw new Error(r.status);
+      if(!r.ok)throw new Error(r.status);
       var d=await r.json();
-      if(d.matches&&d.matches.length){
-        var html='<div style="display:grid;gap:8px">';
-        d.matches.slice(-10).reverse().forEach(function(f){
-          var date=new Date(f.utcDate).toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'});
-          var sc=f.score.fullTime;
-          var s=sc.home!==null?sc.home+' - '+sc.away:'- - -';
-          html+='<div style="background:var(--bg);border-radius:var(--radius);padding:12px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px"><div style="text-align:right;font-size:13px;font-weight:500">'+f.homeTeam.name+'</div><div style="text-align:center;min-width:80px"><div style="font-size:16px;font-weight:700">'+s+'</div><div style="font-size:11px;color:var(--muted)">'+date+'</div></div><div style="font-size:13px;font-weight:500">'+f.awayTeam.name+'</div></div>';
-        });
-        el.innerHTML=html+'</div><div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:right">🔴 Live</div>';
-      }
-    } else if(currentTab==='upcoming'){
+      if(d.matches&&d.matches.length){var html='<div style="display:grid;gap:8px">';d.matches.slice(-10).reverse().forEach(function(f){var dt=new Date(f.utcDate).toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'});var sc=f.score.fullTime;var s=sc.home!==null?sc.home+' - '+sc.away:'- - -';html+='<div style="background:var(--bg);border-radius:var(--radius);padding:12px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px"><div style="text-align:right;font-size:13px;font-weight:500">'+f.homeTeam.name+'</div><div style="text-align:center;min-width:80px"><div style="font-size:16px;font-weight:700">'+s+'</div><div style="font-size:11px;color:var(--muted)">'+dt+'</div></div><div style="font-size:13px;font-weight:500">'+f.awayTeam.name+'</div></div>';});el.innerHTML=html+'</div><div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:right">🔴 Live</div>';}
+    }else if(currentTab==='upcoming'){
       var r=await fetch('https://football-proxy.widehem-olivier.workers.dev/competitions/'+league.id+'/matches?status=SCHEDULED&limit=10');
-      if(!r.ok) throw new Error(r.status);
+      if(!r.ok)throw new Error(r.status);
       var d=await r.json();
-      if(d.matches&&d.matches.length){
-        var html='<div style="display:grid;gap:8px">';
-        d.matches.slice(0,10).forEach(function(f){
-          var date=new Date(f.utcDate).toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'});
-          var time=new Date(f.utcDate).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-          html+='<div style="background:var(--bg);border-radius:var(--radius);padding:12px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px"><div style="text-align:right;font-size:13px;font-weight:500">'+f.homeTeam.name+'</div><div style="text-align:center;min-width:110px"><div style="font-size:14px;font-weight:700;color:var(--accent)">'+time+'</div><div style="font-size:11px;color:var(--muted)">'+date+'</div></div><div style="font-size:13px;font-weight:500">'+f.awayTeam.name+'</div></div>';
-        });
-        el.innerHTML=html+'</div>';
-      }
+      if(d.matches&&d.matches.length){var html='<div style="display:grid;gap:8px">';d.matches.slice(0,10).forEach(function(f){var dt=new Date(f.utcDate).toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'});var tm=new Date(f.utcDate).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});html+='<div style="background:var(--bg);border-radius:var(--radius);padding:12px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px"><div style="text-align:right;font-size:13px;font-weight:500">'+f.homeTeam.name+'</div><div style="text-align:center;min-width:110px"><div style="font-size:14px;font-weight:700;color:var(--accent)">'+tm+'</div><div style="font-size:11px;color:var(--muted)">'+dt+'</div></div><div style="font-size:13px;font-weight:500">'+f.awayTeam.name+'</div></div>';});el.innerHTML=html+'</div>';}
     }
-  }catch(e){
-    console.log('Foot proxy:',e.message);
-    // Fallback déjà affiché pour le classement
-    if(currentTab!=='classement') el.innerHTML='<p style="color:var(--muted);padding:1rem;font-size:13px">Données non disponibles.</p>';
-  }
+  }catch(e){console.log('Foot:',e.message);if(currentTab!=='classement')el.innerHTML='<p style="color:var(--muted);padding:1rem;font-size:13px">Données non disponibles.</p>';}
 }
 
 
@@ -7811,11 +7656,7 @@ document.addEventListener('DOMContentLoaded', function(){
   initPrefs();
   var hash=window.location.hash.replace('#','');
   var validTools=['devises','meteo','horoscope','age','unites','credit','imc','password','surface','retraite','tarot','foot','minuteur','calculatrice','calendrier','traducteur','reseaux','qrcode','metiers','worldcup','timezone','calories','roue','pourboire','metronome','couleurs','fraisport','notefrais','tva','indicatifs','compresseur','convertimg','compteur','epargne','jours','base64','pseudo','compat','facture','correcteur','resumeur','generateur','carburant','marge','quiz','blague','cristal','sommeil','peinture','gradient','diff','regex','json','distance','scanner','radio','vie'];
-  if(validTools.includes(hash)){
-    showTool(hash);
-  } else {
-    showCat('finance');
-  }
+  if(validTools.includes(hash)){showTool(hash);}else{showCat('finance');}
 });
 
 // Impression
@@ -8634,70 +8475,17 @@ function calcSeuil(){
 let quizData=null, quizScore=0, quizTotal=0, quizAnswered=false;
 
 function renderQuiz(el){
-  var QS=[
-    {q:"Quelle est la capitale de l'Australie ?",o:["Sydney","Melbourne","Canberra","Brisbane"],a:2},
-    {q:"Combien de cordes a une guitare classique ?",o:["4","5","6","7"],a:2},
-    {q:"Quel pays a inventé le champagne ?",o:["Italie","Espagne","France","Allemagne"],a:2},
-    {q:"Quelle planète est la plus proche du Soleil ?",o:["Vénus","Mercure","Mars","Terre"],a:1},
-    {q:"En quelle année a eu lieu la Révolution française ?",o:["1776","1789","1804","1815"],a:1},
-    {q:"Quel est le plus grand océan ?",o:["Atlantique","Indien","Arctique","Pacifique"],a:3},
-    {q:"Combien de côtés a un hexagone ?",o:["5","6","7","8"],a:1},
-    {q:"Qui a peint la Joconde ?",o:["Michel-Ange","Raphaël","Léonard de Vinci","Botticelli"],a:2},
-    {q:"Quelle est la monnaie du Japon ?",o:["Yuan","Won","Yen","Ringgit"],a:2},
-    {q:"Combien de joueurs dans une équipe de football ?",o:["9","10","11","12"],a:2},
-    {q:"Quelle est la plus haute montagne du monde ?",o:["K2","Mont Blanc","Everest","Kilimandjaro"],a:2},
-    {q:"Qui a écrit Les Misérables ?",o:["Zola","Balzac","Hugo","Flaubert"],a:2},
-    {q:"En quelle année l'homme a-t-il marché sur la Lune ?",o:["1965","1967","1969","1971"],a:2},
-    {q:"Quelle est la formule chimique de l'eau ?",o:["CO2","H2O","O2","NaCl"],a:1},
-    {q:"Quel pays a la plus grande superficie ?",o:["Canada","Chine","USA","Russie"],a:3},
-    {q:"Quel est le fleuve le plus long du monde ?",o:["Amazone","Nil","Mississippi","Yangtsé"],a:1},
-    {q:"Qui a fondé Microsoft ?",o:["Steve Jobs","Bill Gates","Mark Zuckerberg","Larry Page"],a:1},
-    {q:"Quelle est la capitale de l'Espagne ?",o:["Barcelone","Séville","Valencia","Madrid"],a:3},
-    {q:"Quel est le symbole chimique de l'or ?",o:["Ag","Fe","Au","Cu"],a:2},
-    {q:"Qui a composé la 9ème Symphonie ?",o:["Mozart","Bach","Beethoven","Vivaldi"],a:2},
-    {q:"Combien de dents a un adulte ?",o:["28","30","32","34"],a:2},
-    {q:"Quel est le pays le plus peuplé d'Afrique ?",o:["Éthiopie","Égypte","RDC","Nigeria"],a:3},
-    {q:"Qui a inventé le téléphone ?",o:["Edison","Tesla","Bell","Marconi"],a:2},
-    {q:"Quelle est la capitale du Brésil ?",o:["São Paulo","Rio","Brasília","Salvador"],a:2},
-    {q:"Quel est l'élément le plus abondant dans l'univers ?",o:["Hélium","Oxygène","Carbone","Hydrogène"],a:3},
-    {q:"En quelle année a été fondée l'ONU ?",o:["1919","1939","1945","1950"],a:2},
-    {q:"Quel pays a remporté la Coupe du Monde 2018 ?",o:["Brésil","Allemagne","France","Argentine"],a:2},
-    {q:"Qui a écrit L'Étranger ?",o:["Sartre","Camus","Beauvoir","Gide"],a:1},
-    {q:"Quelle est la capitale de la Turquie ?",o:["Istanbul","Izmir","Bursa","Ankara"],a:3},
-    {q:"Qui a peint La Nuit étoilée ?",o:["Monet","Picasso","Van Gogh","Dalí"],a:2},
-    {q:"Quelle est la devise de la France ?",o:["Foi Espoir Charité","Dieu et mon droit","Liberté Égalité Fraternité","Unité Travail Progrès"],a:2},
-    {q:"Quel est le plus petit pays du monde ?",o:["Monaco","Liechtenstein","San Marin","Vatican"],a:3},
-    {q:"Combien de touches a un piano standard ?",o:["76","82","88","92"],a:2},
-    {q:"Qui a théorisé la relativité ?",o:["Newton","Darwin","Einstein","Curie"],a:2},
-    {q:"Quel est le métal le plus conducteur ?",o:["Or","Cuivre","Aluminium","Argent"],a:3},
-    {q:"Combien de continents y a-t-il ?",o:["5","6","7","8"],a:2},
-    {q:"Combien d'os dans le corps humain adulte ?",o:["186","206","226","246"],a:1},
-    {q:"Quelle est la capitale du Canada ?",o:["Toronto","Montréal","Vancouver","Ottawa"],a:3},
-    {q:"Quelle planète est surnommée planète rouge ?",o:["Vénus","Jupiter","Mars","Saturne"],a:2},
-    {q:"Combien de grammes dans un kilogramme ?",o:["100","500","1000","10000"],a:2},
-    {q:"Quelle est la vitesse de la lumière ?",o:["200 000 km/s","300 000 km/s","400 000 km/s","150 000 km/s"],a:1},
-    {q:"Combien de faces a un cube ?",o:["4","5","6","8"],a:2},
-    {q:"Qui a écrit Don Quichotte ?",o:["Lope de Vega","Cervantes","Calderón","Quevedo"],a:1},
-    {q:"Combien de temps dure un match de rugby à XV ?",o:["60 min","70 min","80 min","90 min"],a:2},
-    {q:"Combien de pays composent l'UE ?",o:["24","25","27","28"],a:2},
-    {q:"Quelle ville accueillera les JO 2028 ?",o:["Paris","Sydney","Los Angeles","Tokyo"],a:2},
-    {q:"Quel est le plus grand désert du monde ?",o:["Sahara","Gobi","Antarctique","Arabie"],a:2},
-    {q:"Quelle est la langue officielle du Brésil ?",o:["Espagnol","Portugais","Français","Anglais"],a:1},
-    {q:"Qui a découvert la pénicilline ?",o:["Pasteur","Curie","Fleming","Koch"],a:2},
-    {q:"En quelle année a eu lieu le premier vol des frères Wright ?",o:["1895","1900","1903","1910"],a:2},
-  ];
+  var QS=[{q:"Capitale de l'Australie ?",o:["Sydney","Melbourne","Canberra","Brisbane"],a:2},{q:"Cordes d'une guitare classique ?",o:["4","5","6","7"],a:2},{q:"Quel pays a inventé le champagne ?",o:["Italie","Espagne","France","Allemagne"],a:2},{q:"Planète la plus proche du Soleil ?",o:["Vénus","Mercure","Mars","Terre"],a:1},{q:"Révolution française ?",o:["1776","1789","1804","1815"],a:1},{q:"Plus grand océan ?",o:["Atlantique","Indien","Arctique","Pacifique"],a:3},{q:"Côtés d'un hexagone ?",o:["5","6","7","8"],a:1},{q:"Qui a peint la Joconde ?",o:["Michel-Ange","Raphaël","Léonard de Vinci","Botticelli"],a:2},{q:"Monnaie du Japon ?",o:["Yuan","Won","Yen","Ringgit"],a:2},{q:"Joueurs dans une équipe de foot ?",o:["9","10","11","12"],a:2},{q:"Plus haute montagne ?",o:["K2","Mont Blanc","Everest","Kilimandjaro"],a:2},{q:"Auteur des Misérables ?",o:["Zola","Balzac","Hugo","Flaubert"],a:2},{q:"Premier homme sur la Lune ?",o:["1965","1967","1969","1971"],a:2},{q:"Formule chimique de l'eau ?",o:["CO2","H2O","O2","NaCl"],a:1},{q:"Plus grand pays du monde ?",o:["Canada","Chine","USA","Russie"],a:3},{q:"Fleuve le plus long ?",o:["Amazone","Nil","Mississippi","Yangtsé"],a:1},{q:"Fondateur de Microsoft ?",o:["Steve Jobs","Bill Gates","Zuckerberg","Larry Page"],a:1},{q:"Capitale de l'Espagne ?",o:["Barcelone","Séville","Valencia","Madrid"],a:3},{q:"Symbole chimique de l'or ?",o:["Ag","Fe","Au","Cu"],a:2},{q:"9ème Symphonie de... ?",o:["Mozart","Bach","Beethoven","Vivaldi"],a:2},{q:"Dents d'un adulte ?",o:["28","30","32","34"],a:2},{q:"Pays le plus peuplé d'Afrique ?",o:["Éthiopie","Égypte","RDC","Nigeria"],a:3},{q:"Inventeur du téléphone ?",o:["Edison","Tesla","Bell","Marconi"],a:2},{q:"Capitale du Brésil ?",o:["São Paulo","Rio","Brasília","Salvador"],a:2},{q:"Élément le plus abondant de l'univers ?",o:["Hélium","Oxygène","Carbone","Hydrogène"],a:3},{q:"Fondation de l'ONU ?",o:["1919","1939","1945","1950"],a:2},{q:"Vainqueur Coupe du Monde 2018 ?",o:["Brésil","Allemagne","France","Argentine"],a:2},{q:"Auteur de L'Étranger ?",o:["Sartre","Camus","Beauvoir","Gide"],a:1},{q:"Capitale de la Turquie ?",o:["Istanbul","Izmir","Bursa","Ankara"],a:3},{q:"La Nuit étoilée est de... ?",o:["Monet","Picasso","Van Gogh","Dalí"],a:2},{q:"Devise de la France ?",o:["Foi Espoir Charité","Dieu et mon droit","Liberté Égalité Fraternité","Unité Travail Progrès"],a:2},{q:"Plus petit pays du monde ?",o:["Monaco","Liechtenstein","San Marin","Vatican"],a:3},{q:"Touches d'un piano standard ?",o:["76","82","88","92"],a:2},{q:"Auteur de la relativité ?",o:["Newton","Darwin","Einstein","Curie"],a:2},{q:"Métal le plus conducteur ?",o:["Or","Cuivre","Aluminium","Argent"],a:3},{q:"Nombre de continents ?",o:["5","6","7","8"],a:2},{q:"Os dans le corps humain adulte ?",o:["186","206","226","246"],a:1},{q:"Capitale du Canada ?",o:["Toronto","Montréal","Vancouver","Ottawa"],a:3},{q:"Planète rouge ?",o:["Vénus","Jupiter","Mars","Saturne"],a:2},{q:"Grammes dans un kilogramme ?",o:["100","500","1000","10000"],a:2},{q:"Vitesse de la lumière ?",o:["200 000 km/s","300 000 km/s","400 000 km/s","150 000 km/s"],a:1},{q:"Faces d'un cube ?",o:["4","5","6","8"],a:2},{q:"Auteur de Don Quichotte ?",o:["Lope de Vega","Cervantes","Calderón","Quevedo"],a:1},{q:"Durée d'un match de rugby ?",o:["60 min","70 min","80 min","90 min"],a:2},{q:"Pays de l'UE ?",o:["24","25","27","28"],a:2},{q:"JO 2028 ?",o:["Paris","Sydney","Los Angeles","Tokyo"],a:2},{q:"Plus grand désert ?",o:["Sahara","Gobi","Antarctique","Arabie"],a:2},{q:"Langue officielle du Brésil ?",o:["Espagnol","Portugais","Français","Anglais"],a:1},{q:"Découvreur de la pénicilline ?",o:["Pasteur","Curie","Fleming","Koch"],a:2},{q:"1er vol des frères Wright ?",o:["1895","1900","1903","1910"],a:2}];
   var pool=QS.slice().sort(function(){return Math.random()-0.5;}).slice(0,10);
   var idx=0,score=0;
   function render(){
     var q=pool[idx];
-    var opts=q.o.map(function(o,i){
-      return '<button onclick="window._qa('+i+')" style="width:100%;text-align:left;padding:12px 16px;margin-bottom:8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;font-family:var(--sans);font-size:14px" onmouseover="if(!window._qd)this.style.borderColor='var(--accent)'" onmouseout="if(!window._qd)this.style.borderColor='var(--border)'">'+( i+1)+'. '+o+'</button>';
-    }).join('');
-    document.getElementById('qz-b').innerHTML='<div style="font-size:12px;color:var(--muted);margin-bottom:8px">Q '+(idx+1)+'/'+pool.length+' · Score: '+score+'</div><p style="font-size:15px;font-weight:600;margin-bottom:1.2rem;line-height:1.5">'+q.q+'</p>'+opts+'<div id="qz-fb" style="margin-top:8px;min-height:40px"></div>';
+    var opts=q.o.map(function(o,i){return '<button onclick="window._qa('+i+')" style="width:100%;text-align:left;padding:12px 16px;margin-bottom:8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;font-family:var(--sans);font-size:14px">'+(i+1)+'. '+o+'</button>';}).join('');
+    document.getElementById('qz-b').innerHTML='<div style="font-size:12px;color:var(--muted);margin-bottom:8px">Q '+(idx+1)+'/'+pool.length+' · Score: '+score+'</div><p style="font-size:15px;font-weight:600;margin-bottom:1.2rem;line-height:1.5">'+q.q+'</p>'+opts+'<div id="qz-fb" style="margin-top:8px;min-height:36px"></div>';
     window._qd=false;
   }
   window._qa=function(i){
-    if(window._qd)return; window._qd=true;
+    if(window._qd)return;window._qd=true;
     var q=pool[idx];
     document.querySelectorAll('#qz-b button').forEach(function(b,bi){
       b.style.cursor='default';
@@ -8706,37 +8494,17 @@ function renderQuiz(el){
     });
     if(i===q.a)score++;
     document.getElementById('qz-fb').innerHTML=i===q.a?'<span style="color:#15803D;font-weight:600">✅ Correct !</span>':'<span style="color:#C4522A;font-weight:600">❌ Réponse : '+q.o[q.a]+'</span>';
-    setTimeout(function(){
-      idx++;
-      if(idx<pool.length){render();}
-      else{
-        var p=Math.round(score/pool.length*100);
-        document.getElementById('qz-b').innerHTML='<div style="text-align:center;padding:2rem"><div style="font-size:48px;margin-bottom:1rem">'+(p>=80?'🏆':p>=50?'👍':'📚')+'</div><div style="font-size:28px;font-weight:700;color:var(--accent)">'+score+'/'+pool.length+'</div><div style="color:var(--muted);margin:8px 0 1.5rem">'+p+'% de bonnes réponses</div><button onclick="window._qr()" class="btn" style="width:auto;padding:0 32px;height:44px">🔄 Rejouer</button></div>';
-      }
-    },1300);
+    setTimeout(function(){idx++;if(idx<pool.length){render();}else{var p=Math.round(score/pool.length*100);document.getElementById('qz-b').innerHTML='<div style="text-align:center;padding:2rem"><div style="font-size:48px">'+(p>=80?'🏆':p>=50?'👍':'📚')+'</div><div style="font-size:28px;font-weight:700;color:var(--accent);margin:8px 0">'+score+'/'+pool.length+'</div><div style="color:var(--muted);margin-bottom:1.5rem">'+p+'% bonnes réponses</div><button onclick="window._qr()" class="btn" style="width:auto;padding:0 32px">🔄 Rejouer</button></div>';}},1300);
   };
   window._qr=function(){pool=QS.slice().sort(function(){return Math.random()-0.5;}).slice(0,10);idx=0;score=0;render();};
   el.innerHTML='<div class="tool-header"><div class="tool-header-icon">🧠</div><div><h2>Quiz Culture Générale</h2><p>50 questions · 10 par partie · sans API</p></div></div><div id="qz-b"></div>';
   render();
 }
 function renderBlague(el){
-  var BL=["Pourquoi les plongeurs plongent-ils toujours en arrière ? Parce que sinon ils tomberaient dans le bateau.","Un homme entre dans une bibliothèque : 'Vous avez des livres sur la paranoïa ?' Le bibliothécaire chuchote : 'Ils sont derrière vous.'","Comment appelle-t-on un chat tombé dans un pot de peinture le jour de Noël ? Un chat-peint de Noël.","Qu'est-ce qu'un crocodile qui surveille la cour d'école ? Un sac à dents.","Pourquoi les éléphants n'utilisent-ils pas d'ordinateurs ? Parce qu'ils ont peur des souris.","Comment appelle-t-on un boomerang qui ne revient pas ? Un bâton.","Comment s'appelle le chat qui tombe dans un four ? Catastrophe.","Pourquoi les cimetières sont-ils si populaires ? Les gens meurent d'y aller.","Deux antennes se marient. La cérémonie était nulle, mais la réception était excellente.","Pourquoi les biologistes ont du mal à divorcer ? A cause des liens du sang.","Que dit un escargot sur le dos d'une tortue ? Wahouuuuu !","Qu'est-ce qu'un parachute qui ne s'ouvre pas ? Un problème.","Pourquoi les girafes ont-elles un long cou ? Parce que leurs pieds sentent mauvais.","Comment appelle-t-on un chien sans pattes ? Peu importe, il viendra pas.","Qu'est-ce qu'un dinosaure qui fait du vélo ? Un vélosociraptor.","Que dit un fantôme à un autre fantôme ? Tu me fais peur !","Comment appelle-t-on deux pieuvres qui se marient ? Un mariage bien tentaculaire.","Pourquoi les manchots ne peuvent pas travailler dans un orchestre ? Ils n'ont pas la baguette.","Qu'est-ce qu'un GPS dans un four ? Un pain grillé localisé.","Comment appelle-t-on un manchot sur un cheval ? Un cow-boy.","Pourquoi les plantes ne font-elles pas de sport ? Elles ont déjà des racines.","Que fait un informaticien quand il s'ennuie ? Il se fait ch... en HTML.","Un pingouin, un crocodile et un chat entrent dans un bar. Le barman dit : C'est une blague ?","Pourquoi les nains ne font-ils pas de ski nautique ? Ils n'ont pas de grands skis.","Comment reconnaît-on un accord de jazz ? On ne le reconnaît pas, mais on fait semblant.","Qu'est-ce qu'un yaourt dans la forêt ? Un yaourt nature.","Que dit un poussin qui sort de l'oeuf ? Extravagant !","Comment appelle-t-on un chat qui travaille pour la police ? Un chat-peau.","Pourquoi les poissons nagent-ils sous l'eau ? Si c'était au-dessus, les oiseaux seraient mouillés.","Qu'est-ce qu'un avion en papier dans un couloir ? Un missile de classement."];
-  var CI=["La vie est ce qui arrive quand vous êtes occupé à faire d'autres plans. — John Lennon","Le succès c'est d'aller d'échec en échec sans perdre son enthousiasme. — Churchill","Soyez le changement que vous voulez voir dans le monde. — Gandhi","L'imagination est plus importante que le savoir. — Einstein","La seule façon de faire du bon travail est d'aimer ce que vous faites. — Steve Jobs","La vie sans musique serait une erreur. — Nietzsche","Celui qui déplace des montagnes commence par déplacer de petites pierres. — Confucius","Le bonheur est la seule chose qui se double si on le partage. — A. Schweitzer","La gentillesse est un langage que les sourds entendent et les aveugles voient. — Twain","Fais de ta vie un rêve, et d'un rêve une réalité. — Saint-Exupéry","La difficulté dans la vie est de choisir. — Oscar Wilde","Le temps que vous appréciez perdre n'est pas du temps perdu. — B. Russell","Ce n'est pas parce que les choses sont difficiles que nous n'osons pas, c'est parce que nous n'osons pas qu'elles sont difficiles. — Sénèque","Vis comme si tu devais mourir demain. Apprends comme si tu devais vivre toujours. — Gandhi","Chaque jour est une nouvelle chance de changer ta vie. — Anonyme"];
-  var ALL=BL.map(function(t){return {t:t,i:'😄',l:'Blague'};}).concat(CI.map(function(t){return {t:t,i:'💬',l:'Citation'};}));
+  var ALL=[{t:"Pourquoi les plongeurs plongent-ils toujours en arrière ? Parce que sinon ils tomberaient dans le bateau.",i:'😄',l:'Blague'},{t:"Un homme entre dans une bibliothèque : Vous avez des livres sur la paranoïa ? Le bibliothécaire chuchote : Ils sont derrière vous.",i:'😄',l:'Blague'},{t:"Comment s'appelle le chat qui tombe dans un four ? Catastrophe.",i:'😄',l:'Blague'},{t:"Qu'est-ce qu'un crocodile qui surveille la cour d'école ? Un sac à dents.",i:'😄',l:'Blague'},{t:"Pourquoi les éléphants n'utilisent-ils pas d'ordinateurs ? Parce qu'ils ont peur des souris.",i:'😄',l:'Blague'},{t:"Deux antennes se marient. La cérémonie était nulle, mais la réception était excellente.",i:'😄',l:'Blague'},{t:"Pourquoi les biologistes ont du mal à divorcer ? A cause des liens du sang.",i:'😄',l:'Blague'},{t:"Que dit un escargot sur le dos d'une tortue ? Wahouuuuu !",i:'😄',l:'Blague'},{t:"Qu'est-ce qu'un parachute qui ne s'ouvre pas ? Un problème.",i:'😄',l:'Blague'},{t:"Pourquoi les girafes ont-elles un long cou ? Parce que leurs pieds sentent mauvais.",i:'😄',l:'Blague'},{t:"Comment appelle-t-on un chien sans pattes ? Peu importe, il viendra pas.",i:'😄',l:'Blague'},{t:"Qu'est-ce qu'un dinosaure qui fait du vélo ? Un vélosociraptor.",i:'😄',l:'Blague'},{t:"Que dit un fantôme à un autre fantôme ? Tu me fais peur !",i:'😄',l:'Blague'},{t:"Comment appelle-t-on deux pieuvres qui se marient ? Un mariage bien tentaculaire.",i:'😄',l:'Blague'},{t:"Pourquoi les manchots ne peuvent pas travailler dans un orchestre ? Ils n'ont pas la baguette.",i:'😄',l:'Blague'},{t:"Qu'est-ce qu'un GPS dans un four ? Un pain grillé localisé.",i:'😄',l:'Blague'},{t:"Comment appelle-t-on un manchot sur un cheval ? Un cow-boy.",i:'😄',l:'Blague'},{t:"Pourquoi les plantes ne font-elles pas de sport ? Elles ont déjà des racines.",i:'😄',l:'Blague'},{t:"Un pingouin, un crocodile et un chat entrent dans un bar. Le barman dit : C'est une blague ?",i:'😄',l:'Blague'},{t:"Pourquoi les nains ne font-ils pas de ski nautique ? Ils n'ont pas de grands skis.",i:'😄',l:'Blague'},{t:"La vie est ce qui arrive quand vous êtes occupé à faire d'autres plans. — John Lennon",i:'💬',l:'Citation'},{t:"Le succès c'est d'aller d'échec en échec sans perdre son enthousiasme. — Churchill",i:'💬',l:'Citation'},{t:"Soyez le changement que vous voulez voir dans le monde. — Gandhi",i:'💬',l:'Citation'},{t:"L'imagination est plus importante que le savoir. — Einstein",i:'💬',l:'Citation'},{t:"La seule façon de faire du bon travail est d'aimer ce que vous faites. — Steve Jobs",i:'💬',l:'Citation'},{t:"La vie sans musique serait une erreur. — Nietzsche",i:'💬',l:'Citation'},{t:"Celui qui déplace des montagnes commence par déplacer de petites pierres. — Confucius",i:'💬',l:'Citation'},{t:"La gentillesse est un langage que les sourds entendent et les aveugles voient. — Twain",i:'💬',l:'Citation'},{t:"Fais de ta vie un rêve, et d'un rêve une réalité. — Saint-Exupéry",i:'💬',l:'Citation'},{t:"Ce n'est pas parce que les choses sont difficiles que nous n'osons pas, c'est parce que nous n'osons pas qu'elles sont difficiles. — Sénèque",i:'💬',l:'Citation'}];
   var last=-1;
-  window._nextBlague=function(){
-    var idx; do{idx=Math.floor(Math.random()*ALL.length);}while(idx===last&&ALL.length>1);
-    last=idx;
-    var item=ALL[idx];
-    var card=document.getElementById('blague-card');
-    if(!card)return;
-    card.style.opacity='0';
-    setTimeout(function(){
-      card.innerHTML='<div style="font-size:32px;margin-bottom:1rem">'+item.i+'</div><div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:12px;font-family:var(--mono)">'+item.l+'</div><p style="font-size:15px;line-height:1.8;color:var(--text)">'+item.t+'</p>';
-      card.style.opacity='1';
-    },200);
-  };
-  el.innerHTML='<div class="tool-header"><div class="tool-header-icon">😄</div><div><h2>Blagues & Citations</h2><p>30 blagues · 15 citations · sans API</p></div></div><div id="blague-card" style="background:var(--bg);border-radius:var(--radius-lg);padding:2rem;text-align:center;margin-bottom:1.5rem;min-height:160px;transition:opacity .2s;display:flex;flex-direction:column;align-items:center;justify-content:center"></div><button onclick="window._nextBlague()" class="btn" style="max-width:320px;margin:0 auto;display:block">🎲 Suivant</button>';
+  window._nextBlague=function(){var idx;do{idx=Math.floor(Math.random()*ALL.length);}while(idx===last&&ALL.length>1);last=idx;var item=ALL[idx];var card=document.getElementById('blague-card');if(!card)return;card.style.opacity='0';setTimeout(function(){card.innerHTML='<div style="font-size:32px;margin-bottom:1rem">'+item.i+'</div><div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:12px;font-family:var(--mono)">'+item.l+'</div><p style="font-size:15px;line-height:1.8;color:var(--text)">'+item.t+'</p>';card.style.opacity='1';},200);};
+  el.innerHTML='<div class="tool-header"><div class="tool-header-icon">😄</div><div><h2>Blagues & Citations</h2><p>20 blagues · 10 citations · sans API</p></div></div><div id="blague-card" style="background:var(--bg);border-radius:var(--radius-lg);padding:2rem;text-align:center;margin-bottom:1.5rem;min-height:160px;transition:opacity .2s;display:flex;flex-direction:column;align-items:center;justify-content:center"></div><button onclick="window._nextBlague()" class="btn" style="max-width:320px;margin:0 auto;display:block">🎲 Suivant</button>';
   window._nextBlague();
 }
 function renderCristal(el){
@@ -8744,7 +8512,7 @@ function renderCristal(el){
     <div class="tool-header"><div class="tool-header-icon">🔮</div><div><h2>Boule de Cristal</h2><p>Consultez les mystères de l'univers...</p></div></div>
     <div style="display:flex;flex-direction:column;align-items:center;padding:1rem 0">
       <p id="cristal-invite" style="font-size:14px;color:var(--muted);margin-bottom:1.5rem;text-align:center;font-style:italic">Posez votre question mentalement... puis touchez la boule</p>
-      <div style="position:relative;cursor:pointer;background:radial-gradient(circle,#1A0A3E,#0D0520);border-radius:50%;box-shadow:0 0 40px rgba(168,85,247,0.4)" onclick="awakeCristal()" id="cristal-wrap">
+      <div style="position:relative;cursor:pointer" onclick="awakeCristal()" id="cristal-wrap">
         <canvas id="cristal-canvas" width="320" height="320" style="border-radius:50%;display:block;background:radial-gradient(circle at 38% 35%,#2D1B69,#1A0A3E 60%,#0D0520)"></canvas>
         <div id="cristal-pulse" style="position:absolute;inset:0;border-radius:50%;pointer-events:none"></div>
       </div>
@@ -10463,6 +10231,25 @@ window._getApiKey=function(){return localStorage.getItem('anthropic_api_key')||'
 </script>
 <script>
 
+var _catCache={},_catDone=false;
+function _initCats(){
+  if(_catDone)return;_catDone=true;
+  var hidden=document.getElementById('cat-hidden');if(!hidden)return;
+  var map={finance:'cat-finance',sante:'cat-sante',monde:'cat-monde',tech:'cat-tech',docs:'cat-docs',maison:'cat-maison',business:'cat-business',fun:'cat-fun',calculs:'cat-calculs',tv:'cat-tv',vie:'cat-vie'};
+  Object.keys(map).forEach(function(k){var el=hidden.querySelector('.'+map[k]);if(el)_catCache[k]=el;});
+}
+window.showCat=function(cat){
+  _initCats();
+  document.querySelectorAll('.cnb2').forEach(function(b){b.style.background='var(--surface)';b.style.color='var(--text)';b.style.border='1px solid var(--border)';});
+  var ab=document.getElementById('cnav-'+cat);
+  if(ab){ab.style.background='var(--accent)';ab.style.color='#fff';ab.style.border='2px solid var(--accent)';}
+  var panel=document.getElementById('cat-panel');
+  if(panel&&_catCache[cat]){panel.innerHTML='';panel.appendChild(_catCache[cat].cloneNode(true));}
+  var ta=document.getElementById('tool-area');
+  if(ta){ta.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;color:var(--muted);text-align:center"><div style="font-size:40px;margin-bottom:12px">🛠️</div><p style="font-size:14px;font-weight:500;color:var(--text)">Sélectionnez un outil</p><p style="font-size:12px;margin-top:4px">Cliquez sur une carte pour commencer</p></div>';}
+};
+
+
 // FIXES v2.2
 window.switchTab=function(t){currentTab=t;var u=currentLeague==='ucl';['tab-class','tab-match','tab-upcoming','tab-bracket'].forEach(function(id){var e=document.getElementById(id);if(!e)return;e.className='btn btn-outline';e.style.cssText=id==='tab-bracket'?'width:auto;padding:0 20px;height:38px;font-size:13px;display:'+(u?'':'none'):'width:auto;padding:0 20px;height:38px;font-size:13px';});var m={classement:'tab-class',matchs:'tab-match',upcoming:'tab-upcoming',bracket:'tab-bracket'};var a=document.getElementById(m[t]||'tab-class');if(a)a.className='btn';if(t==='bracket')showBracket(currentLeague);else if(t==='upcoming')loadUpcomingMatches(currentLeague);else if(currentLeague)loadLeagueData(currentLeague);};
 window.loadUpcomingMatches=async function(key){if(!key||!LEAGUES[key])return;var el=document.getElementById('foot-result');if(!el)return;el.innerHTML='<p style="color:var(--muted);font-size:13px">Chargement...</p>';try{var r=await fetch('https://football-proxy.widehem-olivier.workers.dev/competitions/'+LEAGUES[key].id+'/matches?status=SCHEDULED&limit=10');var d=await r.json();if(d.matches&&d.matches.length){var o='<div style="display:grid;gap:8px">';d.matches.slice(0,10).forEach(function(f){var dt=new Date(f.utcDate).toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'});var tm=new Date(f.utcDate).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});o+='<div style="background:var(--bg);border-radius:var(--radius);padding:12px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px">'+'<div style="text-align:right;font-size:13px;font-weight:500">'+f.homeTeam.name+'</div>'+'<div style="text-align:center;min-width:110px"><div style="font-size:14px;font-weight:700;color:var(--accent)">'+tm+'</div><div style="font-size:11px;color:var(--muted)">'+dt+'</div></div>'+'<div style="font-size:13px;font-weight:500">'+f.awayTeam.name+'</div></div>';});el.innerHTML=o+'</div>';}else el.innerHTML='<p style="color:var(--muted);font-size:13px">Aucun match à venir.</p>';}catch(e){el.innerHTML='<p style="color:var(--muted);font-size:13px">Non disponible.</p>';}};
@@ -10476,9 +10263,9 @@ window.showMetier=function(id){document.querySelectorAll('#metier-tabs button').
 window.renderPeintureMeta=function(el){el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">'+'<div style="background:var(--bg);border-radius:var(--radius-lg);padding:1.2rem">'+'<div style="font-size:13px;font-weight:600;margin-bottom:8px">🖌️ Peinture murale</div>'+'<div class="grid2" style="margin-bottom:10px"><div><label class="fl">Longueur (m)</label><input type="number" id="peinm-l" placeholder="5"></div><div><label class="fl">Largeur (m)</label><input type="number" id="peinm-la" placeholder="4"></div></div>'+'<div style="margin-bottom:10px"><label class="fl">Hauteur (m)</label><input type="number" id="peinm-h" value="2.5" step="0.1"></div>'+'<div class="grid2" style="margin-bottom:10px"><div><label class="fl">Nb portes</label><input type="number" id="peinm-p" value="1" min="0"></div><div><label class="fl">Nb fenêtres</label><input type="number" id="peinm-f" value="1" min="0"></div></div>'+'<div style="margin-bottom:10px"><label class="fl">Couches</label><select id="peinm-c"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select></div>'+'<div style="margin-bottom:10px"><label class="fl">Type</label><select id="peinm-rend"><option value="12">Mate 12m²/L</option><option value="10" selected>Satinée 10m²/L</option><option value="8">Lessivable 8m²/L</option></select></div>'+'<button class="btn" onclick="calcPeinM()">Calculer</button><div class="result" id="peinm-res"></div></div>'+'<div style="background:var(--bg);border-radius:var(--radius-lg);padding:1.2rem">'+'<div style="font-size:13px;font-weight:600;margin-bottom:8px">🏠 Peinture façade</div>'+'<div style="margin-bottom:10px"><label class="fl">Périmètre (m)</label><input type="number" id="fac-per" placeholder="40"></div>'+'<div style="margin-bottom:10px"><label class="fl">Hauteur (m)</label><input type="number" id="fac-h" placeholder="7"></div>'+'<div style="margin-bottom:10px"><label class="fl">Ouvertures m²</label><input type="number" id="fac-ouv" placeholder="15"></div>'+'<div style="margin-bottom:10px"><label class="fl">Type</label><select id="fac-rend"><option value="6">Lisse 6m²/L</option><option value="4">Grenu 4m²/L</option><option value="3">Crépi 3m²/L</option></select></div>'+'<div style="margin-bottom:10px"><label class="fl">Couches</label><select id="fac-c"><option value="1">1</option><option value="2" selected>2</option></select></div>'+'<button class="btn" onclick="calcFac()">Calculer</button><div class="result" id="fac-res"></div></div></div>';};
 window.renderMetiers=function(el){el.innerHTML='<div class="tool-header"><div class="tool-header-icon">🔧</div><div><h2>Calculateur Technique Pro</h2><p>10 métiers · 80+ formules</p></div></div>'+'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem" id="metier-tabs">'+'<button class="btn" style="width:auto;padding:0 14px;height:36px;font-size:12px" onclick="showMetier(\x27elec\x27)">⚡ Électricité</button>'+'<button class="btn btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:12px" onclick="showMetier(\x27plomb\x27)">🔧 Plomberie</button>'+'<button class="btn btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:12px" onclick="showMetier(\x27macon\x27)">🧱 Maçonnerie</button>'+'<button class="btn btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:12px" onclick="showMetier(\x27carreau\x27)">🪟 Carrelage</button>'+'<button class="btn btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:12px" onclick="showMetier(\x27peinture\x27)">🎨 Peinture</button>'+'<button class="btn btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:12px" onclick="showMetier(\x27isol\x27)">🌡 Isolation</button>'+'<button class="btn btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:12px" onclick="showMetier(\x27charp\x27)">🪵 Charpente</button>'+'<button class="btn btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:12px" onclick="showMetier(\x27metal\x27)">🔩 Métallerie</button>'+'<button class="btn btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:12px" onclick="showMetier(\x27terr\x27)">🏗 Terrassement</button>'+'<button class="btn btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:12px" onclick="showMetier(\x27math\x27)">📐 Géométrie</button>'+'</div><div id="metier-content"></div>';showMetier('elec');};
 var _catCache={},_catDone=false;
-function _initCats(){if(_catDone)return;_catDone=true;var hidden=document.getElementById('cat-hidden');if(!hidden)return;var map={finance:'cat-finance',sante:'cat-sante',monde:'cat-monde',tech:'cat-tech',docs:'cat-docs',maison:'cat-maison',business:'cat-business',fun:'cat-fun',calculs:'cat-calculs',tv:'cat-tv',vie:'cat-vie'};Object.keys(map).forEach(function(k){var el=hidden.querySelector('.'+map[k]);if(el)_catCache[k]=el;});}
+function _initCats(){if(_catDone)return;_catDone=true;var hidden=document.getElementById('cat-hidden');if(!hidden)return;var map={finance:'cat-finance',sante:'cat-sante',monde:'cat-monde',sport:'cat-sport',tech:'cat-tech',docs:'cat-docs',maison:'cat-maison',business:'cat-business',fun:'cat-fun',calculs:'cat-calculs',tv:'cat-tv',vie:'cat-vie'};Object.keys(map).forEach(function(k){var el=hidden.querySelector('.'+map[k]);if(el)_catCache[k]=el;});}
 window.showCat=function(cat){_initCats();document.querySelectorAll('.cnb2').forEach(function(b){b.style.background='var(--surface)';b.style.color='var(--text)';b.style.border='1px solid var(--border)';});var ab=document.getElementById('cnav-'+cat);if(ab){ab.style.background='var(--accent)';ab.style.color='#fff';ab.style.border='2px solid var(--accent)';}var panel=document.getElementById('cat-panel');if(panel){panel.innerHTML='';var sec=_catCache[cat];if(sec)panel.appendChild(sec.cloneNode(true));}var ta=document.getElementById('tool-area');if(ta)ta.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;color:var(--muted);text-align:center"><div style="font-size:40px;margin-bottom:12px">🛠️</div><p style="font-size:14px;font-weight:500;color:var(--text)">Sélectionnez un outil</p><p style="font-size:12px;margin-top:4px">Cliquez sur une carte pour commencer</p></div>';};
-// init handled above
+document.// init handled by main DOMContentLoaded
 console.log('✅ Outils Pratiques v2.2 OK');
 
 </script>
