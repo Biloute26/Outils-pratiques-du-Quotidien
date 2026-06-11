@@ -234,6 +234,7 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;
 
 .rcard-item{transition:all .2s;position:relative}
 .rcard-item:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.15);border-color:var(--accent)!important}
+.rfall{font-size:24px}
 </style>
 </head>
 <body>
@@ -9841,7 +9842,7 @@ function renderRadioGrid(){
         ${filtered.map(c=>`
           <div id="rcard-${c.name.replace(/[^a-z]/gi,'')}" data-stream="${c.stream||''}" data-url="${c.url||''}" data-name="${c.name||''}" data-logo="${c.logo||''}" onclick="playRadio(this.dataset.stream,this.dataset.url,this.dataset.name,this.dataset.logo)" title="${c.name} — clic pour ecouter${c.stream?'':' (site officiel)'}" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;position:relative" class="rcard-item">
             <div style="height:42px;display:flex;align-items:center;justify-content:center;margin-bottom:8px">
-              <img src="${c.logo}" alt="${c.name}" style="max-height:38px;max-width:88px;object-fit:contain" onerror="this.parentNode.innerHTML='<span style=\"font-size:24px\">📻</span>'">
+              <img src="${c.logo}" alt="${c.name}" style="max-height:38px;max-width:88px;object-fit:contain" onerror="this.outerHTML='<span class=rfall>📻</span>'">
             </div>
             <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.2">${c.name}</div>
             <div style="font-size:9px;font-weight:600;padding:2px 6px;border-radius:20px;display:inline-block;background:${(GENRE_COLORS[c.genre]||'#666')}22;color:${GENRE_COLORS[c.genre]||'#666'}">${c.genre}</div>
