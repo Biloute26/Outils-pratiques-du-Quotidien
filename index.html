@@ -7675,8 +7675,7 @@ function printTool(name){
   const win=window.open('','_blank','width=900,height=700');
   win.document.write('<html><head><title>Impression — Outils Pratiques</title><style>body{font-family:DM Sans,sans-serif;padding:2rem;color:#1A1916}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px}@media print{button{display:none}}</style></head><body>');
   win.document.write(clone.innerHTML);
-  win.document.write('<script src="reseau.js"></script>
-</body></html>');
+  win.document.write('</body></html>');
   win.document.close();
   win.focus();
   setTimeout(()=>{win.print();},500);
@@ -10327,6 +10326,7 @@ console.log('✅ Outils Pratiques v2.2 OK');
   </div>
 </section>
 <!-- BZ-RESEAU-END -->
+<script src="reseau.js"></script>
 </body>
 </html>
 
