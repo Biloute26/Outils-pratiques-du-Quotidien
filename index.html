@@ -416,7 +416,7 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;
     </div>
   </div>
 </main>
-<footer>© 2025 outils.pratiques · Gratuit · Sans inscription · Données à titre indicatif<br>Nos autres sites : <a href="https://biloute26.github.io/immo/" style="color:inherit" target="_blank" rel="noopener">Calculateurs immobiliers</a> · <a href="https://biloute26.github.io/outils-administratifs/" style="color:inherit" target="_blank" rel="noopener">Outils administratifs</a></footer>
+<footer>© 2025 outils.pratiques · Gratuit · Sans inscription · Données à titre indicatif</footer>
 <script>
 
 var HOROSCOPES={
@@ -7675,7 +7675,8 @@ function printTool(name){
   const win=window.open('','_blank','width=900,height=700');
   win.document.write('<html><head><title>Impression — Outils Pratiques</title><style>body{font-family:DM Sans,sans-serif;padding:2rem;color:#1A1916}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px}@media print{button{display:none}}</style></head><body>');
   win.document.write(clone.innerHTML);
-  win.document.write('</body></html>');
+  win.document.write('<script src="reseau.js"></script>
+</body></html>');
   win.document.close();
   win.focus();
   setTimeout(()=>{win.print();},500);
